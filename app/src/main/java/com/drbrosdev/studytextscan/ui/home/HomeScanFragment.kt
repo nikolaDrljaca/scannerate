@@ -3,6 +3,7 @@ package com.drbrosdev.studytextscan.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
@@ -41,6 +42,15 @@ class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
                 reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
 
                 findNavController().navigate(R.id.action_homeScanFragment_to_detailScanFragment)
+
+                /*
+                Code above is just a placeholder for initial testing,
+                create button should
+                    -launch image request
+                    -show loading dialog while processing
+                    -once processing is finished, insert into db and save id (db insert returns this as long)
+                    -send an event after all is done to navigate to detail screen
+                 */
             }
 
             //temporary for testing purposes

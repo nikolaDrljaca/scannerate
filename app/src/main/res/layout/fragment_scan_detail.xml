@@ -30,7 +30,7 @@
             android:textColor="@color/text_gray"
             android:textSize="20sp"
             app:layout_constraintTop_toBottomOf="@id/guideline5"
-            tools:text="12.07.2021" />
+            android:text="12.07.2021" />
 
         <EditText
             android:id="@+id/et_scan_content"
