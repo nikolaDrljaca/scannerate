@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.core.widget.NestedScrollView
+    android:id="@+id/nested_scroll_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background"
@@ -7,101 +10,109 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/text_view_header"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/text_view_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:gravity="center"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guideline3"
+                tools:text="Your Scans" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.07" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginEnd="48dp"
+                android:background="@color/mid_blue"
+                app:layout_constraintTop_toBottomOf="@id/text_view_header" />
+
+            <TextView
+                android:id="@+id/text_view_num_of_scans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:gravity="center"
+                android:textColor="@color/heavy_blue"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/text_view_header"
+                tools:text="5 Scans" />
+
+            <ImageView
+                android:id="@+id/image_view_info"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/guideline3"
+                android:layout_marginEnd="14dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_round_info_24"/>
+
+            <ImageView
+                android:id="@+id/image_view_settings"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/guideline3"
+                android:layout_marginStart="14dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_round_settings_24"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_scans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/text_view_num_of_scans"
+                android:nestedScrollingEnabled="true"
+                tools:itemCount="5"
+                tools:listitem="@layout/sample_list_item" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/button_create_scan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans_jp_regular"
-            android:gravity="center"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="36sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guideline3"
-            tools:text="Your Scans" />
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="16dp"
+            android:text="@string/create_scan"
+            android:backgroundTint="@color/heavy_blue"
+            app:rippleColor="@color/white"
+            android:textColor="@color/white"
+            />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.07" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginEnd="48dp"
-            android:background="@color/mid_blue"
-            app:layout_constraintTop_toBottomOf="@id/text_view_header" />
+</androidx.core.widget.NestedScrollView>
 
-        <TextView
-            android:id="@+id/text_view_num_of_scans"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans_jp_regular"
-            android:gravity="center"
-            android:textColor="@color/heavy_blue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/text_view_header"
-            tools:text="5 Scans" />
-
-        <ImageView
-            android:id="@+id/image_view_info"
-            android:layout_width="37dp"
-            android:layout_height="37dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/guideline3"
-            android:layout_marginEnd="14dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_round_info_24"/>
-
-        <ImageView
-            android:id="@+id/image_view_settings"
-            android:layout_width="37dp"
-            android:layout_height="37dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/guideline3"
-            android:layout_marginStart="14dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_round_settings_24"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_scans"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/text_view_num_of_scans"
-            tools:itemCount="5"
-            tools:listitem="@layout/sample_list_item" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/button_create_scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="36dp"
-        android:text="@string/create_scan"
-        android:backgroundTint="@color/heavy_blue"
-        app:rippleColor="@color/white"
-        android:textColor="@color/white"
-        />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
