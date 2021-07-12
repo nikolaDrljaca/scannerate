@@ -40,7 +40,6 @@
             android:fontFamily="@font/noto_sans_jp_regular"
             android:gravity="start"
             android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="2"
             android:textColor="@color/detail_text_title_color"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@id/guideline6"
