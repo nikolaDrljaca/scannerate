@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Study Text Scan</string>
+    <string name="create_scan">Create scan</string>
+    <string name="placeholder_text_about_us_and_the_app">Placeholder text - about us and the app</string>
+    <string name="support">Support</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="report_a_bug">Report a bug</string>
+    <string name="share">Share</string>
+    <string name="rate_this_app">Rate this app</string>
+    <string name="support_development">Support Development</string>
+    <string name="open_source_licenses">Open source libraries</string>
+
+</resources>
