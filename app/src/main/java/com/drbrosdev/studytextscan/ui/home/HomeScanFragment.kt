@@ -1,9 +1,8 @@
 package com.drbrosdev.studytextscan.ui.home
 
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
@@ -11,9 +10,7 @@ import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.util.getColor
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
-import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
-import com.google.android.material.transition.SlideDistanceProvider
 
 class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding()
@@ -28,7 +25,6 @@ class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
          */
         updateWindowInsets(binding.root)
         requireActivity().window.navigationBarColor = getColor(android.R.color.transparent)
-
 
         binding.apply {
             imageViewInfo.setOnClickListener {
@@ -46,6 +42,9 @@ class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
 
                 findNavController().navigate(R.id.action_homeScanFragment_to_detailScanFragment)
             }
+
+            //temporary for testing purposes
+            recyclerViewScans.isVisible = false
         }
     }
 }

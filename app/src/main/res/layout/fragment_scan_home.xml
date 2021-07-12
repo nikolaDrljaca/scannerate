@@ -26,13 +26,13 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:gravity="center"
+                android:text="@string/your_scans"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="36sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/guideline3"
-                android:text="@string/your_scans" />
+                app:layout_constraintTop_toBottomOf="@id/guideline3" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline3"
@@ -55,11 +55,11 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:gravity="center"
+                android:text="5 Scans"
                 android:textColor="@color/heavy_blue"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/text_view_header"
-                android:text="5 Scans" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_header" />
 
             <ImageView
                 android:id="@+id/image_view_info"
@@ -81,6 +81,33 @@
                 app:layout_constraintBottom_toTopOf="@id/guideline3"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linear_layout_empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/text_view_num_of_scans"
+                app:layout_constraintBottom_toTopOf="@id/guideline2"
+                android:orientation="vertical">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animation_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="5"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"
+                    app:lottie_rawRes="@raw/empty_box"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/feels_empty_here_create_some_scans"
+                    android:fontFamily="@font/noto_sans_jp_regular"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_scans"
                 android:layout_width="match_parent"
@@ -89,8 +116,8 @@
                 android:layout_marginEnd="24dp"
                 android:nestedScrollingEnabled="true"
                 app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/text_view_num_of_scans"
                 app:layout_constraintBottom_toTopOf="@id/guideline7"
+                app:layout_constraintTop_toBottomOf="@id/text_view_num_of_scans"
                 app:spanCount="2"
                 tools:itemCount="5"
                 tools:listitem="@layout/sample_list_item" />
@@ -107,6 +134,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="1" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.7" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
