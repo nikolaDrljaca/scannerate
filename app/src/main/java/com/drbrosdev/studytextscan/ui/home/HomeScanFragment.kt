@@ -55,6 +55,11 @@ class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
                  */
             }
 
+            /*
+            todo set layout animator to ListAdapter
+            recyclerView.layoutAnimation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_anim)
+             */
+
             //temporary for testing purposes
             recyclerViewScans.isVisible = false
             /*
