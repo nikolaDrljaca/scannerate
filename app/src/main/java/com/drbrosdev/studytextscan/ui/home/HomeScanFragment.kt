@@ -24,6 +24,9 @@ class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
         This is necessary in every fragment.
          */
         updateWindowInsets(binding.root)
+        /*
+        Set nav bar color back to transparent
+         */
         requireActivity().window.navigationBarColor = getColor(android.R.color.transparent)
 
         binding.apply {
@@ -54,6 +57,10 @@ class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
 
             //temporary for testing purposes
             recyclerViewScans.isVisible = false
+            /*
+            Sets the animation to loop only 3 times and then stop as to not be too annoying.
+             */
+            animationView.repeatCount = 3
         }
     }
 }
