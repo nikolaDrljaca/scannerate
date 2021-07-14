@@ -4,11 +4,14 @@ import android.app.Activity
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import com.drbrosdev.studytextscan.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 /*
@@ -95,9 +98,9 @@ The only way to get the rounded corners and style the dialog is to create a cust
 its done in this project.
  */
 
-//fun Fragment.createLoadingDialog(): AlertDialog {
-//    val inflater = requireActivity().layoutInflater
-//    return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-//        .setView(inflater.inflate(R.layout.fragment_loading, null))
-//        .create()
-//}
+fun Fragment.createLoadingDialog(): AlertDialog {
+    val inflater = requireActivity().layoutInflater
+    return MaterialAlertDialogBuilder(requireContext())
+        .setView(inflater.inflate(R.layout.dialog_loading, null))
+        .create()
+}

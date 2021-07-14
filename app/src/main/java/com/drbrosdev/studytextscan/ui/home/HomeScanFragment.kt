@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
+import com.drbrosdev.studytextscan.util.createLoadingDialog
 import com.drbrosdev.studytextscan.util.getColor
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
@@ -36,6 +37,14 @@ class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
                 reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
 
                 findNavController().navigate(R.id.action_homeScanFragment_to_infoFragment)
+            }
+
+            imageViewSettings.setOnClickListener {
+                /*
+                Only Testing purposes
+                 */
+                val loadingDialog = createLoadingDialog()
+                loadingDialog.show()
             }
 
             buttonCreateScan.setOnClickListener {
