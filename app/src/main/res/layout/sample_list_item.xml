@@ -47,7 +47,7 @@
             android:fontFamily="@font/roboto_regular"
             tools:text="Placeholder for scanned content"
             android:textSize="16sp"
-            android:maxLines="3"
+            android:maxLines="4"
             />
 
     </LinearLayout>

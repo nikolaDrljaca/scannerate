@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
+import com.drbrosdev.studytextscan.util.createLoadingDialog
 import com.drbrosdev.studytextscan.util.getColor
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
@@ -24,6 +25,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         This is necessary in every fragment.
          */
         updateWindowInsets(binding.root)
+        /*
+        Set nav bar color back to transparent
+         */
         requireActivity().window.navigationBarColor = getColor(android.R.color.transparent)
 
         binding.apply {
@@ -33,6 +37,14 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
 
                 findNavController().navigate(R.id.action_homeScanFragment_to_infoFragment)
+            }
+
+            imageViewSettings.setOnClickListener {
+                /*
+                Only Testing purposes
+                 */
+                val loadingDialog = createLoadingDialog()
+                loadingDialog.show()
             }
 
             buttonCreateScan.setOnClickListener {
@@ -52,8 +64,26 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                  */
             }
 
+            /*
+            todo set layout animator to ListAdapter
+            recyclerView.layoutAnimation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_anim)
+
+            todo also dont forget to add
+            postponeEnterTransition()
+            view.doOnPreDraw{ startPostponedEnterTransition() }
+             */
+
+            /*
+            todo set padding on list items
+            recyclerView.addItemDecoration(MarginItemDecoration(resources.getDimensionPixelSize(R.dimen.list_item_padding)
+             */
+
             //temporary for testing purposes
             recyclerViewScans.isVisible = false
+            /*
+            Sets the animation to loop only 3 times and then stop as to not be too annoying.
+             */
+            animationView.repeatCount = 3
         }
     }
 }

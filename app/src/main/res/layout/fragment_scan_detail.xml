@@ -23,6 +23,16 @@
             app:layout_constraintBottom_toTopOf="@id/guideline5"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:id="@+id/image_view_delete"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="12dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_round_delete_24"
+            app:layout_constraintBottom_toTopOf="@id/guideline5"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <TextView
             android:id="@+id/text_view_date"
             android:layout_width="match_parent"
