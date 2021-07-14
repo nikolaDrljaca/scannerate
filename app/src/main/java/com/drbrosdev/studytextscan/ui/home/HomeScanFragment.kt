@@ -58,6 +58,15 @@ class HomeScanFragment: Fragment(R.layout.fragment_scan_home) {
             /*
             todo set layout animator to ListAdapter
             recyclerView.layoutAnimation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_anim)
+
+            todo also dont forget to add
+            postponeEnterTransition()
+            view.doOnPreDraw{ startPostponedEnterTransition() }
+             */
+
+            /*
+            todo set padding on list items
+            recyclerView.addItemDecoration(MarginItemDecoration(resources.getDimensionPixelSize(R.dimen.list_item_padding)
              */
 
             //temporary for testing purposes
