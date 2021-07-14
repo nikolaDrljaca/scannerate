@@ -32,6 +32,13 @@ class DetailScanFragment: Fragment(R.layout.fragment_scan_detail) {
             imageViewBack.setOnClickListener {
                 findNavController().navigateUp()
             }
+
+            imageViewDelete.setOnClickListener {
+                /*
+                todo here first display a dialog to confirm deletion and then navigate back
+                if confirmed using findNavController.navigateUp()
+                 */
+            }
         }
 
     }

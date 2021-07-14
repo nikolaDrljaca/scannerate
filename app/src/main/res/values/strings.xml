@@ -11,5 +11,6 @@
     <string name="open_source_licenses">Open source libraries</string>
     <string name="your_scans">Your Scans</string>
     <string name="feels_empty_here_create_some_scans">Feels empty here. Create some scans!</string>
+    <string name="saving_code">Scanning...</string>
 
 </resources>

@@ -23,4 +23,6 @@
 
     <color name="detail_text_title_color">#003666</color>
 
+    <color name="error_red">#c62828</color>
+
 </resources>
