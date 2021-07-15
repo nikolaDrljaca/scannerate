@@ -27,7 +27,8 @@ class MyPrintDocumentAdapter(
     private var pageHeight: Int = 0
     private var pageWidth: Int = 0
     private var myPdfDocument: PdfDocument? = null
-    private var totalPages = 4 // Only for testing -> later we will have to determine the number of pages based on text length
+    private var totalPages =
+        4 // Only for testing -> later we will have to determine the number of pages based on text length
 
     override fun onStart() {
         super.onStart()
@@ -143,13 +144,17 @@ class MyPrintDocumentAdapter(
             paint
         )
 
-        paint.textSize = 14f
-        canvas.drawText(
-            text,
-            leftMargin.toFloat(),
-            (titleBaseLine + 35).toFloat(),
-            paint
-        )
+        paint.textSize = 16f
+        var newLine = 35
+        computeTextForPrinting(text).forEach {
+            canvas.drawText(
+                it,
+                leftMargin.toFloat(),
+                (titleBaseLine + newLine).toFloat(),
+                paint
+            )
+            newLine += 20
+        }
     }
 
     override fun onFinish() {
@@ -161,11 +166,9 @@ class MyPrintDocumentAdapter(
         var itemsPerPage = 4 // default item count for portrait mode
 
         val pageSize = printAttributes.mediaSize
-        if (pageSize != null) {
-            if (!pageSize.isPortrait) {
-                // Six items per page in landscape orientation
-                itemsPerPage = 6
-            }
+        if (pageSize != null && !pageSize.isPortrait) {
+            // Six items per page in landscape orientation
+            itemsPerPage = 6
         }
 
         // Determine number of print items
@@ -179,6 +182,50 @@ class MyPrintDocumentAdapter(
             if (page >= pageRanges[i].start && page <= pageRanges[i].end)
                 return true
         }
+        return false
+    }
+
+    /**
+     * Compute text for print.
+     * Explanation will be made!! @nikola -> see!
+     * @author Ognjen Drljaca
+     */
+    private fun computeTextForPrinting(text: String): List<String> {
+        val stringBuilder = StringBuilder()
+        val arrayList = ArrayList<String>()
+        val textArray = text.toCharArray()
+        val textArraySize = textArray.size
+        var index2 = 0
+
+        textArray.forEachIndexed forEach@{ index, c ->
+            if (checkIfCharIsSpace(c) && index2 == 0) return@forEach
+            stringBuilder.append(c)
+            if (index2 == 90) {
+                if (!checkIfCharIsSign(c)) {
+                    stringBuilder.append('-')
+                }
+                val textToPrint = stringBuilder.toString()
+
+                arrayList.add(textToPrint)
+                stringBuilder.clear()
+                index2 = 0
+            } else {
+                index2++
+            }
+            if (index == textArraySize - 1) {
+                arrayList.add(stringBuilder.toString())
+            }
+        }
+        return arrayList
+    }
+
+    private fun checkIfCharIsSpace(char: Char): Boolean {
+        if (char == ' ') return true
+        return false
+    }
+
+    private fun checkIfCharIsSign(c: Char): Boolean {
+        if (c == '!' || c == ',' || c == '.') return true
         return false
     }
 }

@@ -14,7 +14,9 @@ private fun provideDatabase(context: Context) =
         "posts_database"
     )
         .createFromAsset("database/test_db.db")
-        .fallbackToDestructiveMigration().build()
+        .allowMainThreadQueries()
+        .fallbackToDestructiveMigration()
+        .build()
 
 private fun providePdfExportService() =
     PdfExportServiceImpl()
