@@ -12,6 +12,7 @@ import android.print.PrintAttributes
 import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import android.print.pdf.PrintedPdfDocument
+import android.util.Log
 import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.math.ceil
@@ -21,14 +22,13 @@ import kotlin.math.ceil
  */
 class MyPrintDocumentAdapter(
     private var context: Context,
-    private var text: String
+    private var text: List<String>
 ) : PrintDocumentAdapter() {
 
     private var pageHeight: Int = 0
     private var pageWidth: Int = 0
     private var myPdfDocument: PdfDocument? = null
-    private var totalPages =
-        4 // Only for testing -> later we will have to determine the number of pages based on text length
+    private var totalPages = 4 // default
 
     override fun onStart() {
         super.onStart()
@@ -48,25 +48,29 @@ class MyPrintDocumentAdapter(
         val width = newAttributes.mediaSize?.heightMils
 
         height?.let {
-            pageHeight = it / 1000 * 72
+            pageHeight = it / 1000 * 79
         }
 
         width?.let {
             pageWidth = it / 1000 * 72
         }
 
+        Log.d("page_dimensions", "Page has width: $pageWidth and height: $pageHeight")
+
         if (cancellationSignal.isCanceled) {
             callback.onLayoutCancelled()
             return
         }
 
-        totalPages = computePageCount(newAttributes)
+        totalPages = computePageCount(newAttributes, text)
+        Log.d("total_pages", "Total pages: $totalPages")
 
         if (totalPages > 0) {
             val builder =
-                PrintDocumentInfo.Builder("print_output.pdf").setContentType(
-                    PrintDocumentInfo.CONTENT_TYPE_DOCUMENT
-                )
+                PrintDocumentInfo.Builder("print_output.pdf")
+                    .setContentType(
+                        PrintDocumentInfo.CONTENT_TYPE_DOCUMENT
+                    )
                     .setPageCount(totalPages)
 
             val info = builder.build()
@@ -82,11 +86,13 @@ class MyPrintDocumentAdapter(
         cancellationSignal: CancellationSignal,
         callback: WriteResultCallback
     ) {
+        val textArray = computeTextForPrinting(text)
         for (i in 0 until totalPages) {
             if (pageInRange(pageRanges, i)) {
                 val newPage = PdfDocument.PageInfo.Builder(
                     pageWidth,
-                    pageHeight, i
+                    pageHeight,
+                    i
                 ).create()
 
                 val page = myPdfDocument?.startPage(newPage)
@@ -98,9 +104,15 @@ class MyPrintDocumentAdapter(
                     return
                 }
                 page?.let {
-                    drawPage(it, i)
+                    drawPage(it, i, textArray)
                 }
                 myPdfDocument?.finishPage(page)
+
+                for (i2 in 0 until 35) { // remove texts that were printed TODO still not optimized
+                    if (textArray.isNotEmpty()) {
+                        textArray.removeAt(0)
+                    }
+                }
             }
         }
 
@@ -124,12 +136,13 @@ class MyPrintDocumentAdapter(
 
     private fun drawPage(
         page: PdfDocument.Page,
-        pageNumber: Int
+        pageNumber: Int,
+        textArrayToBePrinted: List<String>
     ) {
-        var pagenum = pageNumber
+        var pageNumber = pageNumber
         val canvas = page.canvas
 
-        pagenum++ // Make sure page numbers start at 1
+        pageNumber++ // Make sure page numbers start at 1
 
         val titleBaseLine = 72
         val leftMargin = 54
@@ -138,7 +151,7 @@ class MyPrintDocumentAdapter(
         paint.color = Color.BLACK
         paint.textSize = 40f
         canvas.drawText(
-            "Test Print Document Page $pagenum",
+            "Test Print Document Page $pageNumber",
             leftMargin.toFloat(),
             titleBaseLine.toFloat(),
             paint
@@ -146,7 +159,8 @@ class MyPrintDocumentAdapter(
 
         paint.textSize = 16f
         var newLine = 35
-        computeTextForPrinting(text).forEach {
+
+        textArrayToBePrinted.forEach {
             canvas.drawText(
                 it,
                 leftMargin.toFloat(),
@@ -162,7 +176,7 @@ class MyPrintDocumentAdapter(
         // clean up functionality
     }
 
-    private fun computePageCount(printAttributes: PrintAttributes): Int {
+    private fun computePageCount(printAttributes: PrintAttributes, text: List<String>): Int {
         var itemsPerPage = 4 // default item count for portrait mode
 
         val pageSize = printAttributes.mediaSize
@@ -172,9 +186,28 @@ class MyPrintDocumentAdapter(
         }
 
         // Determine number of print items
-        val printItemCount = 1 // one text for now
+        val printItemCount =
+            computePrintItemCount(computeTextForPrinting(text).size) // one text for now
 
         return ceil((printItemCount / itemsPerPage.toDouble())).toInt()
+    }
+
+    private fun computePrintItemCount(size: Int): Int {
+        val numberOfPrintItemsPerPage = (size.toFloat() / 38)
+        val comparingInteger = size / 38
+        val checkNewPage = numberOfPrintItemsPerPage - comparingInteger.toFloat()
+        var numberToReturn = size / 38
+        if (checkNewPage > 0.50001) {
+            numberToReturn += 1
+        }
+
+        var printItemCount = 0
+        while (numberToReturn > 0) {
+            printItemCount += 4
+            numberToReturn--
+        }
+        Log.d("print_item_count", "Print item count: $printItemCount")
+        return printItemCount
     }
 
     private fun pageInRange(pageRanges: Array<PageRange>, page: Int): Boolean {
@@ -187,14 +220,19 @@ class MyPrintDocumentAdapter(
 
     /**
      * Compute text for print.
-     * Explanation will be made!! @nikola -> see!
-     * @author Ognjen Drljaca
+     * First tested version of algorithm.
+     * Takes the text and and makes sure it is computed in multiple lines
+     * For every new row adds a '-' if it is not a sign of some sort(buggy)
+     * Algorithm needs to be extended and improved upon further testing -> @drljacan
      */
-    private fun computeTextForPrinting(text: String): List<String> {
+    private fun computeTextForPrinting(strings: List<String>): MutableList<String> {
+        var text = createTextForPrinting(strings)
+
         val stringBuilder = StringBuilder()
-        val arrayList = ArrayList<String>()
+        val arrayListToReturn = mutableListOf<String>()
         val textArray = text.toCharArray()
         val textArraySize = textArray.size
+
         var index2 = 0
 
         textArray.forEachIndexed forEach@{ index, c ->
@@ -206,17 +244,25 @@ class MyPrintDocumentAdapter(
                 }
                 val textToPrint = stringBuilder.toString()
 
-                arrayList.add(textToPrint)
+                arrayListToReturn.add(textToPrint)
                 stringBuilder.clear()
                 index2 = 0
             } else {
                 index2++
             }
             if (index == textArraySize - 1) {
-                arrayList.add(stringBuilder.toString())
+                arrayListToReturn.add(stringBuilder.toString())
             }
         }
-        return arrayList
+        return arrayListToReturn
+    }
+
+    private fun createTextForPrinting(strings: List<String>): String {
+        var text = ""
+        strings.forEachIndexed { index, it ->
+            text += "$index) $it"
+        }
+        return text
     }
 
     private fun checkIfCharIsSpace(char: Char): Boolean {

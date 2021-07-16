@@ -59,11 +59,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
                 activity.also {
                     val scans = scanRepository.getAllScans()
-                    var text = ""
-                    scans.forEach {
-                        text += it.scanText
-                    }
-                    pdfExportService.printDocument(requireContext(), text)
+                    pdfExportService.printDocument(requireContext(), scans)
                 }
 
                 findNavController().navigate(R.id.action_homeScanFragment_to_detailScanFragment)
