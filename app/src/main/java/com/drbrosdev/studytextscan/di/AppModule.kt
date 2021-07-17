@@ -13,7 +13,6 @@ private fun provideDatabase(context: Context) =
         ApplicationDatabase::class.java,
         "posts_database"
     )
-        .createFromAsset("database/test_db.db")
         .allowMainThreadQueries()
         .fallbackToDestructiveMigration()
         .build()
