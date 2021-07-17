@@ -11,6 +11,14 @@
     <string name="open_source_licenses">Open source libraries</string>
     <string name="your_scans">Your Scans</string>
     <string name="feels_empty_here_create_some_scans">Feels empty here. Create some scans!</string>
-    <string name="saving_code">Scanning...</string>
+    <string name="saving_code">Scanning…</string>
+    <string name="git_nikola">https://github.com/nikolaDrljaca</string>
+    <string name="git_ognjen">https://github.com/drljacao96</string>
+    <string name="mail_nikola">devnikoladr@gmail.com</string>
+    <string name="mail_ognjen">drljacao96@hotmail.com</string>
+    <string name="ognjen_drljaca">Ognjen Drljaca</string>
+    <string name="nikola_drljaca">Nikola Drljaca</string>
+    <string name="developers">Developers</string>
+    <string name="about_the_app">About the app</string>
 
 </resources>
