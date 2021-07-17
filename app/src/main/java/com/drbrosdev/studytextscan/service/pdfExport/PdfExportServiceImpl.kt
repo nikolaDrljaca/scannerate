@@ -7,16 +7,26 @@ import com.drbrosdev.studytextscan.persistence.entity.Scan
 
 class PdfExportServiceImpl : PdfExportService {
 
-    override fun printDocument(context: Context, scans: List<Scan>) {
+    override fun printDocument(
+        context: Context,
+        titleOfDocument: String,
+        scans: List<Scan>,
+        color: Int,
+        fontSize: Int
+    ) {
         val printManager = context.getSystemService(Context.PRINT_SERVICE) as PrintManager
 
         val jobName = context.getString(R.string.app_name) + " Document"
 
-        val text = mutableListOf<String>()
+        val textList = mutableListOf<String>()
         scans.forEach {
-            text.add(it.scanText)
+            textList.add(it.scanText)
         }
 
-        printManager.print(jobName, MyPrintDocumentAdapter(context, text), null)
+        printManager.print(
+            jobName,
+            MyPrintDocumentAdapter(context, titleOfDocument, textList, color, fontSize),
+            null
+        )
     }
 }

@@ -1,7 +1,6 @@
 package com.drbrosdev.studytextscan.service.pdfExport
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
@@ -22,13 +21,17 @@ import kotlin.math.ceil
  */
 class MyPrintDocumentAdapter(
     private var context: Context,
-    private var text: List<String>
+    private var titleOfDocument: String,
+    private var text: List<String>,
+    private val color: Int,
+    private val fontSize: Int
 ) : PrintDocumentAdapter() {
 
     private var pageHeight: Int = 0
     private var pageWidth: Int = 0
     private var myPdfDocument: PdfDocument? = null
     private var totalPages = 4 // default
+    private val titleFontSize = 40f
 
     override fun onStart() {
         super.onStart()
@@ -139,25 +142,25 @@ class MyPrintDocumentAdapter(
         pageNumber: Int,
         textArrayToBePrinted: List<String>
     ) {
-        var pageNumber = pageNumber
+        var pageNum = pageNumber
         val canvas = page.canvas
 
-        pageNumber++ // Make sure page numbers start at 1
+        pageNum++ // Make sure page numbers start at 1
 
         val titleBaseLine = 72
         val leftMargin = 54
 
         val paint = Paint()
-        paint.color = Color.BLACK
-        paint.textSize = 40f
+        paint.color = color
+        paint.textSize = titleFontSize // we go with default title font size
         canvas.drawText(
-            "Test Print Document Page $pageNumber",
+            titleOfDocument,
             leftMargin.toFloat(),
             titleBaseLine.toFloat(),
             paint
         )
 
-        paint.textSize = 16f
+        paint.textSize = fontSize.toFloat()
         var newLine = 35
 
         textArrayToBePrinted.forEach {

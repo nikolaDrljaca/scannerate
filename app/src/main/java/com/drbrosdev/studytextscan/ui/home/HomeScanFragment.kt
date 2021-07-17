@@ -1,5 +1,6 @@
 package com.drbrosdev.studytextscan.ui.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -59,7 +60,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
                 activity.also {
                     val scans = scanRepository.getAllScans()
-                    pdfExportService.printDocument(requireContext(), scans)
+                    pdfExportService.printDocument(requireContext(), "TitleOfDocument",scans, Color.BLACK,16)
                 }
 
                 findNavController().navigate(R.id.action_homeScanFragment_to_detailScanFragment)
