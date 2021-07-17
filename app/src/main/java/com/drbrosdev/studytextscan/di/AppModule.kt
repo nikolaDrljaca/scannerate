@@ -19,7 +19,6 @@ private fun provideDatabase(context: Context) =
 private fun providePdfExportService() =
     PdfExportServiceImpl()
 
-
 val appModule = module {
     single { provideDatabase(context = androidContext()) }
     single { providePdfExportService() }
