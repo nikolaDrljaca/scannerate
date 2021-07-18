@@ -76,7 +76,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 id(scan.scanId)
                                 scan(scan)
                                 onScanClicked {
-
+                                    //todo send event to viewModel and navigate to detail screen
                                 }
                             }
                         }
