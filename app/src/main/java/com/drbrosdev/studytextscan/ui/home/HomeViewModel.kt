@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
 import com.drbrosdev.studytextscan.util.Resource
+import com.drbrosdev.studytextscan.util.getCurrentDateTime
 import com.drbrosdev.studytextscan.util.setState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,23 @@ class HomeViewModel(
     init {
         getScans()
     }
+
+    fun createScan(text: String) = viewModelScope.launch {
+        val scan = Scan(
+            scanText = text,
+            dateCreated = getCurrentDateTime(),
+            dateModified = getCurrentDateTime()
+        )
+
+        val result = repo.insertScan(scan)
+        val scanId = Integer.parseInt(result.toString())
+        _events.send(HomeEvents.ShowCurrentScanSaved(scanId))
+    }
+
+    fun showLoadingDialog() = viewModelScope.launch {
+        _events.send(HomeEvents.ShowLoadingDialog)
+    }
+
     private fun getScans() = viewModelScope.launch {
         try {
             repo.getAllScans().collect {

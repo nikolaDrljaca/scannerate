@@ -15,12 +15,12 @@
         android:src="@drawable/ic_round_info_24" />
 
     <ImageView
-        android:id="@+id/image_view_settings"
+        android:id="@+id/image_view_pdf_list"
         android:layout_width="37dp"
         android:layout_height="37dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_round_settings_24" />
+        android:src="@drawable/ic_round_picture_as_pdf_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

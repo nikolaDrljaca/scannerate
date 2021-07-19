@@ -12,9 +12,7 @@ private fun provideDatabase(context: Context) =
         context,
         ApplicationDatabase::class.java,
         "posts_database"
-    )
-        .createFromAsset("database/test_db.db")
-        .fallbackToDestructiveMigration().build()
+    ).fallbackToDestructiveMigration().build()
 
 private fun providePdfExportService() =
     PdfExportServiceImpl()

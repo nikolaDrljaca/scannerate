@@ -8,6 +8,7 @@ import com.drbrosdev.studytextscan.databinding.ModelScanTopBarBinding
 import com.drbrosdev.studytextscan.databinding.ScanListItemBinding
 import com.drbrosdev.studytextscan.epoxy.ViewBindingKotlinModel
 import com.drbrosdev.studytextscan.persistence.entity.Scan
+import com.drbrosdev.studytextscan.util.dateAsString
 
 @EpoxyModelClass
 abstract class ScanTopBarEpoxyModel :
@@ -17,11 +18,11 @@ abstract class ScanTopBarEpoxyModel :
     lateinit var onInfoClicked: () -> Unit
 
     @EpoxyAttribute
-    lateinit var onSettingsClicked: () -> Unit
+    lateinit var onPdfListClicked: () -> Unit
 
     override fun ModelScanTopBarBinding.bind() {
         imageViewInfo.setOnClickListener { onInfoClicked() }
-        imageViewSettings.setOnClickListener { onSettingsClicked() }
+        imageViewPdfList.setOnClickListener { onPdfListClicked() }
     }
 }
 
@@ -48,7 +49,7 @@ abstract class ScanListItemEpoxyModel :
     lateinit var onScanClicked: (Scan) -> Unit
 
     override fun ScanListItemBinding.bind() {
-        textViewDate.text = scan.dateCreated
+        textViewDate.text = dateAsString(scan.dateCreated)
         textViewTitle.text = scan.scanText.lines()[0]
         textViewContent.text = scan.scanText
         card.setOnClickListener { onScanClicked(scan) }

@@ -4,6 +4,14 @@ plugins {
     id 'kotlin-kapt'
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs += 'build/generated/source/kapt/debug/ui/home'
+        }
+    }
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
