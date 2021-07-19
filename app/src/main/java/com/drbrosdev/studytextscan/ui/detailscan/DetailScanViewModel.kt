@@ -1,5 +1,6 @@
 package com.drbrosdev.studytextscan.ui.detailscan
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.util.Resource
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 class DetailScanViewModel(
+    savedStateHandle: SavedStateHandle,
     //private val repo: ScanRepository
 ) : ViewModel() {
 
@@ -19,6 +21,8 @@ class DetailScanViewModel(
         dateCreated = "12.02.2012",
         dateModified = "12.02.2012"
     )
+
+    private val scanId = savedStateHandle.get<Int>("scan_id")
 
     private val _viewState = MutableStateFlow(DetailScanState())
     val viewState: StateFlow<DetailScanState> = _viewState
