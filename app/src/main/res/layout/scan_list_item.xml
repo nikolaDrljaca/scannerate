@@ -29,7 +29,7 @@
             android:textStyle="bold"
             android:fontFamily="@font/noto_sans_jp_regular"
             tools:text="Scan Title"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:maxLines="1"
             />
 
@@ -50,7 +50,7 @@
             android:textColor="@color/heavy_blue"
             android:fontFamily="@font/roboto_regular"
             tools:text="Placeholder for scanned content"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:maxLines="4"
             android:ellipsize="end"
             />

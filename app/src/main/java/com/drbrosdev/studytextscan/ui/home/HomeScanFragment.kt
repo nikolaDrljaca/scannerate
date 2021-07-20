@@ -33,9 +33,11 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val viewModel: HomeViewModel by viewModel()
 
     private val selectImageRequest = registerForActivityResult(GetContent()) { uri ->
-        viewModel.showLoadingDialog()
-        scanText(uri) { scannedText ->
-            viewModel.createScan(scannedText)
+        if (uri != null && uri.equals(Uri.EMPTY)) {
+            viewModel.showLoadingDialog()
+            scanText(uri) { scannedText ->
+                viewModel.createScan(scannedText)
+            }
         }
     }
 
