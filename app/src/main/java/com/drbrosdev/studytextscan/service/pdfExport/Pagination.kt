@@ -1,16 +1,21 @@
 package com.drbrosdev.studytextscan.service.pdfExport
 
+import android.graphics.text.LineBreaker
+import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
+import android.text.TextDirectionHeuristics
 
 import android.text.TextPaint
+import androidx.annotation.RequiresApi
 
+@RequiresApi(Build.VERSION_CODES.Q)
 class Pagination(
     private var mIncludePad: Boolean = false,
     private var mWidth: Int = 0,
     private var mHeight: Int = 0,
-    private var mSpacingMultiple: Float = 0f,
-    private var mSpacingAdd: Float = 0f,
+    private var mSpacingMultiple: Float = 1f,
+    private var mSpacingAdd: Float = 0F,
     private var mText: CharSequence? = null,
     private var mPaint: TextPaint? = null,
     private var mPages: MutableList<CharSequence>? = null,
@@ -20,16 +25,19 @@ class Pagination(
         layout()
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun layout() {
-        val layout = StaticLayout(
-            mText,
-            mPaint,
-            mWidth,
-            Layout.Alignment.ALIGN_NORMAL,
-            mSpacingMultiple,
-            mSpacingAdd,
-            mIncludePad
-        )
+
+        val layout = StaticLayout.Builder
+            .obtain(mText!!, 0, mText!!.length, mPaint!!, mWidth)
+            .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+            .setTextDirection(TextDirectionHeuristics.LTR)
+            .setLineSpacing(mSpacingAdd, mSpacingMultiple)
+            .setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD)
+            .setBreakStrategy(LineBreaker.BREAK_STRATEGY_SIMPLE)
+            .setIncludePad(mIncludePad)
+            .build()
+
         val lines = layout.lineCount
         val text = layout.text
         var startOffset = 0
@@ -39,7 +47,8 @@ class Pagination(
                 // When the layout height has been exceeded
                 addPage(text.subSequence(startOffset, layout.getLineStart(i)))
                 startOffset = layout.getLineStart(i)
-                height = layout.getLineTop(i) + mHeight
+                height =
+                    layout.getLineTop(i) + mHeight - 35 // remove from height the new line where title fits
             }
             if (i == lines - 1) {
                 // Put the rest of the text into the last page
@@ -53,7 +62,7 @@ class Pagination(
         mPages!!.add(text)
     }
 
-    fun size(): Int {
+    fun getNumberOfPages(): Int {
         return mPages!!.size
     }
 

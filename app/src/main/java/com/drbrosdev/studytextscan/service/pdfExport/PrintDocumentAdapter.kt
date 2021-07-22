@@ -23,7 +23,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.graphics.withTranslation
 import java.io.FileOutputStream
 import java.io.IOException
-import kotlin.math.ceil
 
 /**
  * Custom Print Adapter
@@ -36,18 +35,22 @@ class MyPrintDocumentAdapter(
     private val fontSize: Int
 ) : PrintDocumentAdapter() {
 
+    private lateinit var myPdfDocument: PdfDocument
+    private lateinit var pagination: Pagination
+
     private var pageHeight: Int = 0
     private var pageWidth: Int = 0
-    private var myPdfDocument: PdfDocument? = null
-    private var totalPages = 4 // default
+    private var totalPages = 0
+
     private val titleFontSize = 40f
-    private var pagination: Pagination? = null
+    private val rightOffset = 70
+    private val titleBaseLine = 72
+    private val leftMargin = 42
+    private val newLine = 35
+    private val spacingAdd = 0F
+    private val spacingMulti = 1F
 
-    override fun onStart() {
-        super.onStart()
-        // any operation before printing
-    }
-
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onLayout(
         oldAttributes: PrintAttributes,
         newAttributes: PrintAttributes,
@@ -75,12 +78,31 @@ class MyPrintDocumentAdapter(
             return
         }
 
-        totalPages = computePageCount(newAttributes, text)
+        val mutableTextArray = mutableListOf<String>()
+        text.forEachIndexed { index, it -> mutableTextArray.add("$index) $it") }
+        var textToPrint = ""
+        mutableTextArray.forEach {
+            textToPrint += it
+        }
+
+        pagination = Pagination(
+            false,
+            pageWidth - rightOffset,
+            pageHeight - titleBaseLine - newLine,
+            1F,
+            0F,
+            textToPrint,
+            TextPaint(Paint.ANTI_ALIAS_FLAG),
+            mutableListOf()
+        )
+        Log.d("pagination", "Pagination created!")
+
+        totalPages = pagination.getNumberOfPages()
         Log.d("total_pages", "Total pages: $totalPages")
 
         if (totalPages > 0) {
             val builder =
-                PrintDocumentInfo.Builder("print_output.pdf")
+                PrintDocumentInfo.Builder("${titleOfDocument.replace(" ", "_").lowercase()}.pdf")
                     .setContentType(
                         PrintDocumentInfo.CONTENT_TYPE_DOCUMENT
                     )
@@ -100,8 +122,6 @@ class MyPrintDocumentAdapter(
         cancellationSignal: CancellationSignal,
         callback: WriteResultCallback
     ) {
-        val textArray2 = mutableListOf<String>()
-        text.forEachIndexed { index, it -> textArray2.add("$index) $it") }
 
         for (i in 0 until totalPages) {
             if (pageInRange(pageRanges, i)) {
@@ -111,29 +131,23 @@ class MyPrintDocumentAdapter(
                     i
                 ).create()
 
-                val page = myPdfDocument?.startPage(newPage)
+                val page = myPdfDocument.startPage(newPage)
 
                 if (cancellationSignal.isCanceled) {
                     callback.onWriteCancelled()
-                    myPdfDocument?.close()
-                    myPdfDocument = null
+                    myPdfDocument.close()
                     return
                 }
                 page?.let {
-                    drawPage(it, textArray2, i)
+                    drawPage(it, i)
                 }
-                myPdfDocument?.finishPage(page)
+                myPdfDocument.finishPage(page)
 
-                for (i2 in 0 until 39) { // Works, not well tested!
-                    if (textArray2.isNotEmpty()) {
-                        textArray2.removeAt(0)
-                    }
-                }
             }
         }
 
         try {
-            myPdfDocument?.writeTo(
+            myPdfDocument.writeTo(
                 FileOutputStream(
                     destination.fileDescriptor
                 )
@@ -142,8 +156,7 @@ class MyPrintDocumentAdapter(
             callback.onWriteFailed(e.toString())
             return
         } finally {
-            myPdfDocument?.close()
-            myPdfDocument = null
+            myPdfDocument.close()
         }
 
         callback.onWriteFinished(pageRanges)
@@ -153,15 +166,11 @@ class MyPrintDocumentAdapter(
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun drawPage(
         page: PdfDocument.Page,
-        textArrayToBePrinted: List<String>,
         pageNumber: Int
     ) {
         val canvas = page.canvas
 
-        val titleBaseLine = 72
-        val leftMargin = 42
-        val rightOffset = 70
-        val widht = pageWidth - rightOffset
+        val width = pageWidth - rightOffset
 
         val paint = Paint()
         paint.color = color
@@ -175,46 +184,14 @@ class MyPrintDocumentAdapter(
         )
 
         paint.textSize = fontSize.toFloat()
-        val newLine = 35 // new line start
-
-        var textToPrint = ""
-        textArrayToBePrinted.forEach {
-            textToPrint += it
-        }
 
         canvas.drawMultilineText(
-            textToPrint,
             TextPaint(Paint.ANTI_ALIAS_FLAG),
             leftMargin.toFloat(),
             (titleBaseLine + newLine).toFloat(),
-            widht,
+            width,
             pageNumber
         )
-    }
-
-    override fun onFinish() {
-        super.onFinish()
-        // clean up functionality
-    }
-
-    /**
-     * Computes number of pages
-     * @param text: text that needs to be printed
-     * @return number of pages
-     */
-    private fun computePageCount(printAttributes: PrintAttributes, text: List<String>): Int {
-        var itemsPerPage = 4 // default item count for portrait mode
-
-        val pageSize = printAttributes.mediaSize
-        if (pageSize != null && !pageSize.isPortrait) {
-            // Six items per page in landscape orientation
-            itemsPerPage = 6
-        }
-
-        // Determine number of print items
-        val printItemCount = 8
-
-        return ceil((printItemCount / itemsPerPage.toDouble())).toInt()
     }
 
     private fun pageInRange(pageRanges: Array<PageRange>, page: Int): Boolean {
@@ -227,7 +204,6 @@ class MyPrintDocumentAdapter(
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun Canvas.drawMultilineText(
-        text: CharSequence,
         textPaint: TextPaint,
         x: Float,
         y: Float,
@@ -235,34 +211,27 @@ class MyPrintDocumentAdapter(
         page: Int
     ) {
 
-        pagination = Pagination(
-            false,
-            pageWidth,
-            pageHeight,
-            0f,
-            0f,
-            text,
+        Log.d("draw", "Printing page: $page!")
+        val staticLayout = update(
+            page,
             textPaint,
-            mutableListOf()
+            width
         )
-
-        val staticLayout = update(page,textPaint, width)
 
         staticLayout.draw(this, x, y)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun update(index: Int, textPaint: TextPaint, width: Int): StaticLayout {
-        val text: CharSequence? = pagination!![index]
+        val text: CharSequence? = pagination[index]
+        Log.d("text", "Text for printing: $text")
         return StaticLayout.Builder
             .obtain(text!!, 0, text.length, textPaint, width)
             .setAlignment(Layout.Alignment.ALIGN_NORMAL)
             .setTextDirection(TextDirectionHeuristics.LTR)
-            .setLineSpacing(0F, 1F)
+            .setLineSpacing(spacingAdd, spacingMulti)
             .setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD)
             .setBreakStrategy(LineBreaker.BREAK_STRATEGY_SIMPLE)
-            .setIncludePad(true)
-            .setMaxLines(38)
             .build()
     }
 
@@ -271,88 +240,4 @@ class MyPrintDocumentAdapter(
             draw(this)
         }
     }
-
-
-    /**
-     * Determines print item count which later is used for
-     * determining how much pages we need for our document
-     * @param size: size of the text array that needs to be printed
-     * @return number of print items per page
-     */
-//    private fun computePrintItemCount(size: Int): Int {
-//        val numberOfPrintItemsPerPage = (size.toFloat() / 38)
-//        val comparingInteger = size / 38
-//        val checkNewPage = numberOfPrintItemsPerPage - comparingInteger.toFloat()
-//        var numberToReturn = size / 38
-//        if (checkNewPage > 0.50001) {
-//            numberToReturn += 1
-//        }
-//
-//        var printItemCount = 0
-//        while (numberToReturn > 0) {
-//            printItemCount += 4
-//            numberToReturn--
-//        }
-//        Log.d("print_item_count", "Print item count: $printItemCount")
-//        return printItemCount
-//    }
-
-    /**
-     * Compute text for printing line by line, since canvas draws every text in one line.
-     * First tested version of algorithm.
-     * Takes the text and and makes sure it is computed in multiple lines
-     * For every new row adds a '-' if it is not a sign of some sort(buggy)
-     * Algorithm needs to be extended and improved upon further testing -> @drljacan
-     * @param strings: list of strings for printing
-     * @return text that needs to be printed line by line
-     */
-//    private fun computeTextForPrinting(strings: List<String>): MutableList<String> {
-//        var text = createTextForPrinting(strings)
-//
-//        val stringBuilder = StringBuilder()
-//        val arrayListToReturn = mutableListOf<String>()
-//        val textArray = text.toCharArray()
-//        val textArraySize = textArray.size
-//
-//        var index2 = 0
-//
-//        textArray.forEachIndexed forEach@{ index, c ->
-//            if (checkIfCharIsSpace(c) && index2 == 0) return@forEach
-//            stringBuilder.append(c)
-//            if (index2 == 90) {
-//                if (!checkIfCharIsSign(c)) {
-//                    stringBuilder.append('-')
-//                }
-//                val textToPrint = stringBuilder.toString()
-//
-//                arrayListToReturn.add(textToPrint)
-//                stringBuilder.clear()
-//                index2 = 0
-//            } else {
-//                index2++
-//            }
-//            if (index == textArraySize - 1) {
-//                arrayListToReturn.add(stringBuilder.toString())
-//            }
-//        }
-//        return arrayListToReturn
-//    }
-
-//    private fun createTextForPrinting(strings: List<String>): String {
-//        var text = ""
-//        strings.forEachIndexed { index, it ->
-//            text += "$index) $it"
-//        }
-//        return text
-//    }
-//
-//    private fun checkIfCharIsSpace(char: Char): Boolean {
-//        if (char == ' ') return true
-//        return false
-//    }
-//
-//    private fun checkIfCharIsSign(c: Char): Boolean {
-//        if (c == '!' || c == ',' || c == '.') return true
-//        return false
-//    }
 }

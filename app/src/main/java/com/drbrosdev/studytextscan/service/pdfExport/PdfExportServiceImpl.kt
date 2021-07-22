@@ -25,7 +25,13 @@ class PdfExportServiceImpl : PdfExportService {
 
         printManager.print(
             jobName,
-            MyPrintDocumentAdapter(context, titleOfDocument, textList, color, fontSize),
+            MyPrintDocumentAdapter(
+                context,
+                titleOfDocument,
+                textList,
+                color,
+                fontSize
+            ),
             null
         )
     }
