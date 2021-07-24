@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
-import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -20,13 +20,11 @@ import com.drbrosdev.studytextscan.util.createLoadingDialog
 import com.drbrosdev.studytextscan.util.getColor
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
-import com.google.android.material.animation.MotionSpec
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizerOptions
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.lang.StringBuilder
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding()

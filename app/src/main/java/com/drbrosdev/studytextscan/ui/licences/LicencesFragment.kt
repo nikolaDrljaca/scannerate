@@ -6,13 +6,14 @@ import androidx.fragment.app.Fragment
 import androidx.transition.Fade
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentLicencesBinding
-import com.drbrosdev.studytextscan.ui.util.UserInterfaceUtil.Companion.allLicenceItems
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LicencesFragment : Fragment(R.layout.fragment_licences) {
 
     private val binding: FragmentLicencesBinding by viewBinding()
+    private val viewModel: LicenceViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -21,13 +22,12 @@ class LicencesFragment : Fragment(R.layout.fragment_licences) {
         enterTransition = Fade()
         exitTransition = Fade()
 
-        //TODO check!!!
         binding.apply {
             recyclerViewLicences.withModels {
-                licenceListItem {
-                    id("licence_list_item")
-                    allLicenceItems.forEach { licenceListItem ->
-                        licenceListItem(licenceListItem)
+                viewModel.allLicenceItems.forEach {
+                    licenceListItem {
+                        id("licence_list_item${it.order}")
+                        licenceListItem(it)
                     }
                 }
             }
