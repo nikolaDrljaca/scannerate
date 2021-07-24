@@ -12,5 +12,7 @@
     <string name="your_scans">Your Scans</string>
     <string name="feels_empty_here_create_some_scans">Feels empty here. Create some scans!</string>
     <string name="saving_code">Scanning...</string>
+    <string name="koin">Koin</string>
+    <string name="koin_github_link">https://github.com/InsertKoinIO/koin</string>
 
 </resources>

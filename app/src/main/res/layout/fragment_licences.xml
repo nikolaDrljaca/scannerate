@@ -18,56 +18,6 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="24sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:autoLink="web"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="16sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:background="?android:attr/listDivider"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="24sp"
-            android:text="Quickie" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:autoLink="web"
-            android:text="Text" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:background="?android:attr/listDivider"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="?android:attr/textColorPrimary"
             android:textSize="24sp"
             android:text="Coil" />
 
@@ -92,83 +42,14 @@
             android:padding="8dp"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="24sp"
-            android:text="Retrofit" />
+            android:text="@string/koin" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:autoLink="web"
-            android:text="https://github.com/square/retrofit" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:background="?android:attr/listDivider"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="24sp"
-            android:text="Lottie" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:autoLink="web"
-            android:text="http://airbnb.io/lottie/#/android" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:background="?android:attr/listDivider"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="24sp"
-            android:text="Lottie Animation by Manoj Kumar" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:autoLink="web"
-            android:text="https://lottiefiles.com/manoj61" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:background="?android:attr/listDivider"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="24sp"
-            android:text="Lottie Animation by Daniela Stella" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:autoLink="web"
-            android:text="https://lottiefiles.com/user/313969" />
+            android:text="@string/koin_github_link" />
 
         <View
             android:layout_width="match_parent"

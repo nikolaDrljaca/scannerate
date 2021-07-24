@@ -9,9 +9,7 @@ import com.drbrosdev.studytextscan.databinding.FragmentLicencesBinding
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
 
-class LicencesFragment: Fragment(R.layout.fragment_licences) {
-
-    //TODO add navigation!
+class LicencesFragment : Fragment(R.layout.fragment_licences) {
 
     private val binding: FragmentLicencesBinding by viewBinding()
 
