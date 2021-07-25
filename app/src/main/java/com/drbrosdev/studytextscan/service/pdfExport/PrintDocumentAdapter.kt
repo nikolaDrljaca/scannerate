@@ -1,9 +1,11 @@
 package com.drbrosdev.studytextscan.service.pdfExport
 
 import android.content.Context
-import android.graphics.Color
+import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
+import android.graphics.text.LineBreaker
+import android.os.Build
 import android.os.Bundle
 import android.os.CancellationSignal
 import android.os.ParcelFileDescriptor
@@ -12,28 +14,43 @@ import android.print.PrintAttributes
 import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import android.print.pdf.PrintedPdfDocument
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextDirectionHeuristics
+import android.text.TextPaint
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.graphics.withTranslation
 import java.io.FileOutputStream
 import java.io.IOException
-import kotlin.math.ceil
 
 /**
  * Custom Print Adapter
  */
 class MyPrintDocumentAdapter(
     private var context: Context,
-    private var text: String
+    private var titleOfDocument: String,
+    private var text: List<String>,
+    private val color: Int,
+    private val fontSize: Int
 ) : PrintDocumentAdapter() {
+
+    private lateinit var myPdfDocument: PdfDocument
+    private lateinit var pagination: Pagination
 
     private var pageHeight: Int = 0
     private var pageWidth: Int = 0
-    private var myPdfDocument: PdfDocument? = null
-    private var totalPages = 4 // Only for testing -> later we will have to determine the number of pages based on text length
+    private var totalPages = 0
 
-    override fun onStart() {
-        super.onStart()
-        // any operation before printing
-    }
+    private val titleFontSize = 40f
+    private val rightOffset = 70
+    private val titleBaseLine = 72
+    private val leftMargin = 42
+    private val newLine = 35
+    private val spacingAdd = 0F
+    private val spacingMulti = 1F
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onLayout(
         oldAttributes: PrintAttributes,
         newAttributes: PrintAttributes,
@@ -47,25 +64,48 @@ class MyPrintDocumentAdapter(
         val width = newAttributes.mediaSize?.heightMils
 
         height?.let {
-            pageHeight = it / 1000 * 72
+            pageHeight = it / 1000 * 89
         }
 
         width?.let {
             pageWidth = it / 1000 * 72
         }
 
+        Log.d("page_dimensions", "Page has width: $pageWidth and height: $pageHeight")
+
         if (cancellationSignal.isCanceled) {
             callback.onLayoutCancelled()
             return
         }
 
-        totalPages = computePageCount(newAttributes)
+        val mutableTextArray = mutableListOf<String>()
+        text.forEachIndexed { index, it -> mutableTextArray.add("$index) $it") }
+        var textToPrint = ""
+        mutableTextArray.forEach {
+            textToPrint += it
+        }
+
+        pagination = Pagination(
+            false,
+            pageWidth - rightOffset,
+            pageHeight - titleBaseLine - newLine,
+            1F,
+            0F,
+            textToPrint,
+            TextPaint(Paint.ANTI_ALIAS_FLAG),
+            mutableListOf()
+        )
+        Log.d("pagination", "Pagination created!")
+
+        totalPages = pagination.getNumberOfPages()
+        Log.d("total_pages", "Total pages: $totalPages")
 
         if (totalPages > 0) {
             val builder =
-                PrintDocumentInfo.Builder("print_output.pdf").setContentType(
-                    PrintDocumentInfo.CONTENT_TYPE_DOCUMENT
-                )
+                PrintDocumentInfo.Builder("${titleOfDocument.replace(" ", "_").lowercase()}.pdf")
+                    .setContentType(
+                        PrintDocumentInfo.CONTENT_TYPE_DOCUMENT
+                    )
                     .setPageCount(totalPages)
 
             val info = builder.build()
@@ -75,36 +115,39 @@ class MyPrintDocumentAdapter(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onWrite(
         pageRanges: Array<PageRange>,
         destination: ParcelFileDescriptor,
         cancellationSignal: CancellationSignal,
         callback: WriteResultCallback
     ) {
+
         for (i in 0 until totalPages) {
             if (pageInRange(pageRanges, i)) {
                 val newPage = PdfDocument.PageInfo.Builder(
                     pageWidth,
-                    pageHeight, i
+                    pageHeight,
+                    i
                 ).create()
 
-                val page = myPdfDocument?.startPage(newPage)
+                val page = myPdfDocument.startPage(newPage)
 
                 if (cancellationSignal.isCanceled) {
                     callback.onWriteCancelled()
-                    myPdfDocument?.close()
-                    myPdfDocument = null
+                    myPdfDocument.close()
                     return
                 }
                 page?.let {
                     drawPage(it, i)
                 }
-                myPdfDocument?.finishPage(page)
+                myPdfDocument.finishPage(page)
+
             }
         }
 
         try {
-            myPdfDocument?.writeTo(
+            myPdfDocument.writeTo(
                 FileOutputStream(
                     destination.fileDescriptor
                 )
@@ -113,65 +156,42 @@ class MyPrintDocumentAdapter(
             callback.onWriteFailed(e.toString())
             return
         } finally {
-            myPdfDocument?.close()
-            myPdfDocument = null
+            myPdfDocument.close()
         }
 
         callback.onWriteFinished(pageRanges)
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun drawPage(
         page: PdfDocument.Page,
         pageNumber: Int
     ) {
-        var pagenum = pageNumber
         val canvas = page.canvas
 
-        pagenum++ // Make sure page numbers start at 1
-
-        val titleBaseLine = 72
-        val leftMargin = 54
+        val width = pageWidth - rightOffset
 
         val paint = Paint()
-        paint.color = Color.BLACK
-        paint.textSize = 40f
+        paint.color = color
+        paint.textSize = titleFontSize
+
         canvas.drawText(
-            "Test Print Document Page $pagenum",
+            titleOfDocument,
             leftMargin.toFloat(),
             titleBaseLine.toFloat(),
             paint
         )
 
-        paint.textSize = 14f
-        canvas.drawText(
-            text,
+        paint.textSize = fontSize.toFloat()
+
+        canvas.drawMultilineText(
+            TextPaint(Paint.ANTI_ALIAS_FLAG),
             leftMargin.toFloat(),
-            (titleBaseLine + 35).toFloat(),
-            paint
+            (titleBaseLine + newLine).toFloat(),
+            width,
+            pageNumber
         )
-    }
-
-    override fun onFinish() {
-        super.onFinish()
-        // clean up functionality
-    }
-
-    private fun computePageCount(printAttributes: PrintAttributes): Int {
-        var itemsPerPage = 4 // default item count for portrait mode
-
-        val pageSize = printAttributes.mediaSize
-        if (pageSize != null) {
-            if (!pageSize.isPortrait) {
-                // Six items per page in landscape orientation
-                itemsPerPage = 6
-            }
-        }
-
-        // Determine number of print items
-        val printItemCount = 1 // one text for now
-
-        return ceil((printItemCount / itemsPerPage.toDouble())).toInt()
     }
 
     private fun pageInRange(pageRanges: Array<PageRange>, page: Int): Boolean {
@@ -180,5 +200,44 @@ class MyPrintDocumentAdapter(
                 return true
         }
         return false
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun Canvas.drawMultilineText(
+        textPaint: TextPaint,
+        x: Float,
+        y: Float,
+        width: Int,
+        page: Int
+    ) {
+
+        Log.d("draw", "Printing page: $page!")
+        val staticLayout = update(
+            page,
+            textPaint,
+            width
+        )
+
+        staticLayout.draw(this, x, y)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun update(index: Int, textPaint: TextPaint, width: Int): StaticLayout {
+        val text: CharSequence? = pagination[index]
+        Log.d("text", "Text for printing: $text")
+        return StaticLayout.Builder
+            .obtain(text!!, 0, text.length, textPaint, width)
+            .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+            .setTextDirection(TextDirectionHeuristics.LTR)
+            .setLineSpacing(spacingAdd, spacingMulti)
+            .setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD)
+            .setBreakStrategy(LineBreaker.BREAK_STRATEGY_SIMPLE)
+            .build()
+    }
+
+    private fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
+        canvas.withTranslation(x, y) {
+            draw(this)
+        }
     }
 }

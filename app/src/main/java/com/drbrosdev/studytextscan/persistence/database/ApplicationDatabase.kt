@@ -11,8 +11,7 @@ import com.drbrosdev.studytextscan.persistence.entity.Scan
     entities = [
         Scan::class
     ],
-    version = 1,
-    exportSchema = false
+    version = 1
 )
 @TypeConverters(
     DateConverter::class
