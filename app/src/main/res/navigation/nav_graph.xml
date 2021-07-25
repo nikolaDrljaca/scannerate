@@ -22,5 +22,13 @@
     <fragment
         android:id="@+id/infoFragment"
         android:name="com.drbrosdev.studytextscan.ui.info.InfoFragment"
-        android:label="InfoFragment" />
+        android:label="InfoFragment" >
+        <action
+            android:id="@+id/action_infoFragment_to_licencesFragment"
+            app:destination="@id/licencesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/licencesFragment"
+        android:name="com.drbrosdev.studytextscan.ui.licences.LicencesFragment"
+        android:label="LicencesFragment" />
 </navigation>

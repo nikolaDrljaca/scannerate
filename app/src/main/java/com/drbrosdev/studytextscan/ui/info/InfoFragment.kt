@@ -3,8 +3,10 @@ package com.drbrosdev.studytextscan.ui.info
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.transition.Fade
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.BuildConfig
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentInfoBinding
@@ -37,6 +39,11 @@ class InfoFragment: Fragment(R.layout.fragment_info) {
                 startActivity(Intent(Intent.ACTION_VIEW, page))
             }
 
+            ibLinkedInOgnjen.setOnClickListener {
+                val page = Uri.parse(getString(R.string.ognjen_linkedin_url))
+                startActivity(Intent(Intent.ACTION_VIEW, page))
+            }
+
             tvRateApp.setOnClickListener {
                 val page = Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
                 startActivity(Intent(Intent.ACTION_VIEW, page))
@@ -49,7 +56,6 @@ class InfoFragment: Fragment(R.layout.fragment_info) {
             }
 
             tvReportBug.setOnClickListener {
-                //TODO check which string is used!
                 val addresses = arrayOf(getString(R.string.mail_nikola), getString(R.string.mail_ognjen))
                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                     data = Uri.parse("mailto:")
@@ -65,7 +71,6 @@ class InfoFragment: Fragment(R.layout.fragment_info) {
             }
 
             tvShare.setOnClickListener {
-                //TODO check which text is used
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, "share_text")
@@ -76,10 +81,8 @@ class InfoFragment: Fragment(R.layout.fragment_info) {
             }
 
             tvLicenses.setOnClickListener {
-                //TODO check what is here to be done
-//                findNavController().navigate(R.id.action_homeScanFragment_to_detailScanFragment)
-//                reenterTransition = Fade()
-                showShortToast("Licences clicked")
+                findNavController().navigate(R.id.action_infoFragment_to_licencesFragment)
+                reenterTransition = Fade()
             }
 
         }
