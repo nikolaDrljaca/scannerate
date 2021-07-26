@@ -8,24 +8,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
 import com.drbrosdev.studytextscan.util.collectStateFlow
+import com.drbrosdev.studytextscan.util.dateAsString
 import com.drbrosdev.studytextscan.util.getColor
 import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
 import com.google.android.material.transition.MaterialSharedAxis
-import org.w3c.dom.Text
 import java.util.*
-import kotlin.concurrent.timerTask
 
 
 class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
@@ -51,7 +48,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         collectStateFlow(viewModel.viewState) { state ->
             state.scan()?.let { scan ->
                 binding.apply {
-                    textViewDate.text = scan.dateCreated
+                    textViewDate.text = dateAsString(scan.dateCreated)
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
 
 
