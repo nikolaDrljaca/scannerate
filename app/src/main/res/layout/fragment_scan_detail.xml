@@ -40,10 +40,10 @@
             android:textColor="@color/text_gray"
             android:textSize="20sp"
             app:layout_constraintTop_toBottomOf="@id/guideline5"
-            android:text="12.07.2021" />
+            tools:text="12.07.2021" />
 
         <EditText
-            android:id="@+id/et_scan_content"
+            android:id="@+id/edit_text_scan_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@null"
@@ -85,6 +85,7 @@
         android:paddingBottom="18dp">
 
         <ImageView
+            android:id="@+id/image_view_copy"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_weight="1"
@@ -92,6 +93,7 @@
             android:src="@drawable/ic_round_content_copy_24" />
 
         <ImageView
+            android:id="@+id/image_view_share"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_weight="1"
@@ -99,6 +101,7 @@
             android:src="@drawable/ic_round_share_24" />
 
         <ImageView
+            android:id="@+id/image_view_voice"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_weight="1"
@@ -106,6 +109,7 @@
             android:src="@drawable/ic_round_record_voice_over_24" />
 
         <ImageView
+            android:id="@+id/image_view_translate"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_weight="1"
