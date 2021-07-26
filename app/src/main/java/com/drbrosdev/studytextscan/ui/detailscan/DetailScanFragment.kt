@@ -1,14 +1,19 @@
 package com.drbrosdev.studytextscan.ui.detailscan
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,6 +23,7 @@ import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.dateAsString
 import com.drbrosdev.studytextscan.util.getColor
+import com.drbrosdev.studytextscan.util.showShortToast
 import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
@@ -61,6 +67,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
          */
         binding.apply {
             imageViewBack.setOnClickListener {
+                hideKeyboardFrom(requireContext(), it)
                 findNavController().navigateUp()
             }
 
@@ -69,6 +76,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                 todo here first display a dialog to confirm deletion and then navigate back
                 if confirmed using findNavController.navigateUp()
                  */
+                deleteAlertDialog()
             }
 
             imageViewCopy.setOnClickListener {
@@ -148,5 +156,36 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
          */
         if (this::textToSpeech.isInitialized) textToSpeech.stop()
         super.onDestroyView()
+    }
+
+    private fun hideKeyboardFrom(context: Context, view: View) {
+        val imm: InputMethodManager =
+            context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun deleteAlertDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Title")
+        alertDialogBuilder.setMessage("Message")
+        alertDialogBuilder.setPositiveButton("Yes") { dialog, which ->
+            showShortToast("Message Yes")
+        }
+        alertDialogBuilder.setNegativeButton("No") { dialog, which ->
+            showShortToast("Message No")
+        }
+        val built = alertDialogBuilder.create()
+        built.show()
+        val buttonYes = built.getButton(DialogInterface.BUTTON_POSITIVE)
+        with(buttonYes) {
+            setBackgroundColor(Color.BLACK)
+            setTextColor(Color.WHITE)
+        }
+        val buttonNo = built.getButton(DialogInterface.BUTTON_NEGATIVE)
+        with(buttonNo) {
+            setBackgroundColor(Color.BLACK)
+            setTextColor(Color.WHITE)
+            setPadding(20, 0, 20, 0)
+        }
     }
 }

@@ -12,8 +12,6 @@ class DetailScanViewModel(
     //private val repo: ScanRepository
 ) : ViewModel() {
 
-    private val scanId = savedStateHandle.get<Int>("scan_id")
-
     private val _viewState = MutableStateFlow(DetailScanState())
     val viewState: StateFlow<DetailScanState> = _viewState
 

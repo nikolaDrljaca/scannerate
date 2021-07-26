@@ -1,9 +1,9 @@
 package com.drbrosdev.studytextscan.ui.licences
 
 import android.os.Bundle
+import android.transition.Fade
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.transition.Fade
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentLicencesBinding
 import com.drbrosdev.studytextscan.util.updateWindowInsets
@@ -20,7 +20,7 @@ class LicencesFragment : Fragment(R.layout.fragment_licences) {
         updateWindowInsets(binding.root)
 
         enterTransition = Fade()
-        exitTransition = Fade()
+        returnTransition = Fade()
 
         binding.apply {
             recyclerViewLicences.withModels {
