@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="About the app"
+                android:text="@string/about_the_app"
                 android:textColor="@color/detail_text_title_color"
                 android:gravity="center"
                 android:textStyle="bold"
@@ -55,15 +55,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Version: 1.0"
                 android:textSize="14sp"
-                android:textColor="@color/detail_text_title_color"/>
+                android:textColor="@color/detail_text_title_color"
+                android:id="@+id/tvVersion"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/placeholder_text_about_us_and_the_app"
+                android:text="@string/app_description"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColorPrimary"/>
 
@@ -82,7 +82,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Developers"
+                android:text="@string/developers"
                 android:textColor="@color/detail_text_title_color"
                 android:gravity="center"
                 android:textStyle="bold"
@@ -92,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Nikola Drljaca"
+                android:text="@string/nikola_drljaca"
                 android:textSize="16sp"
                 android:textColor="@color/detail_text_title_color"/>
 
@@ -101,22 +101,39 @@
                 android:layout_height="35dp"
                 android:src="@drawable/github_logo"
                 android:layout_marginTop="14dp"
-                android:layout_marginBottom="14dp"/>
+                android:layout_marginBottom="14dp"
+                android:id="@+id/ibGitNikola"
+                />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Ognjen Drljaca"
+                android:text="@string/ognjen_drljaca"
                 android:textSize="16sp"
                 android:textColor="@color/detail_text_title_color"/>
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/github_logo"
-                android:layout_marginTop="14dp"
-                android:layout_marginBottom="14dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/github_logo"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:id="@+id/ibGitOgnjen"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/linkedin"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:id="@+id/ibLinkedInOgnjen"
+                    android:layout_weight="1"/>
+            </LinearLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
