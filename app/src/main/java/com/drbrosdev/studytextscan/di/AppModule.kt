@@ -12,14 +12,10 @@ private fun provideDatabase(context: Context) =
         context,
         ApplicationDatabase::class.java,
         "posts_database"
-    )
-        .allowMainThreadQueries()
-        .fallbackToDestructiveMigration()
-        .build()
+    ).fallbackToDestructiveMigration().build()
 
 private fun providePdfExportService() =
     PdfExportServiceImpl()
-
 
 val appModule = module {
     single { provideDatabase(context = androidContext()) }
