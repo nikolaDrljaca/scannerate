@@ -104,3 +104,21 @@ fun Fragment.createLoadingDialog(): AlertDialog {
         .setView(inflater.inflate(R.layout.dialog_loading, null))
         .create()
 }
+
+fun Fragment.showConfirmDialog(
+    title: String = getString(R.string.are_you_sure),
+    message: String = "",
+    onPositiveClick: () -> Unit
+) {
+    MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+            onPositiveClick()
+            dialog.dismiss()
+        }
+        .setNegativeButton(getString(R.string.no)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        .create().show()
+}

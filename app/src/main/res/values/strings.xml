@@ -22,5 +22,8 @@
     <string name="about_the_app">About the app</string>
     <string name="ognjen_linkedin_url">https://www.linkedin.com/in/ognjen-drljaca-b57a251b6/</string>
     <string name="app_description"><![CDATA[<App_Name> helps you scan text from images on your device. Scan your desired image, and edit the text that was scanned at any time. Export your text to a PDF file and use it everywhere!]]></string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

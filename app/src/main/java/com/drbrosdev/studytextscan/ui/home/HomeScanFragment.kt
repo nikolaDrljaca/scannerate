@@ -92,7 +92,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 onScanClicked {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                    val arg = bundleOf("scan_id" to it.scanId)
+                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
                                     findNavController().navigate(
                                         R.id.action_homeScanFragment_to_detailScanFragment,
                                         arg

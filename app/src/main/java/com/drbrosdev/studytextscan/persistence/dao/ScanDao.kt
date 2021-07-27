@@ -1,6 +1,7 @@
 package com.drbrosdev.studytextscan.persistence.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.drbrosdev.studytextscan.persistence.entity.Scan
@@ -13,4 +14,10 @@ interface ScanDao {
 
     @Insert
     suspend fun insertScan(scan: Scan): Long
+
+    @Delete
+    suspend fun deleteScan(scan: Scan)
+
+    @Query("SELECT * FROM scan WHERE scan_id=:id")
+    suspend fun getScanById(id: Int): Scan
 }
