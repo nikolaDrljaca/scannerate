@@ -11,6 +11,8 @@ class MainActivity : AppCompatActivity() {
         /*
         Tells the activity to draw UI behind system bars.
          */
+
+        supportActionBar?.hide()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
     }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeScanFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/homeScanFragment"
@@ -31,4 +32,31 @@
         android:id="@+id/licencesFragment"
         android:name="com.drbrosdev.studytextscan.ui.licences.LicencesFragment"
         android:label="LicencesFragment" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.drbrosdev.studytextscan.ui.onBoarding.screens.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_viewPagerFragment"
+            app:destination="@id/viewPagerFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_homeScanFragment"
+            app:destination="@id/homeScanFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewPagerFragment"
+        android:name="com.drbrosdev.studytextscan.ui.onBoarding.ViewPagerFragment"
+        android:label="fragment_view_pager"
+        tools:layout="@layout/fragment_view_pager" >
+        <action
+            android:id="@+id/action_viewPagerFragment_to_homeScanFragment"
+            app:destination="@id/homeScanFragment"
+            app:popUpTo="@id/viewPagerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
