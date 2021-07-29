@@ -2,6 +2,8 @@ package com.drbrosdev.studytextscan.util
 
 import android.app.Activity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AlertDialog
@@ -121,4 +123,11 @@ fun Fragment.showConfirmDialog(
             dialog.dismiss()
         }
         .create().show()
+}
+
+fun Fragment.showKeyboardOnEditText(editText: EditText) {
+    editText.requestFocus()
+    val imm: InputMethodManager =
+        requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
 }

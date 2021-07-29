@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
 import com.drbrosdev.studytextscan.util.setState
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -18,6 +19,7 @@ class DetailScanViewModel(
 ) : ViewModel() {
 
     private val scanId = savedStateHandle.get<Int>("scan_id") ?: 0
+    private val isJustCreated = savedStateHandle.get<Int>("is_created") ?: 0
 
     private val _viewState = MutableStateFlow(DetailScanState())
     val viewState: StateFlow<DetailScanState> = _viewState
@@ -41,6 +43,8 @@ class DetailScanViewModel(
     private fun initializeScan() = viewModelScope.launch {
         repo.getScanById(scanId).collect {
             _viewState.setState { copy(scan = it) }
+            delay(100)
+            if (isJustCreated == 1) _events.send(DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad)
         }
     }
 }

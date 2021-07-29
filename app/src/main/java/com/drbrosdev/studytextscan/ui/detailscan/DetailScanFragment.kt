@@ -19,10 +19,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
+import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.dateAsString
 import com.drbrosdev.studytextscan.util.getColor
 import com.drbrosdev.studytextscan.util.showConfirmDialog
+import com.drbrosdev.studytextscan.util.showKeyboardOnEditText
 import com.drbrosdev.studytextscan.util.showShortToast
 import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
@@ -63,6 +65,14 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             }
         }
 
+        collectFlow(viewModel.events) {
+            when(it) {
+                DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad -> {
+                    showKeyboardOnEditText(binding.editTextScanTitle)
+                }
+            }
+        }
+
         /*
         Click events
          */
@@ -75,6 +85,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             imageViewDelete.setOnClickListener {
                 showConfirmDialog(message = "This will delete the scanned text.") {
                     viewModel.deleteScan()
+                    hideKeyboardFrom(requireContext(), it)
                     findNavController().navigateUp()
                 }
             }
@@ -146,7 +157,6 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {
