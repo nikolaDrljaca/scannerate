@@ -43,6 +43,10 @@ class DetailScanViewModel(
     private fun initializeScan() = viewModelScope.launch {
         repo.getScanById(scanId).collect {
             _viewState.setState { copy(scan = it) }
+            /*
+            delay allows views to instantiate so focusing can work
+            This works, later possibly look for a 'more elegant' solution.
+             */
             delay(100)
             if (isJustCreated == 1) _events.send(DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad)
         }
