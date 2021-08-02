@@ -41,6 +41,15 @@ class DetailScanViewModel(
         current?.let { repo.deleteScan(it) }
     }
 
+    fun onNavigateUp(title: String, content: String) = viewModelScope.launch {
+        _viewState.value.scan()?.let {
+            if (it.scanTitle != title || it.scanText != content)
+                _events.send(DetailScanEvents.ShowUnsavedChanges)
+            else
+                _events.send(DetailScanEvents.NavigateUp)
+        }
+    }
+
     fun updateScan(title: String, content: String) {
         viewModelScope.launch {
             _viewState.value.scan()?.let { scan ->

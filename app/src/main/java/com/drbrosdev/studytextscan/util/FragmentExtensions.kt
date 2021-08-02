@@ -110,7 +110,8 @@ fun Fragment.createLoadingDialog(): AlertDialog {
 fun Fragment.showConfirmDialog(
     title: String = getString(R.string.are_you_sure),
     message: String = "",
-    onPositiveClick: () -> Unit
+    onPositiveClick: () -> Unit,
+    onNegativeClick: () -> Unit = {}
 ) {
     MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
         .setTitle(title)
@@ -120,6 +121,7 @@ fun Fragment.showConfirmDialog(
             dialog.dismiss()
         }
         .setNegativeButton(getString(R.string.no)) { dialog, _ ->
+            onNegativeClick()
             dialog.dismiss()
         }
         .create().show()
