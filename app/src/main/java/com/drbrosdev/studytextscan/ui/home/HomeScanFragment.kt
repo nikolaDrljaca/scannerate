@@ -121,7 +121,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
             when (homeEvents) {
                 is HomeEvents.ShowCurrentScanSaved -> {
                     loadingDialog.hide()
-                    val arg = bundleOf("scan_id" to homeEvents.id)
+                    val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
                     findNavController().navigate(
                         R.id.action_homeScanFragment_to_detailScanFragment,
                         arg

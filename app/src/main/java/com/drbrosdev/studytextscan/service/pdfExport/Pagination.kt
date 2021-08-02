@@ -1,15 +1,11 @@
 package com.drbrosdev.studytextscan.service.pdfExport
 
-import android.graphics.text.LineBreaker
-import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
-import android.text.TextDirectionHeuristics
-
 import android.text.TextPaint
-import androidx.annotation.RequiresApi
+import android.text.TextUtils
+import android.util.Log
 
-@RequiresApi(Build.VERSION_CODES.Q)
 class Pagination(
     private var mIncludePad: Boolean = false,
     private var mWidth: Int = 0,
@@ -25,18 +21,21 @@ class Pagination(
         layout()
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun layout() {
 
-        val layout = StaticLayout.Builder
-            .obtain(mText!!, 0, mText!!.length, mPaint!!, mWidth)
-            .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-            .setTextDirection(TextDirectionHeuristics.LTR)
-            .setLineSpacing(mSpacingAdd, mSpacingMultiple)
-            .setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD)
-            .setBreakStrategy(LineBreaker.BREAK_STRATEGY_SIMPLE)
-            .setIncludePad(mIncludePad)
-            .build()
+        val layout = StaticLayout(
+            mText!!,
+            0,
+            mText!!.length,
+            mPaint!!,
+            mWidth,
+            Layout.Alignment.ALIGN_CENTER,
+            mSpacingMultiple,
+            mSpacingAdd,
+            mIncludePad,
+            TextUtils.TruncateAt.START,
+            0
+        )
 
         val lines = layout.lineCount
         val text = layout.text
@@ -53,6 +52,7 @@ class Pagination(
             if (i == lines - 1) {
                 // Put the rest of the text into the last page
                 addPage(text.subSequence(startOffset, layout.getLineEnd(i)))
+                Log.d("pagination_finished", "Pagination finished! Number of pages: ${getNumberOfPages()}")
                 return
             }
         }

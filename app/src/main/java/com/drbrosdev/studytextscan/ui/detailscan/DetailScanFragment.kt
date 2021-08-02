@@ -15,14 +15,18 @@ import android.speech.tts.TextToSpeech
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
+import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.dateAsString
 import com.drbrosdev.studytextscan.util.getColor
+import com.drbrosdev.studytextscan.util.hideKeyboard
 import com.drbrosdev.studytextscan.util.showConfirmDialog
+import com.drbrosdev.studytextscan.util.showKeyboardOnEditText
 import com.drbrosdev.studytextscan.util.showShortToast
 import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
@@ -55,10 +59,47 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         collectStateFlow(viewModel.viewState) { state ->
             state.scan()?.let { scan ->
                 binding.apply {
-                    textViewDate.text = dateAsString(scan.dateCreated)
+                    textViewDateCreated.text = "Created: ${dateAsString(scan.dateCreated)}"
+                    textViewDateModified.text = "Modified: ${dateAsString(scan.dateModified)}"
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
+                    editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
 
 
+                }
+            }
+        }
+
+        collectFlow(viewModel.events) {
+            when (it) {
+                is DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad -> {
+                    showKeyboardOnEditText(binding.editTextScanTitle)
+                }
+                is DetailScanEvents.ShowScanUpdated -> {
+                    showSnackbarShort("Scan updated.", anchor = binding.imageViewCopy)
+                }
+                is DetailScanEvents.ShowUnsavedChanges -> {
+                    showConfirmDialog(
+                        title = "Save changes?",
+                        message = "There seem to be unsaved changes.",
+                        onPositiveClick = {
+                            binding.apply {
+                                viewModel.updateScan(
+                                    title = editTextScanTitle.text.toString(),
+                                    content = editTextScanContent.text.toString()
+                                )
+                            }
+                            hideKeyboard()
+                            findNavController().navigateUp()
+                        },
+                        onNegativeClick = {
+                            hideKeyboard()
+                            findNavController().navigateUp()
+                        }
+                    )
+                }
+                is DetailScanEvents.NavigateUp -> {
+                    hideKeyboard()
+                    findNavController().navigateUp()
                 }
             }
         }
@@ -67,16 +108,30 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         Click events
          */
         binding.apply {
+            imageViewSave.setOnClickListener {
+                viewModel.updateScan(
+                    title = editTextScanTitle.text.toString(),
+                    content = editTextScanContent.text.toString()
+                )
+                hideKeyboard()
+            }
+
             imageViewBack.setOnClickListener {
-                hideKeyboardFrom(requireContext(), it)
-                findNavController().navigateUp()
+                viewModel.onNavigateUp(
+                    title = editTextScanTitle.text.toString(),
+                    content = editTextScanContent.text.toString()
+                )
             }
 
             imageViewDelete.setOnClickListener {
-                showConfirmDialog(message = "This will delete the scanned text.") {
-                    viewModel.deleteScan()
-                    findNavController().navigateUp()
-                }
+                showConfirmDialog(
+                    message = "This will delete the scanned text.",
+                    onPositiveClick = {
+                        viewModel.deleteScan()
+                        hideKeyboard()
+                        findNavController().navigateUp()
+                    }
+                )
             }
 
             imageViewCopy.setOnClickListener {
@@ -146,7 +201,6 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {
@@ -156,12 +210,6 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
          */
         if (this::textToSpeech.isInitialized) textToSpeech.stop()
         super.onDestroyView()
-    }
-
-    private fun hideKeyboardFrom(context: Context, view: View) {
-        val imm: InputMethodManager =
-            context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 //    private fun deleteAlertDialog() {

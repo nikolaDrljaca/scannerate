@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
+import com.drbrosdev.studytextscan.util.getCurrentDateTime
 import com.drbrosdev.studytextscan.util.setState
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -18,6 +20,7 @@ class DetailScanViewModel(
 ) : ViewModel() {
 
     private val scanId = savedStateHandle.get<Int>("scan_id") ?: 0
+    private val isJustCreated = savedStateHandle.get<Int>("is_created") ?: 0
 
     private val _viewState = MutableStateFlow(DetailScanState())
     val viewState: StateFlow<DetailScanState> = _viewState
@@ -38,9 +41,37 @@ class DetailScanViewModel(
         current?.let { repo.deleteScan(it) }
     }
 
-    private fun initializeScan() = viewModelScope.launch {
+    fun onNavigateUp(title: String, content: String) = viewModelScope.launch {
+        _viewState.value.scan()?.let {
+            if (it.scanTitle != title || it.scanText != content)
+                _events.send(DetailScanEvents.ShowUnsavedChanges)
+            else
+                _events.send(DetailScanEvents.NavigateUp)
+        }
+    }
+
+    fun updateScan(title: String, content: String) {
+        viewModelScope.launch {
+            _viewState.value.scan()?.let { scan ->
+                val updated = scan.copy(scanTitle = title, scanText = content, dateModified = getCurrentDateTime())
+                repo.updateScan(updated)
+                _events.send(DetailScanEvents.ShowScanUpdated)
+                initializeScan(false)
+                return@launch
+            }
+            //maybe send event if something fails?
+        }
+    }
+
+    private fun initializeScan(showKeyboard: Boolean = true) = viewModelScope.launch {
         repo.getScanById(scanId).collect {
             _viewState.setState { copy(scan = it) }
+            /*
+            delay allows views to instantiate so focusing can work
+            This works, later possibly look for a 'more elegant' solution.
+             */
+            delay(100)
+            if (isJustCreated == 1 && showKeyboard) _events.send(DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad)
         }
     }
 }

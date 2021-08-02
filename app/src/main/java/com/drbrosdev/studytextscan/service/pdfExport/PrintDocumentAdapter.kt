@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
-import android.graphics.text.LineBreaker
-import android.os.Build
 import android.os.Bundle
 import android.os.CancellationSignal
 import android.os.ParcelFileDescriptor
@@ -16,10 +14,9 @@ import android.print.PrintDocumentInfo
 import android.print.pdf.PrintedPdfDocument
 import android.text.Layout
 import android.text.StaticLayout
-import android.text.TextDirectionHeuristics
 import android.text.TextPaint
+import android.text.TextUtils
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.graphics.withTranslation
 import java.io.FileOutputStream
 import java.io.IOException
@@ -50,7 +47,6 @@ class MyPrintDocumentAdapter(
     private val spacingAdd = 0F
     private val spacingMulti = 1F
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onLayout(
         oldAttributes: PrintAttributes,
         newAttributes: PrintAttributes,
@@ -111,11 +107,11 @@ class MyPrintDocumentAdapter(
             val info = builder.build()
             callback.onLayoutFinished(info, true)
         } else {
+            Log.e("on_layout", "Page count is zero.")
             callback.onLayoutFailed("Page count is zero.")
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onWrite(
         pageRanges: Array<PageRange>,
         destination: ParcelFileDescriptor,
@@ -162,12 +158,12 @@ class MyPrintDocumentAdapter(
         callback.onWriteFinished(pageRanges)
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun drawPage(
         page: PdfDocument.Page,
         pageNumber: Int
     ) {
+        Log.d("draw_page", "Writing page number: $pageNumber")
+
         val canvas = page.canvas
 
         val width = pageWidth - rightOffset
@@ -202,8 +198,7 @@ class MyPrintDocumentAdapter(
         return false
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    fun Canvas.drawMultilineText(
+    private fun Canvas.drawMultilineText(
         textPaint: TextPaint,
         x: Float,
         y: Float,
@@ -211,7 +206,7 @@ class MyPrintDocumentAdapter(
         page: Int
     ) {
 
-        Log.d("draw", "Printing page: $page!")
+        Log.d("draw_multiline_text", "Printing page: $page!")
         val staticLayout = update(
             page,
             textPaint,
@@ -221,18 +216,22 @@ class MyPrintDocumentAdapter(
         staticLayout.draw(this, x, y)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun update(index: Int, textPaint: TextPaint, width: Int): StaticLayout {
         val text: CharSequence? = pagination[index]
-        Log.d("text", "Text for printing: $text")
-        return StaticLayout.Builder
-            .obtain(text!!, 0, text.length, textPaint, width)
-            .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-            .setTextDirection(TextDirectionHeuristics.LTR)
-            .setLineSpacing(spacingAdd, spacingMulti)
-            .setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD)
-            .setBreakStrategy(LineBreaker.BREAK_STRATEGY_SIMPLE)
-            .build()
+        Log.d("update", "Text for printing: $text")
+        return StaticLayout(
+            text!!,
+            0,
+            text.length,
+            textPaint,
+            width,
+            Layout.Alignment.ALIGN_CENTER,
+            spacingMulti,
+            spacingAdd,
+            false,
+            TextUtils.TruncateAt.START,
+            0
+        )
     }
 
     private fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {

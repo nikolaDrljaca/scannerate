@@ -28,18 +28,41 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginBottom="12dp"
+            android:layout_marginEnd="12dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_round_delete_24"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/image_view_save" />
+
+        <ImageView
+            android:id="@+id/image_view_save"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/guideline5"
+            android:src="@drawable/ic_round_done_24"
+            android:background="@drawable/save_button_background"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            />
 
         <TextView
-            android:id="@+id/text_view_date"
+            android:id="@+id/text_view_date_created"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_gray"
-            android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/guideline5"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_scan_title"
+            tools:text="12.07.2021" />
+
+        <TextView
+            android:id="@+id/text_view_date_modified"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/text_gray"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_date_created"
             tools:text="12.07.2021" />
 
         <EditText
@@ -51,12 +74,27 @@
             android:gravity="start"
             android:inputType="textCapSentences|textMultiLine"
             android:textColor="@color/detail_text_title_color"
-            android:textSize="24sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/guideline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_date"
+            app:layout_constraintTop_toBottomOf="@id/text_view_date_modified"
             tools:text="Placeholder content of a scan" />
+
+        <EditText
+            android:id="@+id/edit_text_scan_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:gravity="start"
+            android:inputType="textCapSentences|textMultiLine"
+            android:textColor="@color/detail_text_title_color"
+            android:textSize="22sp"
+            android:maxLines="1"
+            android:hint="@string/enter_title"
+            app:layout_constraintTop_toTopOf="@id/guideline5"
+            tools:text="Placeholder Title" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline5"
