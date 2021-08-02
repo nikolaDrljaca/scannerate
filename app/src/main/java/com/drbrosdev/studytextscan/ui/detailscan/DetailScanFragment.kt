@@ -63,8 +63,6 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     textViewDateModified.text = "Modified: ${dateAsString(scan.dateModified)}"
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
                     editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
-
-
                 }
             }
         }
@@ -211,29 +209,4 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         if (this::textToSpeech.isInitialized) textToSpeech.stop()
         super.onDestroyView()
     }
-
-//    private fun deleteAlertDialog() {
-//        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-//        alertDialogBuilder.setTitle("Title")
-//        alertDialogBuilder.setMessage("Message")
-//        alertDialogBuilder.setPositiveButton("Yes") { dialog, which ->
-//            showShortToast("Message Yes")
-//        }
-//        alertDialogBuilder.setNegativeButton("No") { dialog, which ->
-//            showShortToast("Message No")
-//        }
-//        val built = alertDialogBuilder.create()
-//        built.show()
-//        val buttonYes = built.getButton(DialogInterface.BUTTON_POSITIVE)
-//        with(buttonYes) {
-//            setBackgroundColor(Color.BLACK)
-//            setTextColor(Color.WHITE)
-//        }
-//        val buttonNo = built.getButton(DialogInterface.BUTTON_NEGATIVE)
-//        with(buttonNo) {
-//            setBackgroundColor(Color.BLACK)
-//            setTextColor(Color.WHITE)
-//            setPadding(20, 0, 20, 0)
-//        }
-//    }
 }
