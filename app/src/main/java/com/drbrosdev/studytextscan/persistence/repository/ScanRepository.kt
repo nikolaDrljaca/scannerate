@@ -14,6 +14,7 @@ class ScanRepository(
 
     suspend fun insertScan(scan: Scan) = dao.insertScan(scan)
     suspend fun deleteScan(scan: Scan) = dao.deleteScan(scan)
+    suspend fun updateScan(scan: Scan) = dao.updateScan(scan)
 
     fun getScanById(id: Int) = flow<Resource<Scan>> {
         emit(Resource.Loading())

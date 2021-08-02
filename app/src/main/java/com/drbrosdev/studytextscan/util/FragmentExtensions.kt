@@ -131,3 +131,9 @@ fun Fragment.showKeyboardOnEditText(editText: EditText) {
         requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
 }
+
+fun Fragment.hideKeyboard() {
+    val imm: InputMethodManager =
+        requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+}

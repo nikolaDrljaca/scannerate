@@ -49,8 +49,11 @@ abstract class ScanListItemEpoxyModel :
     lateinit var onScanClicked: (Scan) -> Unit
 
     override fun ScanListItemBinding.bind() {
-        textViewDate.text = dateAsString(scan.dateCreated)
-        textViewTitle.text = scan.scanText.lines()[0]
+        val title = if (scan.scanTitle.isEmpty()) scan.scanText.lines()[0]
+            else scan.scanTitle
+
+        textViewDate.text = dateAsString(scan.dateModified)
+        textViewTitle.text = title
         textViewContent.text = scan.scanText
         card.setOnClickListener { onScanClicked(scan) }
     }

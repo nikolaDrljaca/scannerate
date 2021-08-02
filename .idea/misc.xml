@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/fragment_scan_detail.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/drawable/info_section_background.xml" value="0.23066666666666666" />
+        <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/drawable/save_button_background.xml" value="0.23066666666666666" />
+        <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/fragment_scan_detail.xml" value="0.19166666666666668" />
       </map>
     </option>
   </component>

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
+import com.drbrosdev.studytextscan.util.getCurrentDateTime
 import com.drbrosdev.studytextscan.util.setState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -38,6 +39,18 @@ class DetailScanViewModel(
     fun deleteScan() = viewModelScope.launch {
         val current = _viewState.value.scan()
         current?.let { repo.deleteScan(it) }
+    }
+
+    fun updateScan(title: String, content: String) {
+        viewModelScope.launch {
+            _viewState.value.scan()?.let { scan ->
+                val updated = scan.copy(scanTitle = title, scanText = content, dateModified = getCurrentDateTime())
+                repo.updateScan(updated)
+                _events.send(DetailScanEvents.ShowScanUpdated)
+                return@launch
+            }
+            //maybe send event if something fails?
+        }
     }
 
     private fun initializeScan() = viewModelScope.launch {

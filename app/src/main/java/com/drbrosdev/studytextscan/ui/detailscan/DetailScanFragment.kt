@@ -15,6 +15,7 @@ import android.speech.tts.TextToSpeech
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
@@ -23,6 +24,7 @@ import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.dateAsString
 import com.drbrosdev.studytextscan.util.getColor
+import com.drbrosdev.studytextscan.util.hideKeyboard
 import com.drbrosdev.studytextscan.util.showConfirmDialog
 import com.drbrosdev.studytextscan.util.showKeyboardOnEditText
 import com.drbrosdev.studytextscan.util.showShortToast
@@ -57,8 +59,10 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         collectStateFlow(viewModel.viewState) { state ->
             state.scan()?.let { scan ->
                 binding.apply {
-                    textViewDate.text = dateAsString(scan.dateCreated)
+                    textViewDateCreated.text = "Created: ${dateAsString(scan.dateCreated)}"
+                    textViewDateModified.text = "Modified: ${dateAsString(scan.dateModified)}"
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
+                    editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
 
 
                 }
@@ -67,8 +71,11 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
 
         collectFlow(viewModel.events) {
             when(it) {
-                DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad -> {
+                is DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad -> {
                     showKeyboardOnEditText(binding.editTextScanTitle)
+                }
+                is DetailScanEvents.ShowScanUpdated -> {
+                    showSnackbarShort("Scan updated.", anchor = binding.imageViewCopy)
                 }
             }
         }
@@ -77,6 +84,14 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         Click events
          */
         binding.apply {
+            imageViewSave.setOnClickListener {
+                viewModel.updateScan(
+                    title = editTextScanTitle.text.toString(),
+                    content = editTextScanContent.text.toString()
+                )
+                hideKeyboard()
+            }
+
             imageViewBack.setOnClickListener {
                 hideKeyboardFrom(requireContext(), it)
                 findNavController().navigateUp()
