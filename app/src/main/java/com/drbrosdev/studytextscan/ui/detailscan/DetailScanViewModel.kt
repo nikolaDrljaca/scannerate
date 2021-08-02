@@ -56,13 +56,14 @@ class DetailScanViewModel(
                 val updated = scan.copy(scanTitle = title, scanText = content, dateModified = getCurrentDateTime())
                 repo.updateScan(updated)
                 _events.send(DetailScanEvents.ShowScanUpdated)
+                initializeScan(false)
                 return@launch
             }
             //maybe send event if something fails?
         }
     }
 
-    private fun initializeScan() = viewModelScope.launch {
+    private fun initializeScan(showKeyboard: Boolean = true) = viewModelScope.launch {
         repo.getScanById(scanId).collect {
             _viewState.setState { copy(scan = it) }
             /*
@@ -70,7 +71,7 @@ class DetailScanViewModel(
             This works, later possibly look for a 'more elegant' solution.
              */
             delay(100)
-            if (isJustCreated == 1) _events.send(DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad)
+            if (isJustCreated == 1 && showKeyboard) _events.send(DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad)
         }
     }
 }
