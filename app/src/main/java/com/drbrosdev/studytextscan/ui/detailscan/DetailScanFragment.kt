@@ -1,21 +1,15 @@
 package com.drbrosdev.studytextscan.ui.detailscan
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
@@ -27,7 +21,6 @@ import com.drbrosdev.studytextscan.util.getColor
 import com.drbrosdev.studytextscan.util.hideKeyboard
 import com.drbrosdev.studytextscan.util.showConfirmDialog
 import com.drbrosdev.studytextscan.util.showKeyboardOnEditText
-import com.drbrosdev.studytextscan.util.showShortToast
 import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
