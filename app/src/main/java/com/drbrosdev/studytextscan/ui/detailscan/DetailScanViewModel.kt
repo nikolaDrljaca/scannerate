@@ -41,19 +41,27 @@ class DetailScanViewModel(
         current?.let { repo.deleteScan(it) }
     }
 
-    fun onNavigateUp(title: String, content: String) = viewModelScope.launch {
+    fun onNavigateUp(title: String, content: String) {
         _viewState.value.scan()?.let {
             if (it.scanTitle != title || it.scanText != content)
-                _events.send(DetailScanEvents.ShowUnsavedChanges)
+                viewModelScope.launch {
+                    _events.send(DetailScanEvents.ShowUnsavedChanges)
+                }
             else
-                _events.send(DetailScanEvents.NavigateUp)
+                viewModelScope.launch {
+                    _events.send(DetailScanEvents.NavigateUp)
+                }
         }
     }
 
     fun updateScan(title: String, content: String) {
         viewModelScope.launch {
             _viewState.value.scan()?.let { scan ->
-                val updated = scan.copy(scanTitle = title, scanText = content, dateModified = getCurrentDateTime())
+                val updated = scan.copy(
+                    scanTitle = title,
+                    scanText = content,
+                    dateModified = getCurrentDateTime()
+                )
                 repo.updateScan(updated)
                 _events.send(DetailScanEvents.ShowScanUpdated)
                 initializeScan(false)

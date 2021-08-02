@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
@@ -92,6 +93,19 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     hideKeyboard()
                     findNavController().navigateUp()
                 }
+            }
+        }
+
+        /*
+        Attach a callback when the back button is pressed to act the same way as the
+        imageViewBack does.
+         */
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            binding.apply {
+                viewModel.onNavigateUp(
+                    title = editTextScanTitle.text.toString(),
+                    content = editTextScanContent.text.toString()
+                )
             }
         }
 
