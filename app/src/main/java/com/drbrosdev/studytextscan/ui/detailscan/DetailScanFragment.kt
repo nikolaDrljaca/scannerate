@@ -1,21 +1,16 @@
 package com.drbrosdev.studytextscan.ui.detailscan
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.core.widget.doAfterTextChanged
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
@@ -27,7 +22,6 @@ import com.drbrosdev.studytextscan.util.getColor
 import com.drbrosdev.studytextscan.util.hideKeyboard
 import com.drbrosdev.studytextscan.util.showConfirmDialog
 import com.drbrosdev.studytextscan.util.showKeyboardOnEditText
-import com.drbrosdev.studytextscan.util.showShortToast
 import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
@@ -63,8 +57,6 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     textViewDateModified.text = "Modified: ${dateAsString(scan.dateModified)}"
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
                     editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
-
-
                 }
             }
         }
@@ -101,6 +93,19 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     hideKeyboard()
                     findNavController().navigateUp()
                 }
+            }
+        }
+
+        /*
+        Attach a callback when the back button is pressed to act the same way as the
+        imageViewBack does.
+         */
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            binding.apply {
+                viewModel.onNavigateUp(
+                    title = editTextScanTitle.text.toString(),
+                    content = editTextScanContent.text.toString()
+                )
             }
         }
 
@@ -211,29 +216,4 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         if (this::textToSpeech.isInitialized) textToSpeech.stop()
         super.onDestroyView()
     }
-
-//    private fun deleteAlertDialog() {
-//        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-//        alertDialogBuilder.setTitle("Title")
-//        alertDialogBuilder.setMessage("Message")
-//        alertDialogBuilder.setPositiveButton("Yes") { dialog, which ->
-//            showShortToast("Message Yes")
-//        }
-//        alertDialogBuilder.setNegativeButton("No") { dialog, which ->
-//            showShortToast("Message No")
-//        }
-//        val built = alertDialogBuilder.create()
-//        built.show()
-//        val buttonYes = built.getButton(DialogInterface.BUTTON_POSITIVE)
-//        with(buttonYes) {
-//            setBackgroundColor(Color.BLACK)
-//            setTextColor(Color.WHITE)
-//        }
-//        val buttonNo = built.getButton(DialogInterface.BUTTON_NEGATIVE)
-//        with(buttonNo) {
-//            setBackgroundColor(Color.BLACK)
-//            setTextColor(Color.WHITE)
-//            setPadding(20, 0, 20, 0)
-//        }
-//    }
 }
