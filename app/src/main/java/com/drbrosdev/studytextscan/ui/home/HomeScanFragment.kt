@@ -85,11 +85,37 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         numOfScans(state.itemCount)
                     }
 
-                    state.scanList()?.let { list ->
-                        list.forEach { scan ->
+                    if (state.pinnedScans.isNotEmpty()) {
+                        listHeader {
+                            id("pinned_header")
+                            headerTitle("Pinned")
+                        }
+                        state.pinnedScans.forEach {
                             scanListItem {
-                                id(scan.scanId)
-                                scan(scan)
+                                id(it.scanId)
+                                scan(it)
+                                onScanClicked {
+                                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                    findNavController().navigate(
+                                        R.id.action_homeScanFragment_to_detailScanFragment,
+                                        arg
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    if (state.otherScans.isNotEmpty()) {
+                        listHeader {
+                            id("others_header")
+                            headerTitle("Others")
+                        }
+                        state.otherScans.forEach {
+                            scanListItem {
+                                id(it.scanId)
+                                scan(it)
                                 onScanClicked {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)

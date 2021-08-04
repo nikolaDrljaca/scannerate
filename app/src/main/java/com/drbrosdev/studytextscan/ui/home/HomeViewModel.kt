@@ -34,7 +34,8 @@ class HomeViewModel(
                 scanText = text,
                 dateCreated = getCurrentDateTime(),
                 dateModified = getCurrentDateTime(),
-                scanTitle = ""
+                scanTitle = "",
+                isPinned = false
             )
 
             val result = repo.insertScan(scan)

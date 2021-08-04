@@ -71,6 +71,14 @@ class DetailScanViewModel(
         }
     }
 
+    fun updateScanPinned() = viewModelScope.launch {
+        _viewState.value.scan()?.let {
+            val updated = it.copy(isPinned = !it.isPinned)
+            repo.updateScan(updated)
+            initializeScan(false)
+        }
+    }
+
     private fun initializeScan(showKeyboard: Boolean = true) = viewModelScope.launch {
         repo.getScanById(scanId).collect {
             _viewState.setState { copy(scan = it) }

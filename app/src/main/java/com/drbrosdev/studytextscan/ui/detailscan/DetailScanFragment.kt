@@ -57,6 +57,10 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     textViewDateModified.text = "Modified: ${dateAsString(scan.dateModified)}"
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
                     editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
+
+                    val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
+                        else getColor(R.color.light_blue)
+                    imageViewPin.setColorFilter(pinColor)
                 }
             }
         }
@@ -113,6 +117,11 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         Click events
          */
         binding.apply {
+            imageViewPin.setOnClickListener {
+                viewModel.updateScanPinned()
+                imageViewPin.setColorFilter(getColor(R.color.light_blue))
+            }
+
             imageViewSave.setOnClickListener {
                 viewModel.updateScan(
                     title = editTextScanTitle.text.toString(),

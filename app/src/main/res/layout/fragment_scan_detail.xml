@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/image_view_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="12dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_round_arrow_back_24"
@@ -25,10 +25,10 @@
 
         <ImageView
             android:id="@+id/image_view_delete"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="12dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="18dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_round_delete_24"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
@@ -36,14 +36,26 @@
 
         <ImageView
             android:id="@+id/image_view_save"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
             android:src="@drawable/ic_round_done_24"
             android:background="@drawable/save_button_background"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            />
+
+        <ImageView
+            android:id="@+id/image_view_pin"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="18dp"
+            app:layout_constraintEnd_toStartOf="@id/image_view_delete"
+            app:layout_constraintBottom_toTopOf="@id/guideline5"
+            android:src="@drawable/ic_round_push_pin_24"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             />
 
         <TextView
@@ -101,7 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.1" />
+            app:layout_constraintGuide_percent="0.08" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline6"

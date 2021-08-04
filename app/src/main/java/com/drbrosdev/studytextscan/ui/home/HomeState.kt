@@ -4,7 +4,7 @@ import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.util.Resource
 
 data class HomeState(
-    val scanList: Resource<List<Scan>> = Resource.Loading()
+    private val scanList: Resource<List<Scan>> = Resource.Loading()
 ) {
     val isLoading = scanList is Resource.Loading && scanList().isNullOrEmpty()
     val isError = scanList is Resource.Error && scanList().isNullOrEmpty()
@@ -15,4 +15,7 @@ data class HomeState(
     val itemCount = scanList()?.size ?: 0
 
     val isEmpty = scanList().isNullOrEmpty()
+
+    val pinnedScans = scanList()?.filter { it.isPinned } ?: emptyList()
+    val otherScans = scanList()?.filter { !it.isPinned } ?: emptyList()
 }
