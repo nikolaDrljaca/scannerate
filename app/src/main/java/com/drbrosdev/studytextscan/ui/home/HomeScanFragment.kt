@@ -18,6 +18,7 @@ import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.createLoadingDialog
 import com.drbrosdev.studytextscan.util.getColor
+import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
 import com.google.android.material.transition.MaterialSharedAxis
@@ -129,6 +130,13 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 }
                 is HomeEvents.ShowLoadingDialog -> {
                     loadingDialog.show()
+                }
+                is HomeEvents.ShowScanEmpty -> {
+                    loadingDialog.hide()
+                    showSnackbarShort(
+                        message = "No text was found.",
+                        anchor = binding.buttonCreateScan
+                    )
                 }
             }
         }
