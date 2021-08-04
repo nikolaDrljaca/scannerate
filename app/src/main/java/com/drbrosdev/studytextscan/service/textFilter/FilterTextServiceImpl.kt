@@ -1,34 +1,71 @@
 package com.drbrosdev.studytextscan.service.textFilter
 
-import android.util.Log
+import java.util.regex.Pattern
 
-class FilterTextServiceImpl: TextFilterService {
+class FilterTextServiceImpl : TextFilterService {
 
-    private val numbers = listOf(
-        "0","1","2","3","4","5","6","7","8","9"
-    )
-
-    override fun filterText(text: String): List<FilterTextSample> {
+    override fun filterTextForPhoneNumbers(text: String): List<FilterTextSample.Phone> {
 
         val textArray = text.toCharArray()
-        val phoneEntries = mutableListOf<FilterTextSample>()
-        val emailEntries = mutableListOf<FilterTextSample>()
+        val phoneEntries = mutableListOf<FilterTextSample.Phone>()
         var phone = ""
-        var email = ""
-        textArray.forEach {
-            Log.d("letter", it.toString())
-            if (it.toString() == " ") return@forEach
-            numbers.forEach { it2 ->
-                if(it.toString() == it2){
-                    phone += it
-                }else{
+        textArray.forEachIndexed { index, it ->
+            if (checkLetter(it)) {
+                phone += it
+            } else {
+                if (phone.isNotEmpty() && phone.isNotBlank()) {
                     val phoneSample = FilterTextSample.Phone(phone)
                     phoneEntries.add(phoneSample)
                     phone = ""
                 }
             }
+            if (index == textArray.size - 1) {
+                val phoneSample = FilterTextSample.Phone(phone)
+                phoneEntries.add(phoneSample)
+                phone = ""
+            }
         }
 
-        return emptyList()
+        return filterValidPhoneNumbers(phoneEntries)
+    }
+
+    override fun filterTextForEmails(text: String): List<FilterTextSample.Email> {
+
+        return filterValidEmails(text)
+    }
+
+    private fun checkLetter(it: Char): Boolean {
+
+        val numbers = listOf(
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+"
+        )
+        numbers.forEach { number ->
+            if (it.toString() == number) return true
+        }
+        return false
+    }
+
+    private fun filterValidPhoneNumbers(numbers: List<FilterTextSample.Phone>): List<FilterTextSample.Phone> {
+
+        val validNumbers = mutableListOf<FilterTextSample.Phone>()
+        numbers.forEach {
+            if (!Pattern.matches("[a-zA-Z]+", it.phoneNumber)) {
+                if(it.phoneNumber.length in 7..13) {
+                    validNumbers.add(it)
+                }
+            }
+        }
+        return validNumbers
+    }
+
+    private fun filterValidEmails(text: String): List<FilterTextSample.Email>{
+        val validEmails = mutableListOf<FilterTextSample.Email>()
+        val matcher = Pattern.compile("[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}").matcher(text)
+        while (matcher.find()){
+            val validEmail = FilterTextSample.Email(matcher.group())
+            validEmails.add(validEmail)
+        }
+
+        return validEmails
     }
 }
