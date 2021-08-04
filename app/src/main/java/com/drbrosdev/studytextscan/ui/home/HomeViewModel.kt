@@ -29,16 +29,21 @@ class HomeViewModel(
     }
 
     fun createScan(text: String) = viewModelScope.launch {
-        val scan = Scan(
-            scanText = text,
-            dateCreated = getCurrentDateTime(),
-            dateModified = getCurrentDateTime(),
-            scanTitle = ""
-        )
+        if (text.isNotEmpty() or text.isNotBlank()) {
+            val scan = Scan(
+                scanText = text,
+                dateCreated = getCurrentDateTime(),
+                dateModified = getCurrentDateTime(),
+                scanTitle = ""
+            )
 
-        val result = repo.insertScan(scan)
-        val scanId = Integer.parseInt(result.toString())
-        _events.send(HomeEvents.ShowCurrentScanSaved(scanId))
+            val result = repo.insertScan(scan)
+            val scanId = Integer.parseInt(result.toString())
+            _events.send(HomeEvents.ShowCurrentScanSaved(scanId))
+        } else {
+            _events.send(HomeEvents.ShowScanEmpty)
+        }
+
     }
 
     fun showLoadingDialog() = viewModelScope.launch {
