@@ -2,28 +2,21 @@ package com.drbrosdev.studytextscan.ui.onBoarding.screens
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
+import com.drbrosdev.studytextscan.databinding.FragmentOnBoardingScreen3Binding
 
-class OnBoardingScreen3 : Fragment() {
+class OnBoardingScreen3 : Fragment(R.layout.fragment_on_boarding_screen3) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val binding = FragmentOnBoardingScreen3Binding.bind(view)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_on_boarding_screen3, container, false)
+        binding.apply {
+            button3.setOnClickListener {
 
-        view.findViewById<Button>(R.id.button3).setOnClickListener {
-            findNavController().navigate(R.id.action_viewPagerFragment_to_homeScanFragment)
-            onBoardingFinished()
+            }
         }
-
-        return view
     }
 
     private fun onBoardingFinished() {

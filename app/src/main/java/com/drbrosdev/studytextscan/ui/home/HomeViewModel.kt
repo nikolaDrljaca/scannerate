@@ -3,6 +3,7 @@ package com.drbrosdev.studytextscan.ui.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.drbrosdev.studytextscan.datastore.AppPreferences
 import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
 import com.drbrosdev.studytextscan.util.Resource
@@ -16,7 +17,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val repo: ScanRepository
+    private val repo: ScanRepository,
+    private val prefs: AppPreferences
 ): ViewModel() {
     private val _viewState = MutableStateFlow(HomeState())
     val viewState: StateFlow<HomeState> = _viewState
