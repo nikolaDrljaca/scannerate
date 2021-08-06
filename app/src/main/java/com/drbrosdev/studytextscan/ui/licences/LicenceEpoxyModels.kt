@@ -13,9 +13,13 @@ abstract class LicenceListItemEpoxyModel :
     @EpoxyAttribute
     lateinit var licenceListItem: LicenceViewModel.LicenceListItem
 
+    @EpoxyAttribute
+    lateinit var onLicenceListItemClicked: () -> Unit
+
     override fun LicenceListItemBinding.bind() {
         licenceItemTitle.text = licenceListItem.title
         licenceItemLink.text = licenceListItem.link
+        licenceItemLink.setOnClickListener { onLicenceListItemClicked() }
     }
 
 }
