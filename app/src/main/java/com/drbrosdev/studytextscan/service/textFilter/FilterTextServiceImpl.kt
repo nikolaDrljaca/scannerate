@@ -34,6 +34,20 @@ class FilterTextServiceImpl : TextFilterService {
         return filterValidEmails(text)
     }
 
+    override fun filterTextForLinks(text: String): List<FilterTextSample.Link> {
+        return filterValidLinks(text)
+    }
+
+    private fun filterValidLinks(text: String): List<FilterTextSample.Link> {
+        val validLinks = mutableListOf<FilterTextSample.Link>()
+        val matcher = Pattern.compile("[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)").matcher(text)
+        while (matcher.find()){
+            val validLink = FilterTextSample.Link(matcher.group())
+            validLinks.add(validLink)
+        }
+        return validLinks
+    }
+
     private fun checkLetter(it: Char): Boolean {
 
         val numbers = listOf(

@@ -8,4 +8,8 @@ sealed class FilterTextSample {
     data class Phone(
         val phoneNumber: String
     ) : FilterTextSample()
+
+    data class Link(
+        val link: String
+    ) : FilterTextSample()
 }

@@ -22,4 +22,12 @@ class FilterTextServiceImplTest {
             println(it.toString())
         }
     }
+
+    @Test
+    fun filterLinks(){
+        val list = service.filterTextForLinks("asdasdas https://web.whatsapp.com/ dasdasd https://trello.com/b/7gk0iyzu/text-scan-app aa")
+        list.forEach {
+            println(it.toString())
+        }
+    }
 }

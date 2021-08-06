@@ -6,4 +6,6 @@ interface TextFilterService {
 
     fun filterTextForEmails(text: String): List<FilterTextSample.Email>
 
+    fun filterTextForLinks(text: String): List<FilterTextSample.Link>
+
 }
