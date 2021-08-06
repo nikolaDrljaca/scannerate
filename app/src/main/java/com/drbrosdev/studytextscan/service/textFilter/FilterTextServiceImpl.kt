@@ -38,14 +38,17 @@ class FilterTextServiceImpl : TextFilterService {
         return filterValidLinks(text)
     }
 
-    private fun filterValidLinks(text: String): List<FilterTextSample.Link> {
-        val validLinks = mutableListOf<FilterTextSample.Link>()
-        val matcher = Pattern.compile("[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)").matcher(text)
-        while (matcher.find()){
-            val validLink = FilterTextSample.Link(matcher.group())
-            validLinks.add(validLink)
+    private fun filterValidPhoneNumbers(numbers: List<FilterTextSample.Phone>): List<FilterTextSample.Phone> {
+
+        val validNumbers = mutableListOf<FilterTextSample.Phone>()
+        numbers.forEach {
+            if (!Pattern.matches("[a-zA-Z]+", it.phoneNumber)) {
+                if (it.phoneNumber.length in 7..13) {
+                    validNumbers.add(it)
+                }
+            }
         }
-        return validLinks
+        return validNumbers
     }
 
     private fun checkLetter(it: Char): Boolean {
@@ -59,27 +62,27 @@ class FilterTextServiceImpl : TextFilterService {
         return false
     }
 
-    private fun filterValidPhoneNumbers(numbers: List<FilterTextSample.Phone>): List<FilterTextSample.Phone> {
-
-        val validNumbers = mutableListOf<FilterTextSample.Phone>()
-        numbers.forEach {
-            if (!Pattern.matches("[a-zA-Z]+", it.phoneNumber)) {
-                if(it.phoneNumber.length in 7..13) {
-                    validNumbers.add(it)
-                }
-            }
-        }
-        return validNumbers
-    }
-
-    private fun filterValidEmails(text: String): List<FilterTextSample.Email>{
+    private fun filterValidEmails(text: String): List<FilterTextSample.Email> {
         val validEmails = mutableListOf<FilterTextSample.Email>()
-        val matcher = Pattern.compile("[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}").matcher(text)
-        while (matcher.find()){
+        val matcher =
+            Pattern.compile("[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}").matcher(text)
+        while (matcher.find()) {
             val validEmail = FilterTextSample.Email(matcher.group())
             validEmails.add(validEmail)
         }
 
         return validEmails
+    }
+
+    private fun filterValidLinks(text: String): List<FilterTextSample.Link> {
+        val validLinks = mutableListOf<FilterTextSample.Link>()
+        val matcher =
+            Pattern.compile("[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")
+                .matcher(text)
+        while (matcher.find()) {
+            val validLink = FilterTextSample.Link(matcher.group())
+            validLinks.add(validLink)
+        }
+        return validLinks
     }
 }

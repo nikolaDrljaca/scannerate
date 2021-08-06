@@ -16,16 +16,18 @@ class FilterTextServiceImplTest {
     }
 
     @Test
-    fun filterEmail(){
-        val list = service.filterTextForEmails("aaa1238123@hotmail.com,asd drljacao96@hotmail.com nigga shit mail@mail.com")
+    fun filterEmail() {
+        val list =
+            service.filterTextForEmails("aaa1238123@hotmail.com,asd drljacao96@hotmail.com nigga shit mail@mail.com")
         list.forEach {
             println(it.toString())
         }
     }
 
     @Test
-    fun filterLinks(){
-        val list = service.filterTextForLinks("asdasdas https://web.whatsapp.com/ dasdasd https://trello.com/b/7gk0iyzu/text-scan-app aa")
+    fun filterLinks() {
+        val list =
+            service.filterTextForLinks("asdasdas https://web.whatsapp.com/ dasdasd https://trello.com/b/7gk0iyzu/text-scan-app aa")
         list.forEach {
             println(it.toString())
         }
