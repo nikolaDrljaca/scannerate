@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Scannerate</string>
+    <string name="create_scan">Scan erstellen</string>
+    <string name="support">Unterstützung</string>
+    <string name="privacy_policy">Datenschutz Bestimmungen</string>
+    <string name="report_a_bug">Technische Fehler melden</string>
+    <string name="share">Teilen</string>
+    <string name="rate_this_app">Bewerten</string>
+    <string name="support_development">Entwicklung unterstützen</string>
+    <string name="open_source_licenses">Open Source Bibliotheken</string>
+    <string name="your_scans">Ihre Scans</string>
+    <string name="feels_empty_here_create_some_scans">Fühlt sich hier leer an. Erstellen Sie einige Scans!</string>
+    <string name="saving_code">Scannen...</string>
+    <string name="developers">Entwickler</string>
+    <string name="about_the_app">Über die App</string>
+    <string name="app_description"><![CDATA[Scannerate hilft Ihnen beim Scannen von Text aus Bildern auf Ihrem Gerät. Scannen Sie Ihr gewünschtes Bild und bearbeiten Sie den gescannten Text jederzeit. Exportieren Sie Ihren Text in eine PDF-Datei und verwenden Sie ihn überall!]]></string>
+    <string name="are_you_sure">Sind Sie sicher?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="enter_title">Titel eingeben</string>
+    <string name="text_date_created">Erstellt: %1$s</string>
+    <string name="text_date_modified">Geändert: %1$s</string>
+    <string name="num_of_scans">%1$d Scans</string>
+    <string name="save_changes">Änderungen speichern?</string>
+    <string name="scan_updated">Scan aktualisiert.</string>
+    <string name="unsaved_changes">Es scheint nicht gespeicherte Änderungen zu geben.</string>
+    <string name="delete_scanned_text">Gescannte Text wird gelöscht.</string>
+    <string name="copied_clip">Kopiert.</string>
+    <string name="unsupported_language">Keine unterstützte Sprache gefunden.</string>
+    <string name="loading">Loading...</string>
+    <string name="no_google_translate">Google Translate nicht installiert.</string>
+    <string name="something_went_wrong">Etwas ist schief gelaufen.</string>
+    <string name="header_pinned">Angepinnt</string>
+    <string name="headers_other">Sonstiges</string>
+    <string name="no_text_found">Kein Text gefunden.</string>
+</resources>

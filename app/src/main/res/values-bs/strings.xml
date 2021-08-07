@@ -28,7 +28,7 @@
     <string name="delete_scanned_text">Ovo će obrisati sken.</string>
     <string name="copied_clip">Kopirano.</string>
     <string name="unsupported_language">Nije pronađen podržan jezik.</string>
-    <string name="loading">Učitava se.</string>
+    <string name="loading">Učitava se...</string>
     <string name="no_google_translate">Google Translate nije pronađen.</string>
     <string name="something_went_wrong">Nešto nije u redu.</string>
     <string name="header_pinned">Zakačeno</string>
