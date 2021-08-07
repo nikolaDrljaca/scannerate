@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Study Text Scan</string>
+    <string name="app_name">Scannerate</string>
     <string name="create_scan">Create scan</string>
-    <string name="placeholder_text_about_us_and_the_app">Placeholder text - about us and the app</string>
+    <string name="placeholder_text_about_us_and_the_app" translatable="false">Placeholder text - about us and the app</string>
     <string name="support">Support</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="report_a_bug">Report a bug</string>
@@ -12,16 +12,16 @@
     <string name="your_scans">Your Scans</string>
     <string name="feels_empty_here_create_some_scans">Feels empty here. Create some scans!</string>
     <string name="saving_code">Scanning…</string>
-    <string name="git_nikola">https://github.com/nikolaDrljaca</string>
-    <string name="git_ognjen">https://github.com/drljacao96</string>
-    <string name="mail_nikola">devnikoladr@gmail.com</string>
-    <string name="mail_ognjen">drljacao96@hotmail.com</string>
-    <string name="ognjen_drljaca">Ognjen Drljaca</string>
-    <string name="nikola_drljaca">Nikola Drljaca</string>
+    <string name="git_nikola" translatable="false">https://github.com/nikolaDrljaca</string>
+    <string name="git_ognjen" translatable="false">https://github.com/drljacao96</string>
+    <string name="mail_nikola" translatable="false">devnikoladr@gmail.com</string>
+    <string name="mail_ognjen" translatable="false">drljacao96@hotmail.com</string>
+    <string name="ognjen_drljaca" translatable="false">Ognjen Drljaca</string>
+    <string name="nikola_drljaca" translatable="false">Nikola Drljaca</string>
     <string name="developers">Developers</string>
     <string name="about_the_app">About the app</string>
-    <string name="ognjen_linkedin_url">https://www.linkedin.com/in/ognjen-drljaca-b57a251b6/</string>
-    <string name="app_description"><![CDATA[<App_Name> helps you scan text from images on your device. Scan your desired image, and edit the text that was scanned at any time. Export your text to a PDF file and use it everywhere!]]></string>
+    <string name="ognjen_linkedin_url" translatable="false">https://www.linkedin.com/in/ognjen-drljaca-b57a251b6/</string>
+    <string name="app_description"><![CDATA[Scannerate helps you scan text from images on your device. Scan your desired image, and edit the text that was scanned at any time. Export your text to a PDF file and use it everywhere!]]></string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
