@@ -25,6 +25,9 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="enter_title">Enter title...</string>
+    <string name="enter_title">Enter title…</string>
 
+    <string name="text_date_created">Created: %1$s</string>
+    <string name="text_date_modified">Modified: %1$s</string>
+    <string name="num_of_scans">%1$d Scans</string>
 </resources>

@@ -84,7 +84,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     }
                     scanHeader {
                         id("scan_header")
-                        numOfScans(state.itemCount)
+                        numOfScans(getString(R.string.num_of_scans, state.itemCount))
                     }
 
                     if (state.pinnedScans.isNotEmpty()) {

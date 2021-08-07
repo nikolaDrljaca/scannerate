@@ -54,8 +54,8 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         collectStateFlow(viewModel.viewState) { state ->
             state.scan()?.let { scan ->
                 binding.apply {
-                    textViewDateCreated.text = "Created: ${dateAsString(scan.dateCreated)}"
-                    textViewDateModified.text = "Modified: ${dateAsString(scan.dateModified)}"
+                    textViewDateCreated.text = getString(R.string.text_date_created, dateAsString(scan.dateCreated))
+                    textViewDateModified.text = getString(R.string.text_date_modified, dateAsString(scan.dateModified))
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
                     editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
 

@@ -33,10 +33,10 @@ abstract class ScanHeaderEpoxyModel :
     ViewBindingKotlinModel<ModelScanHeaderBinding>(R.layout.model_scan_header) {
 
     @EpoxyAttribute
-    var numOfScans: Int = 0
+    var numOfScans: String = ""
 
     override fun ModelScanHeaderBinding.bind() {
-        textViewNumOfScans.text = "$numOfScans Scans"
+        textViewNumOfScans.text = numOfScans
     }
 }
 
