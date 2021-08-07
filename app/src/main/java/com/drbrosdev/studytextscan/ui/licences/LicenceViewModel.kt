@@ -15,7 +15,8 @@ class LicenceViewModel() : ViewModel() {
     private fun getLicenceListItems() = viewModelScope.launch {
         allLicenceItems = listOf(
             LicenceListItem.KoinLicence,
-            LicenceListItem.CoilLicence
+            LicenceListItem.LottieLicence,
+            LicenceListItem.EpoxyLicence
         )
     }
 
@@ -24,7 +25,9 @@ class LicenceViewModel() : ViewModel() {
         val title: String,
         val link: String
     ) {
-        object KoinLicence : LicenceListItem(1,"Koin", "Koin Link")
-        object CoilLicence : LicenceListItem(2,"Coil", "Coil Link")
+        object KoinLicence : LicenceListItem(1,"Koin", "https://insert-koin.io/")
+        object LottieLicence : LicenceListItem(2,"Lottie", "https://github.com/airbnb/lottie-android")
+        object EpoxyLicence: LicenceListItem(3,"Epoxy", "https://github.com/airbnb/epoxy")
+
     }
 }
