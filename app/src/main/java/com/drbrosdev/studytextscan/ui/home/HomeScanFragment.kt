@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
+import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
 import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.createLoadingDialog
@@ -34,8 +35,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val selectImageRequest = registerForActivityResult(GetContent()) { uri ->
         if (uri != null) {
             viewModel.showLoadingDialog()
-            scanText(uri) { scannedText ->
-                viewModel.createScan(scannedText)
+            scanText(uri) { scannedText, filteredTextList ->
+                viewModel.createScan(scannedText, filteredTextList)
             }
         }
     }
@@ -200,8 +201,10 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         }
     }
 
-    private fun scanText(uri: Uri, action: (String) -> Unit) {
+    private fun scanText(uri: Uri, action: (String, List<Pair<String, String>>) -> Unit) {
         val completeText = StringBuilder()
+        val filterService = FilterTextServiceImpl()
+        val list = mutableListOf<Pair<String, String>>()
         try {
             val image = InputImage.fromFilePath(requireContext(), uri)
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
@@ -210,9 +213,19 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 .addOnCompleteListener { task ->
                     val scannedText = task.result
                     for (block in scannedText.textBlocks) {
+                        Log.d("DEBUGn", "scanText: block - ${block.text}")
                         completeText.append(block.text)
+                        for (line in block.lines) {
+                            Log.d("DEBUGn", "scanText: line - ${line.text}")
+                            for (element in line.elements) {
+                                Log.d("DEBUGn", "scanText: element - ${element.text}")
+                                list.addAll(filterService.filterTextForEmails(element.text))
+                                list.addAll(filterService.filterTextForPhoneNumbers(element.text))
+                                list.addAll(filterService.filterTextForLinks(element.text))
+                            }
+                        }
                     }
-                    action(completeText.toString())
+                    action(completeText.toString(), list)
                 }
                 .addOnFailureListener { e -> throw e }
         } catch (e: Exception) {
