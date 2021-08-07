@@ -1,5 +1,6 @@
 package com.drbrosdev.studytextscan.ui.home
 
+import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.EpoxyTouchHelper
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
@@ -19,6 +21,7 @@ import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.createLoadingDialog
 import com.drbrosdev.studytextscan.util.getColor
+import com.drbrosdev.studytextscan.util.showSnackbarLongWithAction
 import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
@@ -131,19 +134,50 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         }
                     }
                 }
+            }
+        }
 
-                /*
+        binding.apply {
+            /*
                 Scrolling listener to hide the create scan FAB
                  */
-                recyclerViewScans.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        if (dy > 0) {
-                            buttonCreateScan.hide()
-                        }
-                        if (dy < 0) { buttonCreateScan.show() }
+            recyclerViewScans.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy > 0) {
+                        buttonCreateScan.hide()
                     }
+                    if (dy < 0) { buttonCreateScan.show() }
+                }
+            })
+
+            /*
+            Swipe support, swipe to delete
+             */
+            EpoxyTouchHelper.initSwiping(recyclerViewScans)
+                .right()
+                .withTarget(ScanListItemEpoxyModel::class.java)
+                .andCallbacks(object : EpoxyTouchHelper.SwipeCallbacks<ScanListItemEpoxyModel>() {
+                    override fun onSwipeCompleted(
+                        model: ScanListItemEpoxyModel?,
+                        itemView: View?,
+                        position: Int,
+                        direction: Int
+                    ) {
+                        model?.let {
+                            viewModel.deleteScan(it.scan)
+                        }
+                    }
+
+                    override fun onSwipeProgressChanged(
+                        model: ScanListItemEpoxyModel?,
+                        itemView: View?,
+                        swipeProgress: Float,
+                        canvas: Canvas?
+                    ) {
+                        itemView?.alpha = 1 - swipeProgress
+                    }
+
                 })
-            }
         }
 
         collectFlow(viewModel.events) { homeEvents ->
@@ -165,6 +199,15 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         message = getString(R.string.no_text_found),
                         anchor = binding.buttonCreateScan
                     )
+                }
+                is HomeEvents.ShowUndoDeleteScan -> {
+                    showSnackbarLongWithAction(
+                        message = getString(R.string.scan_deleted),
+                        anchor = binding.buttonCreateScan,
+                        actionText = getString(R.string.undo)
+                    ) {
+                        viewModel.insertScan(homeEvents.scan)
+                    }
                 }
             }
         }

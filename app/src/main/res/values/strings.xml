@@ -44,4 +44,7 @@
     <string name="header_pinned">Pinned</string>
     <string name="headers_other">Others</string>
     <string name="no_text_found">No text was found.</string>
+
+    <string name="scan_deleted" translatable="false">Scan deleted.</string>
+    <string name="undo" translatable="false">Undo</string>
 </resources>
