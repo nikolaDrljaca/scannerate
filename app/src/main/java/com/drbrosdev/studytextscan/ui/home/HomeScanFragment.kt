@@ -90,7 +90,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     if (state.pinnedScans.isNotEmpty()) {
                         listHeader {
                             id("pinned_header")
-                            headerTitle("Pinned")
+                            headerTitle(getString(R.string.header_pinned))
                         }
                         state.pinnedScans.forEach {
                             scanListItem {
@@ -112,7 +112,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     if (state.otherScans.isNotEmpty()) {
                         listHeader {
                             id("others_header")
-                            headerTitle("Others")
+                            headerTitle(getString(R.string.headers_other))
                         }
                         state.otherScans.forEach {
                             scanListItem {
@@ -162,7 +162,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 is HomeEvents.ShowScanEmpty -> {
                     loadingDialog.hide()
                     showSnackbarShort(
-                        message = "No text was found.",
+                        message = getString(R.string.no_text_found),
                         anchor = binding.buttonCreateScan
                     )
                 }

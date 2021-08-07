@@ -30,4 +30,18 @@
     <string name="text_date_created">Created: %1$s</string>
     <string name="text_date_modified">Modified: %1$s</string>
     <string name="num_of_scans">%1$d Scans</string>
+
+    <string name="save_changes">Save changes?</string>
+    <string name="scan_updated">Scan updated.</string>
+    <string name="unsaved_changes">There seem to be unsaved changes.</string>
+    <string name="delete_scanned_text">This will delete the scanned text.</string>
+    <string name="copied_clip">Copied to clipboard.</string>
+    <string name="unsupported_language">No supported language found.</string>
+    <string name="loading">Loading…</string>
+    <string name="no_google_translate">It seems you don\'t have Google Translate installed.</string>
+    <string name="something_went_wrong">Something went wrong.</string>
+
+    <string name="header_pinned">Pinned</string>
+    <string name="headers_other">Others</string>
+    <string name="no_text_found">No text was found.</string>
 </resources>

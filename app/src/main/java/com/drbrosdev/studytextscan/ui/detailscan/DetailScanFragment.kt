@@ -100,12 +100,12 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     showKeyboardOnEditText(binding.editTextScanTitle)
                 }
                 is DetailScanEvents.ShowScanUpdated -> {
-                    showSnackbarShort("Scan updated.", anchor = binding.imageViewCopy)
+                    showSnackbarShort(getString(R.string.scan_updated), anchor = binding.imageViewCopy)
                 }
                 is DetailScanEvents.ShowUnsavedChanges -> {
                     showConfirmDialog(
-                        title = "Save changes?",
-                        message = "There seem to be unsaved changes.",
+                        title = getString(R.string.save_changes),
+                        message = getString(R.string.unsaved_changes),
                         onPositiveClick = {
                             binding.apply {
                                 viewModel.updateScan(
@@ -168,7 +168,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
 
             imageViewDelete.setOnClickListener {
                 showConfirmDialog(
-                    message = "This will delete the scanned text.",
+                    message = getString(R.string.delete_scanned_text),
                     onPositiveClick = {
                         viewModel.deleteScan()
                         hideKeyboard()
@@ -183,7 +183,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                 val clip = ClipData.newPlainText("raw_data", editTextScanContent.text.toString())
                 clipboardManager.setPrimaryClip(clip)
                 showSnackbarShort(
-                    message = "Copied to clipboard",
+                    message = getString(R.string.copied_clip),
                     anchor = binding.imageViewTranslate
                 )
             }
@@ -204,11 +204,11 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                         val hasLanguage = textToSpeech.setLanguage(Locale.US)
                         if (hasLanguage == TextToSpeech.LANG_MISSING_DATA || hasLanguage == TextToSpeech.LANG_NOT_SUPPORTED) {
                             showSnackbarShort(
-                                "No supported language found.",
+                                getString(R.string.unsupported_language),
                                 anchor = imageViewShare
                             )
                         } else {
-                            showSnackbarShort("Loading...", anchor = imageViewShare)
+                            showSnackbarShort(getString(R.string.loading), anchor = imageViewShare)
                             textToSpeech.speak(
                                 editTextScanContent.text.toString(),
                                 TextToSpeech.QUEUE_ADD,
@@ -238,7 +238,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
                     showSnackbarShort(
-                        message = "It seems you don't have Google Translate installed.",
+                        message = getString(R.string.no_google_translate),
                         anchor = binding.imageViewShare
                     )
                 }
@@ -283,7 +283,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             }
         } catch (e: ActivityNotFoundException) {
             showSnackbarShort(
-                message = "Something went wrong.",
+                message = getString(R.string.something_went_wrong),
                 anchor = binding.imageViewCopy
             )
         }
