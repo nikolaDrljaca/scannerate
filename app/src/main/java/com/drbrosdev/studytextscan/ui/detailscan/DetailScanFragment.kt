@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
@@ -69,9 +70,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                                 chip {
                                     id(model.filteredTextModelId)
                                     onModelClick {
-                                        /*
-                                        Func to handle intents based on info
-                                         */
+                                        processFilteredModelIntent(model.type, model.content)
                                     }
                                     model(model)
                                     initCard { cardView ->
@@ -254,5 +253,39 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
          */
         if (this::textToSpeech.isInitialized) textToSpeech.stop()
         super.onDestroyView()
+    }
+
+    private fun processFilteredModelIntent(type: String, content: String) {
+        try {
+            when(type) {
+                "phone" -> {
+                    val dialIntent = Intent(Intent.ACTION_DIAL).apply {
+                        data = Uri.parse("tel:$content")
+                    }
+                    if (requireActivity().packageManager != null)
+                        startActivity(dialIntent)
+                }
+                "email" -> {
+                    val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse("mailto:")
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf(content))
+                    }
+                    if (requireActivity().packageManager != null)
+                        startActivity(emailIntent)
+                }
+                "link" -> {
+                    val urlIntent = Intent(Intent.ACTION_VIEW).apply {
+                        data = Uri.parse(content)
+                    }
+                    if (requireActivity().packageManager != null)
+                        startActivity(urlIntent)
+                }
+            }
+        } catch (e: ActivityNotFoundException) {
+            showSnackbarShort(
+                message = "Something went wrong.",
+                anchor = binding.imageViewCopy
+            )
+        }
     }
 }
