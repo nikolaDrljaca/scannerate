@@ -97,7 +97,7 @@
             android:gravity="start"
             android:inputType="textCapSentences|textMultiLine"
             android:textColor="@color/detail_text_title_color"
-            android:textSize="18sp"
+            android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="@id/guideline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -148,7 +148,7 @@
         <ImageView
             android:id="@+id/image_view_copy"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_round_content_copy_24" />
@@ -156,7 +156,7 @@
         <ImageView
             android:id="@+id/image_view_share"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_round_share_24" />
@@ -164,7 +164,7 @@
         <ImageView
             android:id="@+id/image_view_voice"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_round_record_voice_over_24" />
@@ -172,7 +172,7 @@
         <ImageView
             android:id="@+id/image_view_translate"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_round_g_translate_24" />
