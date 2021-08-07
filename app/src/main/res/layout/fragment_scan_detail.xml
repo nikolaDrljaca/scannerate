@@ -77,6 +77,17 @@
             app:layout_constraintTop_toBottomOf="@id/text_view_date_created"
             tools:text="12.07.2021" />
 
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:id="@+id/recycler_view_chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/edit_text_scan_content"
+            app:layout_constraintTop_toBottomOf="@id/text_view_date_modified"
+            android:layout_marginVertical="8dp"
+            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+            android:orientation="horizontal"
+            app:spanCount="2"/>
+
         <EditText
             android:id="@+id/edit_text_scan_content"
             android:layout_width="match_parent"
@@ -90,7 +101,7 @@
             app:layout_constraintBottom_toBottomOf="@id/guideline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_date_modified"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view_chips"
             tools:text="Placeholder content of a scan" />
 
         <EditText
