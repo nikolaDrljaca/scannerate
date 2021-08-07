@@ -5,7 +5,9 @@ import androidx.room.Room
 import com.drbrosdev.studytextscan.persistence.database.ApplicationDatabase
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
+import com.drbrosdev.studytextscan.service.textFilter.TextFilterService
 import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 private fun provideDatabase(context: Context) =
@@ -24,5 +26,5 @@ private fun provideFilterTextService() =
 val appModule = module {
     single { provideDatabase(context = androidContext()) }
     single { providePdfExportService() }
-    single { provideFilterTextService() }
+    single { provideFilterTextService() } bind TextFilterService::class
 }

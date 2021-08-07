@@ -26,6 +26,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizerOptions
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
@@ -203,7 +204,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
     private fun scanText(uri: Uri, action: (String, List<Pair<String, String>>) -> Unit) {
         val completeText = StringBuilder()
-        val filterService = FilterTextServiceImpl()
+        val filterService: FilterTextServiceImpl by inject()
         val list = mutableListOf<Pair<String, String>>()
         try {
             val image = InputImage.fromFilePath(requireContext(), uri)
