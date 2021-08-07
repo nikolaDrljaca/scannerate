@@ -14,4 +14,7 @@ interface FilteredTextModelDao {
     @Query("SELECT * FROM FILTERED_TEXT_MODEL")
     fun getAllModels(): Flow<List<FilteredTextModel>>
 
+    @Query("SELECT * FROM FILTERED_TEXT_MODEL WHERE scan_id = :scanId")
+    fun getModelsByScanId(scanId: Int): Flow<List<FilteredTextModel>>
+
 }

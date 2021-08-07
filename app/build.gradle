@@ -7,7 +7,7 @@ plugins {
 sourceSets {
     main {
         java {
-            srcDirs += 'build/generated/source/kapt/debug/ui/home'
+            srcDirs += 'build/generated/source/kapt/debug/ui'
         }
     }
 }

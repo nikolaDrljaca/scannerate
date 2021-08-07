@@ -10,5 +10,7 @@ class FilteredTextRepository(
 
     fun getAllModels() = dao.getAllModels()
 
+    fun getModelsByScanId(scanId: Int) = dao.getModelsByScanId(scanId)
+
     suspend fun insertModel(model: FilteredTextModel) = dao.insertModel(model)
 }

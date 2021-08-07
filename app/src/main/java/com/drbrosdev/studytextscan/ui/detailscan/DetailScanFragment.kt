@@ -61,6 +61,36 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
                         else getColor(R.color.light_blue)
                     imageViewPin.setColorFilter(pinColor)
+
+                    recyclerViewChips.withModels {
+
+                        state.filteredTextModels()?.let {
+                            it.forEach { model ->
+                                chip {
+                                    id(model.filteredTextModelId)
+                                    onModelClick {
+                                        /*
+                                        Func to handle intents based on info
+                                         */
+                                    }
+                                    model(model)
+                                    initCard { cardView ->
+                                        when(model.type) {
+                                            "phone" -> {
+                                                cardView.setCardBackgroundColor(getColor(R.color.chip_green))
+                                            }
+                                            "email" -> {
+                                                cardView.setCardBackgroundColor(getColor(R.color.chip_orange))
+                                            }
+                                            "link" -> {
+                                                cardView.setCardBackgroundColor(getColor(R.color.chip_yellow))
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

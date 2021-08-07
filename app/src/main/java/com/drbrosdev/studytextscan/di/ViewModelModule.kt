@@ -9,5 +9,11 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { HomeViewModel(scanRepo = get(), filteredTextModelRepo = get()) }
     viewModel { LicenceViewModel() }
-    viewModel { DetailScanViewModel(savedStateHandle = get(), repo = get()) }
+    viewModel {
+        DetailScanViewModel(
+            savedStateHandle = get(),
+            scanRepository = get(),
+            filteredModelsRepository = get()
+        )
+    }
 }
