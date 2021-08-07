@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyTextScan"
         android:name=".MyApp">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

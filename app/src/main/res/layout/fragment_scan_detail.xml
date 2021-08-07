@@ -111,7 +111,7 @@
             android:background="@null"
             android:fontFamily="@font/noto_sans_jp_regular"
             android:gravity="start"
-            android:inputType="textCapSentences|textMultiLine"
+            android:inputType="textCapSentences"
             android:textColor="@color/detail_text_title_color"
             android:textSize="22sp"
             android:maxLines="1"
