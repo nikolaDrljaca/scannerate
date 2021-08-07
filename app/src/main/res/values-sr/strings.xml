@@ -16,7 +16,7 @@
     <string name="are_you_sure">Јеси ли сигуран?</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
-    <string name="enter_title">Унеси наслов?</string>
+    <string name="enter_title">Унеси наслов...</string>
     <string name="text_date_created">Направљено: %1$s</string>
     <string name="text_date_modified">Промењено: %1$s</string>
     <string name="num_of_scans">%1$d Скенова</string>
