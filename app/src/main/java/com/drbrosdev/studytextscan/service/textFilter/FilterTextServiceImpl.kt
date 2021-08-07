@@ -83,7 +83,7 @@ class FilterTextServiceImpl : TextFilterService {
     private fun filterValidLinks(text: String): List<Pair<String, String>> {
         val validLinks = mutableListOf<Pair<String, String>>()
         val matcher =
-            Pattern.compile("[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")
+            Pattern.compile("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")
                 .matcher(text)
         while (matcher.find()) {
             val validLink = Pair(second = matcher.group(), first = "link")
