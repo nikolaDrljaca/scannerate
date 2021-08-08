@@ -3,6 +3,7 @@ package com.drbrosdev.studytextscan.ui.detailscan
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.persistence.repository.FilteredTextRepository
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
 import com.drbrosdev.studytextscan.util.Resource
@@ -83,17 +84,11 @@ class DetailScanViewModel(
         }
     }
 
-    private fun initializeScan(showKeyboard: Boolean = true) = viewModelScope.launch {
-//        scanRepository.getScanById(scanId).collect {
-//            _viewState.setState { copy(scan = it) }
-//            /*
-//            delay allows views to instantiate so focusing can work
-//            This works, later possibly look for a 'more elegant' solution.
-//             */
-//            delay(100)
-//            if (isJustCreated == 1 && showKeyboard) _events.send(DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad)
-//        }
+    fun getCurrentScan(action: (Scan?) -> Unit){
+        action(_viewState.value.scan())
+    }
 
+    private fun initializeScan(showKeyboard: Boolean = true) = viewModelScope.launch {
         combine(
             scanRepository.getScanById(scanId),
             filteredModelsRepository.getModelsByScanId(scanId)

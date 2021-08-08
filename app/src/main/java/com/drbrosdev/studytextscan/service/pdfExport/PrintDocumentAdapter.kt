@@ -75,7 +75,7 @@ class MyPrintDocumentAdapter(
         }
 
         val mutableTextArray = mutableListOf<String>()
-        text.forEachIndexed { index, it -> mutableTextArray.add("$index) $it") }
+        text.forEach { mutableTextArray.add("$it") }
         var textToPrint = ""
         mutableTextArray.forEach {
             textToPrint += it
@@ -225,7 +225,7 @@ class MyPrintDocumentAdapter(
             text.length,
             textPaint,
             width,
-            Layout.Alignment.ALIGN_CENTER,
+            Layout.Alignment.ALIGN_NORMAL,
             spacingMulti,
             spacingAdd,
             false,

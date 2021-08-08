@@ -29,7 +29,7 @@ class Pagination(
             mText!!.length,
             mPaint!!,
             mWidth,
-            Layout.Alignment.ALIGN_CENTER,
+            Layout.Alignment.ALIGN_NORMAL,
             mSpacingMultiple,
             mSpacingAdd,
             mIncludePad,

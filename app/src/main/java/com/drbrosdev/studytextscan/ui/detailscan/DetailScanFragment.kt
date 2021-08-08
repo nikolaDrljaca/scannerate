@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
-import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
@@ -255,22 +254,19 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             }
 
             imageViewPdf.setOnClickListener {
-                pdfExportService.printDocument(
-                    requireContext(),
-                    "TITLE",
-                    listOf(
-                        Scan(
-                            1,
-                            "IDE GAS NA MAKS",
-                            "AA",
-                            1L,
-                            1L,
-                            false
+                viewModel.getCurrentScan {
+                    it?.let {
+                        pdfExportService.printDocument(
+                            requireContext(),
+                            it.scanTitle,
+                            listOf(
+                                it
+                            ),
+                            Color.BLACK,
+                            16
                         )
-                    ),
-                    Color.BLACK,
-                    16
-                )
+                    }
+                }
             }
         }
     }
