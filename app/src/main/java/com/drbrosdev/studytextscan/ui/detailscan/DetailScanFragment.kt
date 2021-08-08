@@ -6,7 +6,6 @@ import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -254,7 +253,8 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             }
 
             imageViewPdf.setOnClickListener {
-                viewModel.getCurrentScan {
+                findNavController().navigate(R.id.action_detailScanFragment_to_pdfDialogFragment)
+                /*viewModel.getCurrentScan {
                     it?.let {
                         pdfExportService.printDocument(
                             requireContext(),
@@ -266,7 +266,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                             16
                         )
                     }
-                }
+                }*/
             }
         }
     }

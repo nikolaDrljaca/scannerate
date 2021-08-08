@@ -18,7 +18,11 @@
     <fragment
         android:id="@+id/detailScanFragment"
         android:name="com.drbrosdev.studytextscan.ui.detailscan.DetailScanFragment"
-        android:label="DetailScanFragment" />
+        android:label="DetailScanFragment" >
+        <action
+            android:id="@+id/action_detailScanFragment_to_pdfDialogFragment"
+            app:destination="@id/pdfDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/infoFragment"
         android:name="com.drbrosdev.studytextscan.ui.info.InfoFragment"
@@ -31,4 +35,8 @@
         android:id="@+id/licencesFragment"
         android:name="com.drbrosdev.studytextscan.ui.licences.LicencesFragment"
         android:label="LicencesFragment" />
+    <dialog
+        android:id="@+id/pdfDialogFragment"
+        android:name="com.drbrosdev.studytextscan.ui.pdfDialog.PdfDialogFragment"
+        android:label="PdfDialogFragment" />
 </navigation>
