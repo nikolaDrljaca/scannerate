@@ -58,6 +58,18 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             />
 
+        <ImageView
+            android:id="@+id/image_view_pdf"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="18dp"
+            app:layout_constraintEnd_toStartOf="@id/image_view_pin"
+            app:layout_constraintBottom_toTopOf="@id/guideline5"
+            android:src="@drawable/ic_round_picture_as_pdf_24"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            />
+
         <TextView
             android:id="@+id/text_view_date_created"
             android:layout_width="match_parent"

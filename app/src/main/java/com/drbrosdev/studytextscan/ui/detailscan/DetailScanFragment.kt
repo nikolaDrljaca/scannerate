@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -16,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
+import com.drbrosdev.studytextscan.persistence.entity.Scan
+import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.dateAsString
@@ -27,6 +30,7 @@ import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
 import com.google.android.material.transition.MaterialSharedAxis
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
 
@@ -34,6 +38,7 @@ import java.util.*
 class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
     private val binding: FragmentScanDetailBinding by viewBinding()
     private val viewModel: DetailScanViewModel by stateViewModel(state = { requireArguments() })
+    private val pdfExportService: PdfExportServiceImpl by inject()
     private lateinit var textToSpeech: TextToSpeech
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,13 +59,15 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         collectStateFlow(viewModel.viewState) { state ->
             state.scan()?.let { scan ->
                 binding.apply {
-                    textViewDateCreated.text = getString(R.string.text_date_created, dateAsString(scan.dateCreated))
-                    textViewDateModified.text = getString(R.string.text_date_modified, dateAsString(scan.dateModified))
+                    textViewDateCreated.text =
+                        getString(R.string.text_date_created, dateAsString(scan.dateCreated))
+                    textViewDateModified.text =
+                        getString(R.string.text_date_modified, dateAsString(scan.dateModified))
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
                     editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
 
                     val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
-                        else getColor(R.color.light_blue)
+                    else getColor(R.color.light_blue)
                     imageViewPin.setColorFilter(pinColor)
 
                     recyclerViewChips.withModels {
@@ -74,7 +81,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                                     }
                                     model(model)
                                     initCard { cardView ->
-                                        when(model.type) {
+                                        when (model.type) {
                                             "phone" -> {
                                                 cardView.setCardBackgroundColor(getColor(R.color.chip_green))
                                             }
@@ -100,7 +107,10 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     showKeyboardOnEditText(binding.editTextScanTitle)
                 }
                 is DetailScanEvents.ShowScanUpdated -> {
-                    showSnackbarShort(getString(R.string.scan_updated), anchor = binding.imageViewCopy)
+                    showSnackbarShort(
+                        getString(R.string.scan_updated),
+                        anchor = binding.imageViewCopy
+                    )
                 }
                 is DetailScanEvents.ShowUnsavedChanges -> {
                     showConfirmDialog(
@@ -243,6 +253,25 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     )
                 }
             }
+
+            imageViewPdf.setOnClickListener {
+                pdfExportService.printDocument(
+                    requireContext(),
+                    "TITLE",
+                    listOf(
+                        Scan(
+                            1,
+                            "IDE GAS NA MAKS",
+                            "AA",
+                            1L,
+                            1L,
+                            false
+                        )
+                    ),
+                    Color.BLACK,
+                    16
+                )
+            }
         }
     }
 
@@ -257,7 +286,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
 
     private fun processFilteredModelIntent(type: String, content: String) {
         try {
-            when(type) {
+            when (type) {
                 "phone" -> {
                     val dialIntent = Intent(Intent.ACTION_DIAL).apply {
                         data = Uri.parse("tel:$content")
