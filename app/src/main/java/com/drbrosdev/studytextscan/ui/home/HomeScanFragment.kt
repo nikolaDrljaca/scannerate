@@ -1,12 +1,15 @@
 package com.drbrosdev.studytextscan.ui.home
 
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -101,7 +104,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 scan(it)
                                 onScanClicked {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                    reenterTransition =
+                                        MaterialSharedAxis(MaterialSharedAxis.X, false)
                                     val arg = bundleOf("scan_id" to it.scanId.toInt())
                                     findNavController().navigate(
                                         R.id.action_homeScanFragment_to_detailScanFragment,
@@ -123,7 +127,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 scan(it)
                                 onScanClicked {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                    reenterTransition =
+                                        MaterialSharedAxis(MaterialSharedAxis.X, false)
                                     val arg = bundleOf("scan_id" to it.scanId.toInt())
                                     findNavController().navigate(
                                         R.id.action_homeScanFragment_to_detailScanFragment,
@@ -146,7 +151,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     if (dy > 0) {
                         buttonCreateScan.hide()
                     }
-                    if (dy < 0) { buttonCreateScan.show() }
+                    if (dy < 0) {
+                        buttonCreateScan.show()
+                    }
                 }
             })
 
@@ -154,7 +161,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
             Swipe support, swipe to delete
              */
             EpoxyTouchHelper.initSwiping(recyclerViewScans)
-                .right()
+                .left()
                 .withTarget(ScanListItemEpoxyModel::class.java)
                 .andCallbacks(object : EpoxyTouchHelper.SwipeCallbacks<ScanListItemEpoxyModel>() {
                     override fun onSwipeCompleted(
@@ -174,9 +181,42 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         swipeProgress: Float,
                         canvas: Canvas?
                     ) {
-                        itemView?.alpha = 1 - swipeProgress
-                    }
+                        val delete = ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_round_delete_24
+                        )
+                        itemView?.let { view ->
+                            view.alpha = 1 + swipeProgress
 
+                            val itemHeight = view.bottom - view.top
+                            delete?.setTint(getColor(R.color.white))
+                            canvas?.let {
+                                val paint = Paint().apply { color = getColor(R.color.error_red) }
+                                it.clipRect(
+                                    view.left,
+                                    view.top,
+                                    view.right,
+                                    view.bottom
+                                )
+                                it.drawRoundRect(
+                                    RectF(
+                                        view.left.toFloat(),
+                                        view.top.toFloat(),
+                                        view.right.toFloat(),
+                                        view.bottom.toFloat()
+                                    ), 52f, 52f, paint
+                                )
+                            }
+                            val iconTop = view.top + (itemHeight - delete!!.intrinsicHeight) / 2
+                            val iconMargin = (itemHeight - delete.intrinsicHeight) / 2
+                            val iconLeft = view.right - iconMargin - delete.intrinsicWidth
+                            val iconRight = view.right - iconMargin
+                            val iconBottom = iconTop + delete.intrinsicHeight
+
+                            delete.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                            delete.draw(canvas!!)
+                        }
+                    }
                 })
         }
 
