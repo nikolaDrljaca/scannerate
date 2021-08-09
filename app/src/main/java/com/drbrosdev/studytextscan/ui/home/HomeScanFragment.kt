@@ -82,9 +82,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
                             findNavController().navigate(R.id.action_homeScanFragment_to_infoFragment)
                         }
-                        onPdfListClicked {
-
-                        }
                     }
                     scanHeader {
                         id("scan_header")

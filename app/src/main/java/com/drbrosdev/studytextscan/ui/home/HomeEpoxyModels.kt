@@ -19,12 +19,8 @@ abstract class ScanTopBarEpoxyModel :
     @EpoxyAttribute
     lateinit var onInfoClicked: () -> Unit
 
-    @EpoxyAttribute
-    lateinit var onPdfListClicked: () -> Unit
-
     override fun ModelScanTopBarBinding.bind() {
         imageViewInfo.setOnClickListener { onInfoClicked() }
-        imageViewPdfList.setOnClickListener { onPdfListClicked() }
     }
 }
 
