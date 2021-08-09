@@ -40,13 +40,14 @@ class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
             val colorOptionsAdapter = ArrayAdapter(requireContext(), R.layout.list_item, colorOptionsList)
             val fontOptionsAdapter = ArrayAdapter(requireContext(), R.layout.list_item, fontSizeOptionsList)
 
+            colorMenu.editText?.setText(defaultColor)
+            fontSizeMenu.editText?.setText(defaultFontSize)
+
             (fontSizeMenu.editText as? AutoCompleteTextView)?.setAdapter(fontOptionsAdapter)
             (colorMenu.editText as? AutoCompleteTextView)?.setAdapter(colorOptionsAdapter)
 
             buttonCancel.setOnClickListener { dismiss() }
 
-            colorMenu.editText?.setText(defaultColor)
-            fontSizeMenu.editText?.setText(defaultFontSize)
 
             buttonExport.setOnClickListener {
                 /*
