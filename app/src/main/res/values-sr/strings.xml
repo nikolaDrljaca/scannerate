@@ -34,4 +34,11 @@
     <string name="no_text_found">Текст није пронађен.</string>
     <string name="feels_empty_here_create_some_scans">Направи нови скен.</string>
     <string name="app_description"><![CDATA[Scannerate ти помаже да скенираш фотографије на твом уређају. Скенирај жељене фотографије, и промени текст у сваком моменту. Креирај ПДФ фајл на основу твог текста и користи га свугде.]]></string>
+    <string name="color">Боја</string>
+    <string name="customize_your_export">Прилагоди свој извоз</string>
+    <string name="export">Извоз</string>
+    <string name="cancel">Поништи</string>
+    <string name="font_size">Величина фонта</string>
+    <string name="scan_deleted">Скен обрисан.</string>
+    <string name="undo">Опозови</string>
 </resources>

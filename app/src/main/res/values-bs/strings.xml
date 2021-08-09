@@ -34,4 +34,11 @@
     <string name="header_pinned">Zakačeno</string>
     <string name="headers_other">Drugo</string>
     <string name="no_text_found">Tekst nije pronađen.</string>
+    <string name="color">Boja</string>
+    <string name="customize_your_export">Prilagodi svoj izvoz</string>
+    <string name="export">Izvoz</string>
+    <string name="cancel">Poništi</string>
+    <string name="font_size">Veličina fonta</string>
+    <string name="scan_deleted">Sken obrisan.</string>
+    <string name="undo">Opozovi</string>
 </resources>

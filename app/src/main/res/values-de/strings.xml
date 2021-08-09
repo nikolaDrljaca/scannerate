@@ -34,4 +34,11 @@
     <string name="header_pinned">Angepinnt</string>
     <string name="headers_other">Sonstiges</string>
     <string name="no_text_found">Kein Text gefunden.</string>
+    <string name="color">Farbe</string>
+    <string name="customize_your_export">Export anpassen</string>
+    <string name="export">Export</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="font_size">Schriftgröße</string>
+    <string name="scan_deleted">Scan gelöscht.</string>
+    <string name="undo">Undo</string>
 </resources>
