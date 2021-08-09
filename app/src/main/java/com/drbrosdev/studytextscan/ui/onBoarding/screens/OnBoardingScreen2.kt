@@ -16,9 +16,7 @@ class OnBoardingScreen2 : Fragment(R.layout.fragment_on_boarding_screen2) {
         val viewPager = requireActivity().findViewById<ViewPager2>(R.id.view_pager)
 
         binding.apply {
-            button2.setOnClickListener {
-                viewPager.currentItem = 2
-            }
+            animationView.repeatCount = 2
         }
     }
 }

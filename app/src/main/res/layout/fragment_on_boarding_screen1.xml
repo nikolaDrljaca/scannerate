@@ -4,27 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ui.onBoarding.screens.OnBoardingScreen1">
 
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+        android:id="@+id/text_view_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Screen1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginHorizontal="16dp"
+        android:fontFamily="@font/noto_sans_jp_regular"
+        android:gravity="start"
+        android:text="Welcome!"
+        android:textColor="@color/heavy_blue"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/guideline4" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/guideline7"
+        app:layout_constraintTop_toBottomOf="@id/text_view_header">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/button_create_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/heavy_blue"
+            android:text="@string/create_scan"
+            android:textColor="@color/white"
+            app:rippleColor="@color/white"
+            android:enabled="false" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"/>
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_round_arrow_downward_24"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"/>
+
+        <include layout="@layout/onboarding_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintTop_toBottomOf="@id/button_create_scan"
+            />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_info1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toTopOf="@id/guideline7"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout"
+        android:text="Extract text from images easily by creating a scan!\nClick on the button to launch an image picker and select an image to extract its text/"
+        android:gravity="center"
+        android:fontFamily="@font/noto_sans_jp_regular"
+        />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button_next"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
         android:text="Next"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/heavy_blue"
+        app:backgroundTint="@color/light_blue"
+        app:layout_constraintTop_toBottomOf="@id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView1" />
+        app:rippleColor="@color/heavy_blue" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

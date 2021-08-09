@@ -4,27 +4,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.onBoarding.screens.OnBoardingScreen2">
+    android:background="@color/background"
+    tools:context=".ui.onBoarding.screens.OnBoardingScreen1">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:id="@+id/text_view_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Screen2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginHorizontal="16dp"
+        android:fontFamily="@font/noto_sans_jp_regular"
+        android:gravity="start"
+        android:text="Edit!"
+        android:textColor="@color/heavy_blue"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/guideline4" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:lottie_rawRes="@raw/edit_text_feather"
+        app:lottie_autoPlay="true"
+        app:layout_constraintTop_toBottomOf="@id/guideline8"
+        app:layout_constraintBottom_toTopOf="@id/guideline9"
+        />
+
+    <TextView
+        android:id="@+id/tv_info1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:fontFamily="@font/noto_sans_jp_regular"
+        android:gravity="center"
+        android:text="Extract text from images easily by creating a scan!\nClick on the button to launch an image picker and select an image to extract its text/"
+        app:layout_constraintBottom_toTopOf="@id/guideline7"
+        app:layout_constraintTop_toBottomOf="@id/guideline9" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_export"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
         android:text="Next"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/heavy_blue"
+        app:backgroundTint="@color/light_blue"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline7"
+        app:rippleColor="@color/heavy_blue" />
+
+    <Button
+        android:id="@+id/button_cancel"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:text="Previous"
+        android:textColor="@color/heavy_blue"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@id/guideline7"
+        app:rippleColor="@color/heavy_blue" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp"
+        app:layout_constraintGuide_percent="0.65" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -253,7 +253,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         -send an event after all is done to navigate to detail screen
                      */
 
-                    selectImageRequest.launch("image/*")
+                    //selectImageRequest.launch("image/*")
+                    findNavController().navigate(R.id.action_homeScanFragment_to_viewPagerFragment)
                 }
                 /*
                 Sets the animation to loop only 3 times and then stop as to not be too annoying.

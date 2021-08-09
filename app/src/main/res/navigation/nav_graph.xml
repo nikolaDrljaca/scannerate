@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeScanFragment">
 
@@ -14,6 +15,9 @@
         <action
             android:id="@+id/action_homeScanFragment_to_infoFragment"
             app:destination="@id/infoFragment" />
+        <action
+            android:id="@+id/action_homeScanFragment_to_viewPagerFragment"
+            app:destination="@id/viewPagerFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailScanFragment"
@@ -39,4 +43,9 @@
         android:id="@+id/pdfDialogFragment"
         android:name="com.drbrosdev.studytextscan.ui.pdfDialog.PdfDialogFragment"
         android:label="PdfDialogFragment" />
+    <fragment
+        android:id="@+id/viewPagerFragment"
+        android:name="com.drbrosdev.studytextscan.ui.onBoarding.ViewPagerFragment"
+        android:label="fragment_view_pager"
+        tools:layout="@layout/fragment_view_pager" />
 </navigation>
