@@ -1,8 +1,6 @@
 package com.drbrosdev.studytextscan.ui.home
 
 import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.RectF
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -186,28 +184,10 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         canvas: Canvas?
                     ) {
                         itemView?.let { view ->
-                            //view.alpha = 1 + swipeProgress
+                            view.alpha = swipeProgress + 1
                             val itemHeight = view.bottom - view.top
-                            delete?.setTint(getColor(R.color.white))
-                            canvas?.let {
-                                val paint = Paint().apply {
-                                    color = getColor(R.color.error_red)
-                                }
-                                it.clipRect(
-                                    view.left,
-                                    view.top,
-                                    view.right,
-                                    view.bottom
-                                )
-                                it.drawRoundRect(
-                                    RectF(
-                                        view.left.toFloat(),
-                                        view.top.toFloat(),
-                                        view.right.toFloat(),
-                                        view.bottom.toFloat()
-                                    ), 52f, 52f, paint
-                                )
-                            }
+                            delete?.setTint(getColor(R.color.error_red))
+
                             val iconTop = view.top + (itemHeight - delete!!.intrinsicHeight) / 2
                             val iconMargin = (itemHeight - delete.intrinsicHeight) / 2
                             val iconLeft = view.right - iconMargin - delete.intrinsicWidth
@@ -216,7 +196,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
                             delete.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                             delete.draw(canvas!!)
-                            canvas
                         }
                     }
                 })
