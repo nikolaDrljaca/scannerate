@@ -160,6 +160,10 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
             /*
             Swipe support, swipe to delete
              */
+            val delete = ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.ic_round_delete_white_24
+            )
             EpoxyTouchHelper.initSwiping(recyclerViewScans)
                 .left()
                 .withTarget(ScanListItemEpoxyModel::class.java)
@@ -181,17 +185,14 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         swipeProgress: Float,
                         canvas: Canvas?
                     ) {
-                        val delete = ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.ic_round_delete_24
-                        )
                         itemView?.let { view ->
-                            view.alpha = 1 + swipeProgress
-
+                            //view.alpha = 1 + swipeProgress
                             val itemHeight = view.bottom - view.top
                             delete?.setTint(getColor(R.color.white))
                             canvas?.let {
-                                val paint = Paint().apply { color = getColor(R.color.error_red) }
+                                val paint = Paint().apply {
+                                    color = getColor(R.color.error_red)
+                                }
                                 it.clipRect(
                                     view.left,
                                     view.top,
@@ -215,6 +216,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
                             delete.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                             delete.draw(canvas!!)
+                            canvas
                         }
                     }
                 })
