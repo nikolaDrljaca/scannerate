@@ -24,7 +24,7 @@ class DetailScanViewModel(
     private val filteredModelsRepository: FilteredTextRepository
 ) : ViewModel() {
 
-    private val scanId = savedStateHandle.get<Int>("scan_id") ?: 0
+    val scanId = savedStateHandle.get<Int>("scan_id") ?: 0
     private val isJustCreated = savedStateHandle.get<Int>("is_created") ?: 0
 
     private val _viewState = MutableStateFlow(DetailScanState())

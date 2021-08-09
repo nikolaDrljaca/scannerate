@@ -182,7 +182,7 @@ class MyPrintDocumentAdapter(
         paint.textSize = fontSize.toFloat()
 
         canvas.drawMultilineText(
-            TextPaint(Paint.ANTI_ALIAS_FLAG),
+            TextPaint(paint),
             leftMargin.toFloat(),
             (titleBaseLine + newLine).toFloat(),
             width,

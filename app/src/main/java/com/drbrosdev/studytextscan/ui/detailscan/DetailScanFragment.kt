@@ -12,6 +12,7 @@ import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
@@ -253,20 +254,11 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             }
 
             imageViewPdf.setOnClickListener {
-                findNavController().navigate(R.id.action_detailScanFragment_to_pdfDialogFragment)
-                /*viewModel.getCurrentScan {
-                    it?.let {
-                        pdfExportService.printDocument(
-                            requireContext(),
-                            it.scanTitle,
-                            listOf(
-                                it
-                            ),
-                            Color.BLACK,
-                            16
-                        )
-                    }
-                }*/
+                val arg = bundleOf("pdf_scan_id" to viewModel.scanId)
+                findNavController().navigate(
+                    R.id.action_detailScanFragment_to_pdfDialogFragment,
+                    arg
+                )
             }
         }
     }
