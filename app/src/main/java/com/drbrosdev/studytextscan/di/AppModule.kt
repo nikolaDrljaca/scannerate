@@ -6,7 +6,10 @@ import com.drbrosdev.studytextscan.datastore.AppPreferences
 import com.drbrosdev.studytextscan.datastore.datastore
 import com.drbrosdev.studytextscan.persistence.database.ApplicationDatabase
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
+import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
+import com.drbrosdev.studytextscan.service.textFilter.TextFilterService
 import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 private fun provideDatabase(context: Context) =
@@ -21,8 +24,12 @@ private fun providePdfExportService() =
 
 private fun providePreferences(context: Context) = AppPreferences(context.datastore)
 
+private fun provideFilterTextService() =
+    FilterTextServiceImpl()
+
 val appModule = module {
     single { provideDatabase(context = androidContext()) }
     single { providePdfExportService() }
     factory { providePreferences(androidContext()) }
+    single { provideFilterTextService() } bind TextFilterService::class
 }

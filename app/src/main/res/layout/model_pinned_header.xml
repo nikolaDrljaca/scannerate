@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:id="@+id/text_view_list_header"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:text="Placeholder text"
+    android:fontFamily="@font/roboto_regular"
+    android:paddingHorizontal="18dp"
+    android:paddingVertical="8dp"
+    android:textAllCaps="true">
+
+</TextView>

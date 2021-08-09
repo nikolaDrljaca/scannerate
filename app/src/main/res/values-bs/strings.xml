@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Scannerate</string>
+    <string name="create_scan">Napravi sken</string>
+    <string name="support">Podrška</string>
+    <string name="privacy_policy">Pravila o privatnosti</string>
+    <string name="report_a_bug">Prijavi grešku</string>
+    <string name="share">Podijeli</string>
+    <string name="rate_this_app">Ocijeni aplikaciju</string>
+    <string name="support_development">Podrži nas</string>
+    <string name="open_source_licenses">Biblioteke otvorenog koda</string>
+    <string name="your_scans">Tvoji skenovi</string>
+    <string name="feels_empty_here_create_some_scans">Napravi novi sken.</string>
+    <string name="saving_code">Skeniranje...</string>
+    <string name="developers">Programeri</string>
+    <string name="about_the_app">O Aplikaciji</string>
+    <string name="app_description"><![CDATA[Scannerate ti pomaže da skeniraš fotografije na tvom uređaju. Skeniraj željene fotografije i promjeni tekst u svakom momentu. Kreiraj PDF fajl na osnovu tvog teksta i iskoristi ga svugdje.]]></string>
+    <string name="are_you_sure">Jesi li siguran?</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+    <string name="enter_title">Unesi naslov...</string>
+    <string name="text_date_created">Napravljeno: %1$s</string>
+    <string name="text_date_modified">Promjenjeno: %1$s</string>
+    <string name="num_of_scans">%1$d skenova</string>
+    <string name="save_changes">Sačuvaj promjene?</string>
+    <string name="scan_updated">Sken ažuriran.</string>
+    <string name="unsaved_changes">Imaš ne sačuvane promjene.</string>
+    <string name="delete_scanned_text">Ovo će obrisati sken.</string>
+    <string name="copied_clip">Kopirano.</string>
+    <string name="unsupported_language">Nije pronađen podržan jezik.</string>
+    <string name="loading">Učitava se...</string>
+    <string name="no_google_translate">Google Translate nije pronađen.</string>
+    <string name="something_went_wrong">Nešto nije u redu.</string>
+    <string name="header_pinned">Zakačeno</string>
+    <string name="headers_other">Drugo</string>
+    <string name="no_text_found">Tekst nije pronađen.</string>
+    <string name="color">Boja</string>
+    <string name="customize_your_export">Prilagodi svoj izvoz</string>
+    <string name="export">Izvoz</string>
+    <string name="cancel">Poništi</string>
+    <string name="font_size">Veličina fonta</string>
+    <string name="scan_deleted">Sken obrisan.</string>
+    <string name="undo">Opozovi</string>
+</resources>

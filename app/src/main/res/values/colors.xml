@@ -25,4 +25,8 @@
 
     <color name="error_red">#c62828</color>
 
+    <color name="chip_green">#00c853</color>
+    <color name="chip_yellow">#ffd600</color>
+    <color name="chip_orange">#ff6d00</color>
+
 </resources>

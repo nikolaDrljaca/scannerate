@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Study Text Scan</string>
+    <string name="app_name">Scannerate</string>
     <string name="create_scan">Create scan</string>
-    <string name="placeholder_text_about_us_and_the_app">Placeholder text - about us and the app</string>
+    <string name="placeholder_text_about_us_and_the_app" translatable="false">Placeholder text - about us and the app</string>
     <string name="support">Support</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="report_a_bug">Report a bug</string>
@@ -12,19 +12,44 @@
     <string name="your_scans">Your Scans</string>
     <string name="feels_empty_here_create_some_scans">Feels empty here. Create some scans!</string>
     <string name="saving_code">Scanning…</string>
-    <string name="git_nikola">https://github.com/nikolaDrljaca</string>
-    <string name="git_ognjen">https://github.com/drljacao96</string>
-    <string name="mail_nikola">devnikoladr@gmail.com</string>
-    <string name="mail_ognjen">drljacao96@hotmail.com</string>
-    <string name="ognjen_drljaca">Ognjen Drljaca</string>
-    <string name="nikola_drljaca">Nikola Drljaca</string>
+    <string name="git_nikola" translatable="false">https://github.com/nikolaDrljaca</string>
+    <string name="git_ognjen" translatable="false">https://github.com/drljacao96</string>
+    <string name="mail_nikola" translatable="false">devnikoladr@gmail.com</string>
+    <string name="mail_ognjen" translatable="false">drljacao96@hotmail.com</string>
+    <string name="ognjen_drljaca" translatable="false">Ognjen Drljaca</string>
+    <string name="nikola_drljaca" translatable="false">Nikola Drljaca</string>
     <string name="developers">Developers</string>
     <string name="about_the_app">About the app</string>
-    <string name="ognjen_linkedin_url">https://www.linkedin.com/in/ognjen-drljaca-b57a251b6/</string>
-    <string name="app_description"><![CDATA[<App_Name> helps you scan text from images on your device. Scan your desired image, and edit the text that was scanned at any time. Export your text to a PDF file and use it everywhere!]]></string>
+    <string name="ognjen_linkedin_url" translatable="false">https://www.linkedin.com/in/ognjen-drljaca-b57a251b6/</string>
+    <string name="app_description"><![CDATA[Scannerate helps you scan text from images on your device. Scan your desired image, and edit the text that was scanned at any time. Export your text to a PDF file and use it everywhere!]]></string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="enter_title">Enter title...</string>
+    <string name="enter_title">Enter title…</string>
 
+    <string name="text_date_created">Created: %1$s</string>
+    <string name="text_date_modified">Modified: %1$s</string>
+    <string name="num_of_scans">%1$d Scans</string>
+
+    <string name="save_changes">Save changes?</string>
+    <string name="scan_updated">Scan updated.</string>
+    <string name="unsaved_changes">There seem to be unsaved changes.</string>
+    <string name="delete_scanned_text">This will delete the scanned text.</string>
+    <string name="copied_clip">Copied to clipboard.</string>
+    <string name="unsupported_language">No supported language found.</string>
+    <string name="loading">Loading…</string>
+    <string name="no_google_translate">It seems you don\'t have Google Translate installed.</string>
+    <string name="something_went_wrong">Something went wrong.</string>
+
+    <string name="header_pinned">Pinned</string>
+    <string name="headers_other">Others</string>
+    <string name="no_text_found">No text was found.</string>
+    <string name="color">Color</string>
+    <string name="customize_your_export">Customize your export</string>
+    <string name="export">Export</string>
+    <string name="cancel">Cancel</string>
+    <string name="font_size">Font size</string>
+
+    <string name="scan_deleted">Scan deleted.</string>
+    <string name="undo">Undo</string>
 </resources>

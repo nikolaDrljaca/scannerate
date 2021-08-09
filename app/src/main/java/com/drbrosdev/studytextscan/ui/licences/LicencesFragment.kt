@@ -1,5 +1,7 @@
 package com.drbrosdev.studytextscan.ui.licences
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.transition.Fade
 import android.view.View
@@ -28,6 +30,12 @@ class LicencesFragment : Fragment(R.layout.fragment_licences) {
                     licenceListItem {
                         id("licence_list_item${it.order}")
                         licenceListItem(it)
+                        onLicenceListItemClicked {
+                            val intent = Intent(Intent.ACTION_VIEW).apply {
+                                data = Uri.parse(it.link)
+                            }
+                            startActivity(intent)
+                        }
                     }
                 }
             }

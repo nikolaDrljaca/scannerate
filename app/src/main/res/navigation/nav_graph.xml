@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeScanFragment">
 
@@ -15,14 +14,15 @@
         <action
             android:id="@+id/action_homeScanFragment_to_infoFragment"
             app:destination="@id/infoFragment" />
-        <action
-            android:id="@+id/action_homeScanFragment_to_viewPagerFragment"
-            app:destination="@id/viewPagerFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailScanFragment"
         android:name="com.drbrosdev.studytextscan.ui.detailscan.DetailScanFragment"
-        android:label="DetailScanFragment" />
+        android:label="DetailScanFragment" >
+        <action
+            android:id="@+id/action_detailScanFragment_to_pdfDialogFragment"
+            app:destination="@id/pdfDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/infoFragment"
         android:name="com.drbrosdev.studytextscan.ui.info.InfoFragment"
@@ -35,9 +35,8 @@
         android:id="@+id/licencesFragment"
         android:name="com.drbrosdev.studytextscan.ui.licences.LicencesFragment"
         android:label="LicencesFragment" />
-    <fragment
-        android:id="@+id/viewPagerFragment"
-        android:name="com.drbrosdev.studytextscan.ui.onBoarding.ViewPagerFragment"
-        android:label="fragment_view_pager"
-        tools:layout="@layout/fragment_view_pager" />
+    <dialog
+        android:id="@+id/pdfDialogFragment"
+        android:name="com.drbrosdev.studytextscan.ui.pdfDialog.PdfDialogFragment"
+        android:label="PdfDialogFragment" />
 </navigation>

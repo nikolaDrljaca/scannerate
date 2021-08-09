@@ -8,6 +8,8 @@ sourceSets {
     main {
         java {
             srcDirs += 'build/generated/source/kapt/debug/ui/home'
+            srcDirs += 'build/generated/source/kapt/debug/ui/detailscan'
+            srcDirs += 'build/generated/source/kapt/debug/ui/licenses'
         }
     }
 }
@@ -42,6 +44,10 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 

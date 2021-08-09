@@ -6,15 +6,18 @@ import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
+import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.dateAsString
@@ -26,6 +29,7 @@ import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
 import com.google.android.material.transition.MaterialSharedAxis
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
 
@@ -33,6 +37,7 @@ import java.util.*
 class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
     private val binding: FragmentScanDetailBinding by viewBinding()
     private val viewModel: DetailScanViewModel by stateViewModel(state = { requireArguments() })
+    private val pdfExportService: PdfExportServiceImpl by inject()
     private lateinit var textToSpeech: TextToSpeech
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +58,44 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         collectStateFlow(viewModel.viewState) { state ->
             state.scan()?.let { scan ->
                 binding.apply {
-                    textViewDateCreated.text = "Created: ${dateAsString(scan.dateCreated)}"
-                    textViewDateModified.text = "Modified: ${dateAsString(scan.dateModified)}"
+                    textViewDateCreated.text =
+                        getString(R.string.text_date_created, dateAsString(scan.dateCreated))
+                    textViewDateModified.text =
+                        getString(R.string.text_date_modified, dateAsString(scan.dateModified))
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
                     editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
+
+                    val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
+                    else getColor(R.color.light_blue)
+                    imageViewPin.setColorFilter(pinColor)
+
+                    recyclerViewChips.withModels {
+
+                        state.filteredTextModels()?.let {
+                            it.forEach { model ->
+                                chip {
+                                    id(model.filteredTextModelId)
+                                    onModelClick {
+                                        processFilteredModelIntent(model.type, model.content)
+                                    }
+                                    model(model)
+                                    initCard { cardView ->
+                                        when (model.type) {
+                                            "phone" -> {
+                                                cardView.setCardBackgroundColor(getColor(R.color.chip_green))
+                                            }
+                                            "email" -> {
+                                                cardView.setCardBackgroundColor(getColor(R.color.chip_orange))
+                                            }
+                                            "link" -> {
+                                                cardView.setCardBackgroundColor(getColor(R.color.chip_yellow))
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -67,12 +106,15 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     showKeyboardOnEditText(binding.editTextScanTitle)
                 }
                 is DetailScanEvents.ShowScanUpdated -> {
-                    showSnackbarShort("Scan updated.", anchor = binding.imageViewCopy)
+                    showSnackbarShort(
+                        getString(R.string.scan_updated),
+                        anchor = binding.imageViewCopy
+                    )
                 }
                 is DetailScanEvents.ShowUnsavedChanges -> {
                     showConfirmDialog(
-                        title = "Save changes?",
-                        message = "There seem to be unsaved changes.",
+                        title = getString(R.string.save_changes),
+                        message = getString(R.string.unsaved_changes),
                         onPositiveClick = {
                             binding.apply {
                                 viewModel.updateScan(
@@ -113,6 +155,11 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         Click events
          */
         binding.apply {
+            imageViewPin.setOnClickListener {
+                viewModel.updateScanPinned()
+                imageViewPin.setColorFilter(getColor(R.color.light_blue))
+            }
+
             imageViewSave.setOnClickListener {
                 viewModel.updateScan(
                     title = editTextScanTitle.text.toString(),
@@ -130,7 +177,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
 
             imageViewDelete.setOnClickListener {
                 showConfirmDialog(
-                    message = "This will delete the scanned text.",
+                    message = getString(R.string.delete_scanned_text),
                     onPositiveClick = {
                         viewModel.deleteScan()
                         hideKeyboard()
@@ -145,7 +192,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                 val clip = ClipData.newPlainText("raw_data", editTextScanContent.text.toString())
                 clipboardManager.setPrimaryClip(clip)
                 showSnackbarShort(
-                    message = "Copied to clipboard",
+                    message = getString(R.string.copied_clip),
                     anchor = binding.imageViewTranslate
                 )
             }
@@ -166,11 +213,11 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                         val hasLanguage = textToSpeech.setLanguage(Locale.US)
                         if (hasLanguage == TextToSpeech.LANG_MISSING_DATA || hasLanguage == TextToSpeech.LANG_NOT_SUPPORTED) {
                             showSnackbarShort(
-                                "No supported language found.",
+                                getString(R.string.unsupported_language),
                                 anchor = imageViewShare
                             )
                         } else {
-                            showSnackbarShort("Loading...", anchor = imageViewShare)
+                            showSnackbarShort(getString(R.string.loading), anchor = imageViewShare)
                             textToSpeech.speak(
                                 editTextScanContent.text.toString(),
                                 TextToSpeech.QUEUE_ADD,
@@ -200,10 +247,18 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
                     showSnackbarShort(
-                        message = "It seems you don't have Google Translate installed.",
+                        message = getString(R.string.no_google_translate),
                         anchor = binding.imageViewShare
                     )
                 }
+            }
+
+            imageViewPdf.setOnClickListener {
+                val arg = bundleOf("pdf_scan_id" to viewModel.scanId)
+                findNavController().navigate(
+                    R.id.action_detailScanFragment_to_pdfDialogFragment,
+                    arg
+                )
             }
         }
     }
@@ -215,5 +270,39 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
          */
         if (this::textToSpeech.isInitialized) textToSpeech.stop()
         super.onDestroyView()
+    }
+
+    private fun processFilteredModelIntent(type: String, content: String) {
+        try {
+            when (type) {
+                "phone" -> {
+                    val dialIntent = Intent(Intent.ACTION_DIAL).apply {
+                        data = Uri.parse("tel:$content")
+                    }
+                    if (requireActivity().packageManager != null)
+                        startActivity(dialIntent)
+                }
+                "email" -> {
+                    val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse("mailto:")
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf(content))
+                    }
+                    if (requireActivity().packageManager != null)
+                        startActivity(emailIntent)
+                }
+                "link" -> {
+                    val urlIntent = Intent(Intent.ACTION_VIEW).apply {
+                        data = Uri.parse(content)
+                    }
+                    if (requireActivity().packageManager != null)
+                        startActivity(urlIntent)
+                }
+            }
+        } catch (e: ActivityNotFoundException) {
+            showSnackbarShort(
+                message = getString(R.string.something_went_wrong),
+                anchor = binding.imageViewCopy
+            )
+        }
     }
 }

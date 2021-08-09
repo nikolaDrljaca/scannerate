@@ -9,7 +9,7 @@ fun getCurrentDateTime(): Long {
 
 fun dateAsString(
     dateInMillis: Long,
-    format: String = "yyyy/MM/dd HH:mm",
+    format: String = "dd.MM.yyyy HH:mm",
     locale: Locale = Locale.getDefault()
 ): String {
     val date = Date(dateInMillis)

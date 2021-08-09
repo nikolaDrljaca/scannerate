@@ -12,6 +12,7 @@
         android:id="@+id/animation_view"
         android:layout_width="match_parent"
         android:layout_height="144dp"
+        android:padding="8dp"
         app:lottie_rawRes="@raw/text_scan_loading"
         app:lottie_loop="true"
         app:lottie_autoPlay="true"

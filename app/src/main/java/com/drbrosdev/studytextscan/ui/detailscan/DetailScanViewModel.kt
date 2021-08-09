@@ -3,7 +3,10 @@ package com.drbrosdev.studytextscan.ui.detailscan
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.drbrosdev.studytextscan.persistence.entity.Scan
+import com.drbrosdev.studytextscan.persistence.repository.FilteredTextRepository
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
+import com.drbrosdev.studytextscan.util.Resource
 import com.drbrosdev.studytextscan.util.getCurrentDateTime
 import com.drbrosdev.studytextscan.util.setState
 import kotlinx.coroutines.channels.Channel
@@ -11,15 +14,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class DetailScanViewModel(
     val savedStateHandle: SavedStateHandle,
-    private val repo: ScanRepository
+    private val scanRepository: ScanRepository,
+    private val filteredModelsRepository: FilteredTextRepository
 ) : ViewModel() {
 
-    private val scanId = savedStateHandle.get<Int>("scan_id") ?: 0
+    val scanId = savedStateHandle.get<Int>("scan_id") ?: 0
     private val isJustCreated = savedStateHandle.get<Int>("is_created") ?: 0
 
     private val _viewState = MutableStateFlow(DetailScanState())
@@ -38,7 +43,7 @@ class DetailScanViewModel(
 
     fun deleteScan() = viewModelScope.launch {
         val current = _viewState.value.scan()
-        current?.let { repo.deleteScan(it) }
+        current?.let { scanRepository.deleteScan(it) }
     }
 
     fun onNavigateUp(title: String, content: String) {
@@ -62,7 +67,7 @@ class DetailScanViewModel(
                     scanText = content,
                     dateModified = getCurrentDateTime()
                 )
-                repo.updateScan(updated)
+                scanRepository.updateScan(updated)
                 _events.send(DetailScanEvents.ShowScanUpdated)
                 initializeScan(false)
                 return@launch
@@ -71,13 +76,25 @@ class DetailScanViewModel(
         }
     }
 
+    fun updateScanPinned() = viewModelScope.launch {
+        _viewState.value.scan()?.let {
+            val updated = it.copy(isPinned = !it.isPinned)
+            scanRepository.updateScan(updated)
+            initializeScan(false)
+        }
+    }
+
+    fun getCurrentScan(action: (Scan?) -> Unit){
+        action(_viewState.value.scan())
+    }
+
     private fun initializeScan(showKeyboard: Boolean = true) = viewModelScope.launch {
-        repo.getScanById(scanId).collect {
-            _viewState.setState { copy(scan = it) }
-            /*
-            delay allows views to instantiate so focusing can work
-            This works, later possibly look for a 'more elegant' solution.
-             */
+        combine(
+            scanRepository.getScanById(scanId),
+            filteredModelsRepository.getModelsByScanId(scanId)
+        ) { scan, models ->
+            _viewState.setState { copy(scan = scan, filteredTextModels = Resource.Success(models)) }
+        }.collect {
             delay(100)
             if (isJustCreated == 1 && showKeyboard) _events.send(DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad)
         }

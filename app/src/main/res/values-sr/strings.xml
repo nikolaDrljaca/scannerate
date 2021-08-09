@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Scannerate</string>
+    <string name="create_scan">Направи скен</string>
+    <string name="support">Подршка</string>
+    <string name="privacy_policy">Правила о приватности</string>
+    <string name="report_a_bug">Пријави грешку</string>
+    <string name="share">Подели</string>
+    <string name="rate_this_app">Оцени апликацију</string>
+    <string name="support_development">Подржи нас</string>
+    <string name="open_source_licenses">Библиотеке отвореног кода</string>
+    <string name="your_scans">Твоји скенови</string>
+    <string name="saving_code">Скенирање...</string>
+    <string name="developers">Програмери</string>
+    <string name="about_the_app">О Апликацији</string>
+    <string name="are_you_sure">Јеси ли сигуран?</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
+    <string name="enter_title">Унеси наслов...</string>
+    <string name="text_date_created">Направљено: %1$s</string>
+    <string name="text_date_modified">Промењено: %1$s</string>
+    <string name="num_of_scans">%1$d Скенова</string>
+    <string name="save_changes">Сачувај промене?</string>
+    <string name="scan_updated">Скен ажуриран.</string>
+    <string name="unsaved_changes">Имаш не сачуване промене.</string>
+    <string name="delete_scanned_text">Ово ће обрисати скен.</string>
+    <string name="copied_clip">Копирано.</string>
+    <string name="unsupported_language">Није пронађен подржани језик.</string>
+    <string name="loading">Учитава се...</string>
+    <string name="no_google_translate">Немаш Google Translate.</string>
+    <string name="something_went_wrong">Нешто није уреду.</string>
+    <string name="header_pinned">Закачено</string>
+    <string name="headers_other">Друго</string>
+    <string name="no_text_found">Текст није пронађен.</string>
+    <string name="feels_empty_here_create_some_scans">Направи нови скен.</string>
+    <string name="app_description"><![CDATA[Scannerate ти помаже да скенираш фотографије на твом уређају. Скенирај жељене фотографије, и промени текст у сваком моменту. Креирај ПДФ фајл на основу твог текста и користи га свугде.]]></string>
+    <string name="color">Боја</string>
+    <string name="customize_your_export">Прилагоди свој извоз</string>
+    <string name="export">Извоз</string>
+    <string name="cancel">Поништи</string>
+    <string name="font_size">Величина фонта</string>
+    <string name="scan_deleted">Скен обрисан.</string>
+    <string name="undo">Опозови</string>
+</resources>

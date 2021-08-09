@@ -1,23 +1,28 @@
 package com.drbrosdev.studytextscan.ui.home
 
+import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.EpoxyTouchHelper
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
+import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
 import com.drbrosdev.studytextscan.util.collectFlow
 import com.drbrosdev.studytextscan.util.collectStateFlow
 import com.drbrosdev.studytextscan.util.createLoadingDialog
 import com.drbrosdev.studytextscan.util.getColor
+import com.drbrosdev.studytextscan.util.showSnackbarLongWithAction
 import com.drbrosdev.studytextscan.util.showSnackbarShort
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
@@ -25,6 +30,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizerOptions
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
@@ -34,8 +40,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val selectImageRequest = registerForActivityResult(GetContent()) { uri ->
         if (uri != null) {
             viewModel.showLoadingDialog()
-            scanText(uri) { scannedText ->
-                viewModel.createScan(scannedText)
+            scanText(uri) { scannedText, filteredTextList ->
+                viewModel.createScan(scannedText, filteredTextList)
             }
         }
     }
@@ -76,23 +82,48 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
                             findNavController().navigate(R.id.action_homeScanFragment_to_infoFragment)
                         }
-                        onPdfListClicked {
-
-                        }
                     }
                     scanHeader {
                         id("scan_header")
-                        numOfScans(state.itemCount)
+                        numOfScans(getString(R.string.num_of_scans, state.itemCount))
                     }
 
-                    state.scanList()?.let { list ->
-                        list.forEach { scan ->
+                    if (state.pinnedScans.isNotEmpty()) {
+                        listHeader {
+                            id("pinned_header")
+                            headerTitle(getString(R.string.header_pinned))
+                        }
+                        state.pinnedScans.forEach {
                             scanListItem {
-                                id(scan.scanId)
-                                scan(scan)
+                                id(it.scanId)
+                                scan(it)
                                 onScanClicked {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                    reenterTransition =
+                                        MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                    findNavController().navigate(
+                                        R.id.action_homeScanFragment_to_detailScanFragment,
+                                        arg
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    if (state.otherScans.isNotEmpty()) {
+                        listHeader {
+                            id("others_header")
+                            headerTitle(getString(R.string.headers_other))
+                        }
+                        state.otherScans.forEach {
+                            scanListItem {
+                                id(it.scanId)
+                                scan(it)
+                                onScanClicked {
+                                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                                    reenterTransition =
+                                        MaterialSharedAxis(MaterialSharedAxis.X, false)
                                     val arg = bundleOf("scan_id" to it.scanId.toInt())
                                     findNavController().navigate(
                                         R.id.action_homeScanFragment_to_detailScanFragment,
@@ -103,19 +134,68 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         }
                     }
                 }
+            }
+        }
 
-                /*
+        binding.apply {
+            /*
                 Scrolling listener to hide the create scan FAB
                  */
-                recyclerViewScans.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        if (dy > 0) {
-                            buttonCreateScan.hide()
+            recyclerViewScans.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy > 0) {
+                        buttonCreateScan.hide()
+                    }
+                    if (dy < 0) {
+                        buttonCreateScan.show()
+                    }
+                }
+            })
+
+            /*
+            Swipe support, swipe to delete
+             */
+            val delete = ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.ic_round_delete_white_24
+            )
+            EpoxyTouchHelper.initSwiping(recyclerViewScans)
+                .left()
+                .withTarget(ScanListItemEpoxyModel::class.java)
+                .andCallbacks(object : EpoxyTouchHelper.SwipeCallbacks<ScanListItemEpoxyModel>() {
+                    override fun onSwipeCompleted(
+                        model: ScanListItemEpoxyModel?,
+                        itemView: View?,
+                        position: Int,
+                        direction: Int
+                    ) {
+                        model?.let {
+                            viewModel.deleteScan(it.scan)
                         }
-                        if (dy < 0) { buttonCreateScan.show() }
+                    }
+
+                    override fun onSwipeProgressChanged(
+                        model: ScanListItemEpoxyModel?,
+                        itemView: View?,
+                        swipeProgress: Float,
+                        canvas: Canvas?
+                    ) {
+                        itemView?.let { view ->
+                            view.alpha = swipeProgress + 1
+                            val itemHeight = view.bottom - view.top
+                            delete?.setTint(getColor(R.color.error_red))
+
+                            val iconTop = view.top + (itemHeight - delete!!.intrinsicHeight) / 2
+                            val iconMargin = (itemHeight - delete.intrinsicHeight) / 2
+                            val iconLeft = view.right - iconMargin - delete.intrinsicWidth
+                            val iconRight = view.right - iconMargin
+                            val iconBottom = iconTop + delete.intrinsicHeight
+
+                            delete.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                            delete.draw(canvas!!)
+                        }
                     }
                 })
-            }
         }
 
         collectFlow(viewModel.events) { homeEvents ->
@@ -134,9 +214,18 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 is HomeEvents.ShowScanEmpty -> {
                     loadingDialog.hide()
                     showSnackbarShort(
-                        message = "No text was found.",
+                        message = getString(R.string.no_text_found),
                         anchor = binding.buttonCreateScan
                     )
+                }
+                is HomeEvents.ShowUndoDeleteScan -> {
+                    showSnackbarLongWithAction(
+                        message = getString(R.string.scan_deleted),
+                        anchor = binding.buttonCreateScan,
+                        actionText = getString(R.string.undo)
+                    ) {
+                        viewModel.insertScan(homeEvents.scan)
+                    }
                 }
             }
         }
@@ -174,8 +263,10 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         }
     }
 
-    private fun scanText(uri: Uri, action: (String) -> Unit) {
+    private fun scanText(uri: Uri, action: (String, List<Pair<String, String>>) -> Unit) {
         val completeText = StringBuilder()
+        val filterService: FilterTextServiceImpl by inject()
+        val list = mutableListOf<Pair<String, String>>()
         try {
             val image = InputImage.fromFilePath(requireContext(), uri)
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
@@ -184,9 +275,19 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 .addOnCompleteListener { task ->
                     val scannedText = task.result
                     for (block in scannedText.textBlocks) {
+                        Log.d("DEBUGn", "scanText: block - ${block.text}")
                         completeText.append(block.text)
+                        for (line in block.lines) {
+                            Log.d("DEBUGn", "scanText: line - ${line.text}")
+                            for (element in line.elements) {
+                                Log.d("DEBUGn", "scanText: element - ${element.text}")
+                                list.addAll(filterService.filterTextForEmails(element.text))
+                                list.addAll(filterService.filterTextForPhoneNumbers(element.text))
+                                list.addAll(filterService.filterTextForLinks(element.text))
+                            }
+                        }
                     }
-                    action(completeText.toString())
+                    action(completeText.toString(), list)
                 }
                 .addOnFailureListener { e -> throw e }
         } catch (e: Exception) {
