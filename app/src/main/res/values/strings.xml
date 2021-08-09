@@ -49,4 +49,7 @@
     <string name="export">Export</string>
     <string name="cancel">Cancel</string>
     <string name="font_size">Font size</string>
+
+    <string name="scan_deleted" translatable="false">Scan deleted.</string>
+    <string name="undo" translatable="false">Undo</string>
 </resources>

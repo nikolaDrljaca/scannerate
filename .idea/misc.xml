@@ -3,8 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/drawable/bottom_bar_background.xml" value="0.23066666666666666" />
-        <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/drawable/dialog_background.xml" value="0.23066666666666666" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/drawable/ic_round_delete_24.xml" value="0.23066666666666666" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/drawable/ic_round_delete_white_24.xml" value="0.23066666666666666" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/drawable/ic_round_push_pin_24.xml" value="0.23066666666666666" />
@@ -12,11 +10,9 @@
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/drawable/save_button_background.xml" value="0.23066666666666666" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/dialog_loading.xml" value="0.21688888888888888" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/fragment_on_boarding_screen1.xml" value="0.21981981981981982" />
-        <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/fragment_pdf_dialog.xml" value="0.21981981981981982" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/fragment_scan_detail.xml" value="0.21688888888888888" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/fragment_view_pager.xml" value="0.21981981981981982" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/licence_list_item.xml" value="0.21981981981981982" />
-        <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/list_item.xml" value="0.21981981981981982" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/model_chip.xml" value="0.21981981981981982" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/model_pinned_header.xml" value="0.21981981981981982" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/model_scan_header.xml" value="0.21688888888888888" />

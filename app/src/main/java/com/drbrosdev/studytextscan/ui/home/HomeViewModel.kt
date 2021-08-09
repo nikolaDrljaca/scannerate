@@ -64,6 +64,15 @@ class HomeViewModel(
         _events.send(HomeEvents.ShowLoadingDialog)
     }
 
+    fun deleteScan(scan: Scan) = viewModelScope.launch {
+        scanRepo.deleteScan(scan)
+        _events.send(HomeEvents.ShowUndoDeleteScan(scan))
+    }
+
+    fun insertScan(scan: Scan) = viewModelScope.launch {
+        scanRepo.insertScan(scan)
+    }
+
     private fun getScans() = viewModelScope.launch {
         try {
             scanRepo.getAllScans().collect {
