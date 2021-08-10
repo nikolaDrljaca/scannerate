@@ -7,11 +7,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentOnBoardingScreen3Binding
+import com.drbrosdev.studytextscan.util.updateWindowInsets
 
 class OnBoardingScreen3 : Fragment(R.layout.fragment_on_boarding_screen3) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentOnBoardingScreen3Binding.bind(view)
+        updateWindowInsets(binding.root)
 
         val viewPager = requireActivity().findViewById<ViewPager2>(R.id.view_pager)
 
