@@ -15,7 +15,7 @@ import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
 import com.google.android.material.transition.MaterialSharedAxis
 
-class InfoFragment: Fragment(R.layout.fragment_info) {
+class InfoFragment : Fragment(R.layout.fragment_info) {
     private val binding: FragmentInfoBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,7 +45,8 @@ class InfoFragment: Fragment(R.layout.fragment_info) {
             }
 
             tvRateApp.setOnClickListener {
-                val page = Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
+                val page =
+                    Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
                 startActivity(Intent(Intent.ACTION_VIEW, page))
             }
 
@@ -56,24 +57,27 @@ class InfoFragment: Fragment(R.layout.fragment_info) {
             }
 
             tvReportBug.setOnClickListener {
-                val addresses = arrayOf(getString(R.string.mail_nikola), getString(R.string.mail_ognjen))
+                val addresses =
+                    arrayOf(getString(R.string.mail_nikola), getString(R.string.mail_ognjen))
                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                     data = Uri.parse("mailto:")
                     putExtra(Intent.EXTRA_EMAIL, addresses)
-                    putExtra(Intent.EXTRA_SUBJECT, "bug_report")
+                    putExtra(Intent.EXTRA_SUBJECT, "Scannerate - Bug Report")
                 }
                 startActivity(intent)
             }
 
             tvSupport.setOnClickListener {
-                //TODO: Complete setup, checkout buy me a coffee site, or setup a github page and have it there
-                showShortToast("Support clicked")
+                showShortToast("Coming soon!!!")
             }
 
             tvShare.setOnClickListener {
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "share_text")
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "Checkout this text scanning app - Scannerate: https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+                    )
                     type = "text/plain"
                 }
                 val intent = Intent.createChooser(shareIntent, null)
