@@ -1,9 +1,10 @@
 package com.drbrosdev.studytextscan.ui.onBoarding.screens
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentOnBoardingScreen3Binding
 
@@ -12,17 +13,18 @@ class OnBoardingScreen3 : Fragment(R.layout.fragment_on_boarding_screen3) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentOnBoardingScreen3Binding.bind(view)
 
-        binding.apply {
-            button3.setOnClickListener {
+        val viewPager = requireActivity().findViewById<ViewPager2>(R.id.view_pager)
 
+        binding.apply {
+            animationView.repeatCount = 2
+
+            buttonFinish.setOnClickListener {
+                findNavController().navigateUp()
+            }
+
+            buttonPrevious.setOnClickListener {
+                viewPager.currentItem = 1
             }
         }
-    }
-
-    private fun onBoardingFinished() {
-        val sharedPref = requireActivity().getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putBoolean("finished", true)
-        editor.apply()
     }
 }

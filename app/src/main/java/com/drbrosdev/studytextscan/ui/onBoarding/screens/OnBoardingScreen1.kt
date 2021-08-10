@@ -18,6 +18,9 @@ class OnBoardingScreen1 : Fragment(R.layout.fragment_on_boarding_screen1) {
 
         binding.apply {
 
+            buttonNext.setOnClickListener {
+                viewPager.currentItem = 1
+            }
         }
     }
 

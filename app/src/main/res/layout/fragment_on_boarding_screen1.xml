@@ -71,8 +71,9 @@
         android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toTopOf="@id/guideline7"
         app:layout_constraintTop_toBottomOf="@id/linear_layout"
-        android:text="Extract text from images easily by creating a scan!\nClick on the button to launch an image picker and select an image to extract its text/"
+        android:text="Extract text from images easily by creating a scan!\nClick on the button to launch an image picker and select an image to extract its text."
         android:gravity="center"
+        android:textSize="16sp"
         android:fontFamily="@font/noto_sans_jp_regular"
         />
 

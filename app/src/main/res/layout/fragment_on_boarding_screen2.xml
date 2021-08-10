@@ -24,7 +24,8 @@
         android:id="@+id/animation_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:lottie_rawRes="@raw/edit_text_feather"
+        android:padding="4dp"
+        app:lottie_rawRes="@raw/edit_text_pencil"
         app:lottie_autoPlay="true"
         app:layout_constraintTop_toBottomOf="@id/guideline8"
         app:layout_constraintBottom_toTopOf="@id/guideline9"
@@ -37,12 +38,13 @@
         android:layout_marginHorizontal="16dp"
         android:fontFamily="@font/noto_sans_jp_regular"
         android:gravity="center"
-        android:text="Extract text from images easily by creating a scan!\nClick on the button to launch an image picker and select an image to extract its text/"
+        android:textSize="16sp"
+        android:text="Edit and format extracted text. You can also copy, share and even translate!"
         app:layout_constraintBottom_toTopOf="@id/guideline7"
         app:layout_constraintTop_toBottomOf="@id/guideline9" />
 
     <Button
-        android:id="@+id/button_export"
+        android:id="@+id/button_next"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,7 +57,7 @@
         app:rippleColor="@color/heavy_blue" />
 
     <Button
-        android:id="@+id/button_cancel"
+        android:id="@+id/button_previous"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
