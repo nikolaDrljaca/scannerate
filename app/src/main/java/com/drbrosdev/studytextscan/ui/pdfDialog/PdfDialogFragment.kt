@@ -7,9 +7,12 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentPdfDialogBinding
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
@@ -69,6 +72,15 @@ class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
                             currentFontSize.toInt()
                         )
                     }
+                }
+                /*
+                Hacky solution to dismiss the dialog after export is clicked.
+                Probably not a good solution, might cause crashes since its could modify a fragment
+                that has gone through onDestroy
+                 */
+                lifecycleScope.launch {
+                    delay(500)
+                    dismiss()
                 }
             }
         }
