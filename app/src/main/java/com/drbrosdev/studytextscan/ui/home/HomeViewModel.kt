@@ -15,6 +15,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -31,6 +32,7 @@ class HomeViewModel(
 
     init {
         getScans()
+        initOnboarding()
     }
 
     fun createScan(text: String, filteredTextList: List<Pair<String, String>>) = viewModelScope.launch {
@@ -73,6 +75,14 @@ class HomeViewModel(
 
     fun insertScan(scan: Scan) = viewModelScope.launch {
         scanRepo.insertScan(scan)
+    }
+
+    private fun initOnboarding() = viewModelScope.launch {
+        val hasSeen = prefs.isFirstLaunch.first()
+        if (!hasSeen) {
+            _events.send(HomeEvents.ShowOnboarding)
+            prefs.firstLaunchComplete()
+        }
     }
 
     private fun getScans() = viewModelScope.launch {

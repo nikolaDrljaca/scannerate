@@ -7,4 +7,5 @@ sealed class HomeEvents {
     data class ShowCurrentScanSaved(val id: Int): HomeEvents()
     object ShowScanEmpty: HomeEvents()
     data class ShowUndoDeleteScan(val scan: Scan): HomeEvents()
+    object ShowOnboarding: HomeEvents()
 }
