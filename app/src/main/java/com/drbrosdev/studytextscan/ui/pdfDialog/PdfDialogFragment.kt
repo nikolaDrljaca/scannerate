@@ -26,7 +26,29 @@ class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
     dropdown menu.
      */
     private val colorOptionsList = listOf("Black", "Blue", "Red", "Green", "Yellow")
-    private val fontSizeOptionsList = listOf("12", "14", "16", "18")
+    private val fontSizeOptionsList = listOf(
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "20",
+        "22",
+        "24",
+        "26",
+        "28",
+        "30",
+        "32",
+        "36",
+        "40",
+        "44"
+    )
     private val defaultColor = "Black"
     private val defaultFontSize = "12"
 
@@ -40,8 +62,10 @@ class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         binding.apply {
-            val colorOptionsAdapter = ArrayAdapter(requireContext(), R.layout.list_item, colorOptionsList)
-            val fontOptionsAdapter = ArrayAdapter(requireContext(), R.layout.list_item, fontSizeOptionsList)
+            val colorOptionsAdapter =
+                ArrayAdapter(requireContext(), R.layout.list_item, colorOptionsList)
+            val fontOptionsAdapter =
+                ArrayAdapter(requireContext(), R.layout.list_item, fontSizeOptionsList)
 
             colorMenu.editText?.setText(defaultColor)
             fontSizeMenu.editText?.setText(defaultFontSize)
@@ -86,8 +110,8 @@ class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
         }
     }
 
-    private fun determineColor(colorString: String): Int{
-        when(colorString){
+    private fun determineColor(colorString: String): Int {
+        when (colorString) {
             "Black" -> return Color.BLACK
             "Blue" -> return Color.BLUE
             "Green" -> return Color.GREEN
