@@ -278,19 +278,18 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 .addOnCompleteListener { task ->
                     val scannedText = task.result
                     for (block in scannedText.textBlocks) {
-                        Log.d("DEBUGn", "scanText: block - ${block.text}")
-                        completeText.append(block.text)
                         for (line in block.lines) {
-                            Log.d("DEBUGn", "scanText: line - ${line.text}")
                             for (element in line.elements) {
                                 Log.d("DEBUGn", "scanText: element - ${element.text}")
                                 list.addAll(filterService.filterTextForEmails(element.text))
                                 list.addAll(filterService.filterTextForPhoneNumbers(element.text))
                                 list.addAll(filterService.filterTextForLinks(element.text))
+                                completeText.append(element.text + " ")
                             }
                         }
                     }
-                    action(completeText.toString(), list)
+                    val display = completeText.toString()
+                    action(display, list)
                 }
                 .addOnFailureListener { e -> throw e }
         } catch (e: Exception) {

@@ -107,4 +107,7 @@ dependencies {
     implementation "com.airbnb.android:epoxy:$epoxyVersion"
     // Add the annotation processor if you are using Epoxy's annotations (recommended)
     kapt "com.airbnb.android:epoxy-processor:$epoxyVersion"
+
+    //entity extraction - text recognition
+    implementation 'com.google.mlkit:entity-extraction:16.0.0-beta2'
 }
