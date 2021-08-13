@@ -201,7 +201,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         collectFlow(viewModel.events) { homeEvents ->
             when (homeEvents) {
                 is HomeEvents.ShowCurrentScanSaved -> {
-                    loadingDialog.hide()
+                    loadingDialog.dismiss()
                     val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
                     findNavController().navigate(
                         R.id.action_homeScanFragment_to_detailScanFragment,
@@ -212,7 +212,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     loadingDialog.show()
                 }
                 is HomeEvents.ShowScanEmpty -> {
-                    loadingDialog.hide()
+                    loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.no_text_found),
                         anchor = binding.buttonCreateScan
