@@ -89,7 +89,8 @@ class MyPrintDocumentAdapter(
             0F,
             textToPrint,
             TextPaint(Paint.ANTI_ALIAS_FLAG),
-            mutableListOf()
+            mutableListOf(),
+            fontSize.toFloat()
         )
         Log.d("pagination", "Pagination created!")
 

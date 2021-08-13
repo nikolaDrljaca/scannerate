@@ -15,6 +15,7 @@ class Pagination(
     private var mText: CharSequence? = null,
     private var mPaint: TextPaint? = null,
     private var mPages: MutableList<CharSequence>? = null,
+    private var fontSize: Float
 ) {
 
     init {
@@ -23,6 +24,7 @@ class Pagination(
 
     private fun layout() {
 
+        mPaint!!.textSize = fontSize
         val layout = StaticLayout(
             mText!!,
             0,
