@@ -48,10 +48,8 @@ class FilterTextServiceImpl : TextFilterService {
 
         val validNumbers = mutableListOf<Pair<String, String>>()
         numbers.forEach {
-            if (!Pattern.matches("[a-zA-Z]+", it.second)) {
-                if (it.second.length in 7..13) {
-                    validNumbers.add(it)
-                }
+            if (!Pattern.matches("[a-zA-Z]+", it.second) && it.second.length in 7..13) {
+                validNumbers.add(it)
             }
         }
         return validNumbers
