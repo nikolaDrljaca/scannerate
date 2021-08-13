@@ -50,12 +50,6 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                 startActivity(Intent(Intent.ACTION_VIEW, page))
             }
 
-            tvPrivacy.setOnClickListener {
-                //TODO change when policy is created
-                val page = Uri.parse("https://nikoladrljaca.github.io/bitcodept/privacy-policy")
-                startActivity(Intent(Intent.ACTION_VIEW, page))
-            }
-
             tvReportBug.setOnClickListener {
                 val addresses =
                     arrayOf(getString(R.string.mail_nikola), getString(R.string.mail_ognjen))
