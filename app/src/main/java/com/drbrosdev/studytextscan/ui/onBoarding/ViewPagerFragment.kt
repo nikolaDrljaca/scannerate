@@ -25,10 +25,17 @@ class ViewPagerFragment : Fragment(R.layout.fragment_view_pager) {
             OnBoardingScreen3()
         )
 
+        /*
+        Use childFragmentManager instead of activity.supportFragmentManager
+        to preserve state when configuration change happens.
+
+        This is because in this case we are making nested navigation, using a Fragment to host
+        onBoarding Fragments.
+         */
         val adapter = ViewPagerAdapter(
             fragmentList,
-            requireActivity().supportFragmentManager,
-            lifecycle
+            childFragmentManager,
+            viewLifecycleOwner.lifecycle
         )
 
         binding.apply {
