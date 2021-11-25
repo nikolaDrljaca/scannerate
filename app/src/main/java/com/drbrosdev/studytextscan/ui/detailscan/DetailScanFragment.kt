@@ -1,11 +1,6 @@
 package com.drbrosdev.studytextscan.ui.detailscan
 
-import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -18,16 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
-import com.drbrosdev.studytextscan.util.collectFlow
-import com.drbrosdev.studytextscan.util.collectStateFlow
-import com.drbrosdev.studytextscan.util.dateAsString
-import com.drbrosdev.studytextscan.util.getColor
-import com.drbrosdev.studytextscan.util.hideKeyboard
-import com.drbrosdev.studytextscan.util.showConfirmDialog
-import com.drbrosdev.studytextscan.util.showKeyboardOnEditText
-import com.drbrosdev.studytextscan.util.showSnackbarShort
-import com.drbrosdev.studytextscan.util.updateWindowInsets
-import com.drbrosdev.studytextscan.util.viewBinding
+import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
@@ -55,7 +41,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         requireActivity().window.navigationBarColor = getColor(R.color.bottom_bar_color)
 
 
-        collectStateFlow(viewModel.viewState) { state ->
+        collectFlow(viewModel.viewState) { state ->
             state.scan()?.let { scan ->
                 binding.apply {
                     textViewDateCreated.text =

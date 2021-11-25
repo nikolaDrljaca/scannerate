@@ -8,7 +8,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -18,26 +17,6 @@ Grab dependencies here:
 
     Keep in mind the dep version will change and may be different at the time you are
     looking at this.
- */
-
-/*
-Takes a StateFlow as a parameter and renders(collects) it in a safe way using repeatOnLifecycle.
-Could be used with a data class representing the screen state just like in a Mavericks or MVI
-paradigm. The data class could use the a sealed class to represent different states when async loading
-data - from network or database.
- */
-inline fun <T> Fragment.collectStateFlow(state: StateFlow<T>, crossinline render: ((T) -> Unit)) {
-    viewLifecycleOwner.lifecycleScope.launch {
-        viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            state.collect { state ->
-                render(state)
-            }
-        }
-    }
-}
-
-/*
-Same thing as above, just takes a flow instead.
  */
 inline fun <T> Fragment.collectFlow(state: Flow<T>, crossinline render: ((T) -> Unit)) {
     viewLifecycleOwner.lifecycleScope.launch {
@@ -70,16 +49,6 @@ For further information check these great articles explaining these topics:
 
 The code itself here originates from the second article.
  */
-inline fun <T> StateFlow<T>.collectAndLaunchIn(
-    owner: LifecycleOwner,
-    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    crossinline block: suspend CoroutineScope.(T) -> Unit
-) = owner.lifecycleScope.launch {
-    owner.repeatOnLifecycle(minActiveState) {
-        collect { block(it) }
-    }
-}
-
 inline fun <T> Flow<T>.collectAndLaunchIn(
     owner: LifecycleOwner,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,

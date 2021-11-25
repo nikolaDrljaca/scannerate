@@ -1,9 +1,10 @@
 package com.drbrosdev.studytextscan.ui.home
 
+import android.content.Intent
 import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.os.Parcelable
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
@@ -18,31 +19,20 @@ import com.airbnb.epoxy.EpoxyTouchHelper
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
-import com.drbrosdev.studytextscan.util.collectFlow
-import com.drbrosdev.studytextscan.util.collectStateFlow
-import com.drbrosdev.studytextscan.util.createLoadingDialog
-import com.drbrosdev.studytextscan.util.getColor
-import com.drbrosdev.studytextscan.util.showSnackbarLongWithAction
-import com.drbrosdev.studytextscan.util.showSnackbarShort
-import com.drbrosdev.studytextscan.util.updateWindowInsets
-import com.drbrosdev.studytextscan.util.viewBinding
+import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.TextRecognizerOptions
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding()
     private val viewModel: HomeViewModel by viewModel()
+    private val filterTextService: FilterTextServiceImpl by inject()
 
     private val selectImageRequest = registerForActivityResult(GetContent()) { uri ->
-        if (uri != null) {
-            viewModel.showLoadingDialog()
-            scanText(uri) { scannedText, filteredTextList ->
-                viewModel.createScan(scannedText, filteredTextList)
-            }
+        uri?.let {
+            handleImage(it)
         }
     }
 
@@ -69,7 +59,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
          */
         val loadingDialog = createLoadingDialog()
 
-        collectStateFlow(viewModel.viewState) { state ->
+        collectFlow(viewModel.viewState) { state ->
             binding.apply {
                 linearLayoutEmpty.isVisible = state.isEmpty
 
@@ -264,36 +254,28 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 animationView.repeatCount = 2
             }
         }
+
+        requireActivity().apply {
+            if (intent.action == Intent.ACTION_SEND) {
+                if (intent.type?.startsWith("image") == true) {
+                    handleIntent(intent)
+                }
+            }
+        }
     }
 
-    private fun scanText(uri: Uri, action: (String, List<Pair<String, String>>) -> Unit) {
-        val completeText = StringBuilder()
-        val filterService: FilterTextServiceImpl by inject()
-        val list = mutableListOf<Pair<String, String>>()
-        try {
-            val image = InputImage.fromFilePath(requireContext(), uri)
-            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-
-            recognizer.process(image)
-                .addOnCompleteListener { task ->
-                    val scannedText = task.result
-                    for (block in scannedText.textBlocks) {
-                        for (line in block.lines) {
-                            for (element in line.elements) {
-                                Log.d("DEBUGn", "scanText: element - ${element.text}")
-                                list.addAll(filterService.filterTextForEmails(element.text))
-                                list.addAll(filterService.filterTextForPhoneNumbers(element.text))
-                                list.addAll(filterService.filterTextForLinks(element.text))
-                                completeText.append(element.text + " ")
-                            }
-                        }
-                    }
-                    val display = completeText.toString()
-                    action(display, list)
-                }
-                .addOnFailureListener { e -> throw e }
-        } catch (e: Exception) {
-            Log.e("DEBUGn", "scanText: ", e)
+    private fun handleIntent(intent: Intent) {
+        (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
+            handleImage(it)
         }
+        /*
+        After the intent is handled, set the action to "" so it does not trigger again.
+         */
+        intent.action = ""
+    }
+
+    private fun handleImage(uri: Uri) {
+        val image = InputImage.fromFilePath(requireContext(), uri)
+        viewModel.handleScan(image)
     }
 }
