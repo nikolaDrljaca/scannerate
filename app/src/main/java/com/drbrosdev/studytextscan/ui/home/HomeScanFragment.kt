@@ -220,6 +220,13 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 is HomeEvents.ShowOnboarding -> {
                     findNavController().navigate(R.id.action_homeScanFragment_to_viewPagerFragment)
                 }
+                is HomeEvents.ShowErrorWhenScanning -> {
+                    loadingDialog.dismiss()
+                    showSnackbarShort(
+                        message = getString(R.string.something_went_wrong),
+                        anchor = binding.buttonCreateScan
+                    )
+                }
             }
         }
 

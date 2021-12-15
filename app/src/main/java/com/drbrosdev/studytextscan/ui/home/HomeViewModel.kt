@@ -113,20 +113,26 @@ class HomeViewModel(
 
             recognizer.process(image)
                 .addOnCompleteListener { task ->
-                    val scannedText = task.result
-                    for (block in scannedText.textBlocks) {
-                        for (line in block.lines) {
-                            for (element in line.elements) {
-                                Log.d("DEBUGn", "scanText: element - ${element.text}")
-                                list.addAll(filterService.filterTextForEmails(element.text))
-                                list.addAll(filterService.filterTextForPhoneNumbers(element.text))
-                                list.addAll(filterService.filterTextForLinks(element.text))
-                                completeText.append(element.text + " ")
+                    try {
+                        val scannedText = task.result
+                        for (block in scannedText.textBlocks) {
+                            for (line in block.lines) {
+                                for (element in line.elements) {
+                                    Log.d("DEBUGn", "scanText: element - ${element.text}")
+                                    list.addAll(filterService.filterTextForEmails(element.text))
+                                    list.addAll(filterService.filterTextForPhoneNumbers(element.text))
+                                    list.addAll(filterService.filterTextForLinks(element.text))
+                                    completeText.append(element.text + " ")
+                                }
                             }
                         }
+                        val display = completeText.toString()
+                        action(display, list)
+                    } catch (e: Exception) {
+                        viewModelScope.launch {
+                           _events.send(HomeEvents.ShowErrorWhenScanning)
+                        }
                     }
-                    val display = completeText.toString()
-                    action(display, list)
                 }
                 .addOnFailureListener { e -> throw e }
         } catch (e: Exception) {
