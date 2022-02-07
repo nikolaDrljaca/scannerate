@@ -8,6 +8,7 @@ import com.drbrosdev.studytextscan.persistence.database.ApplicationDatabase
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
 import com.drbrosdev.studytextscan.service.textFilter.TextFilterService
+import com.drbrosdev.studytextscan.ui.home.ScanTextFromImageUseCase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -27,9 +28,13 @@ private fun providePreferences(context: Context) = AppPreferences(context.datast
 private fun provideFilterTextService() =
     FilterTextServiceImpl()
 
+private fun provideScanTextFromImageUseCase(filterTextService: TextFilterService) =
+    ScanTextFromImageUseCase(filterTextService)
+
 val appModule = module {
     single { provideDatabase(context = androidContext()) }
     single { providePdfExportService() }
     factory { providePreferences(androidContext()) }
     single { provideFilterTextService() } bind TextFilterService::class
+    factory { provideScanTextFromImageUseCase(get()) }
 }

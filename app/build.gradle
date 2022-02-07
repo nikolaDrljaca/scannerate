@@ -67,7 +67,21 @@ dependencies {
     implementation "io.coil-kt:coil:1.2.2"
 
     //Ml kit library for text recognition
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:16.3.0'
+//    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:16.3.0'
+    // To recognize Latin script
+    implementation 'com.google.mlkit:text-recognition:16.0.0-beta3'
+
+    // To recognize Chinese script
+    implementation 'com.google.mlkit:text-recognition-chinese:16.0.0-beta3'
+
+    // To recognize Devanagari script
+    implementation 'com.google.mlkit:text-recognition-devanagari:16.0.0-beta3'
+
+    // To recognize Japanese script
+    implementation 'com.google.mlkit:text-recognition-japanese:16.0.0-beta3'
+
+    // To recognize Korean script
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta3'
 
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha02'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
@@ -110,4 +124,8 @@ dependencies {
 
     //entity extraction - text recognition
     implementation 'com.google.mlkit:entity-extraction:16.0.0-beta2'
+
+    //Google ML-kit Task extensions
+    //Source: https://github.com/Kotlin/kotlinx.coroutines/tree/master/integration/kotlinx-coroutines-play-services
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1'
 }

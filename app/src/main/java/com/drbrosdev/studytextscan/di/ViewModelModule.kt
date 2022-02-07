@@ -8,7 +8,14 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(scanRepo = get(), filteredTextModelRepo = get(), prefs = get(), filterService = get()) }
+    viewModel {
+        HomeViewModel(
+            scanRepo = get(),
+            filteredTextModelRepo = get(),
+            prefs = get(),
+            filterService = get(), scanTextFromImageUseCase = get()
+        )
+    }
     viewModel { LicenceViewModel() }
     viewModel {
         DetailScanViewModel(

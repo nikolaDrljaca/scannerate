@@ -14,16 +14,21 @@ import com.drbrosdev.studytextscan.util.getCurrentDateTime
 import com.drbrosdev.studytextscan.util.setState
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.TextRecognizerOptions
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val prefs: AppPreferences,
     private val scanRepo: ScanRepository,
     private val filteredTextModelRepo: FilteredTextRepository,
-    private val filterService: TextFilterService
+    private val filterService: TextFilterService,
+    private val scanTextFromImageUseCase: ScanTextFromImageUseCase
 ): ViewModel() {
     private val _viewState = MutableStateFlow(HomeState())
     val viewState: StateFlow<HomeState> = _viewState
@@ -100,8 +105,17 @@ class HomeViewModel(
 
     fun handleScan(image: InputImage) {
         showLoadingDialog()
-        scanText(image) { scannedText, filteredTextList ->
-            createScan(scannedText, filteredTextList)
+//        scanText(image) { scannedText, filteredTextList ->
+//            createScan(scannedText, filteredTextList)
+//        }
+        viewModelScope.launch {
+            val (completeText, filteredText) = scanTextFromImageUseCase(image)
+            //TODO: error check, wrap in try catch block
+            try {
+                createScan(completeText, filteredText)
+            } catch (e: Exception) {
+                Log.e("DEBUGn", "Error: ${e.localizedMessage}")
+            }
         }
     }
 

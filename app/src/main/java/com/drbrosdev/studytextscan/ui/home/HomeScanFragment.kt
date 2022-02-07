@@ -18,17 +18,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
-import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
-import com.drbrosdev.studytextscan.util.*
+import com.drbrosdev.studytextscan.util.collectFlow
+import com.drbrosdev.studytextscan.util.createLoadingDialog
+import com.drbrosdev.studytextscan.util.getColor
+import com.drbrosdev.studytextscan.util.showSnackbarLongWithAction
+import com.drbrosdev.studytextscan.util.showSnackbarShort
+import com.drbrosdev.studytextscan.util.updateWindowInsets
+import com.drbrosdev.studytextscan.util.viewBinding
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding()
     private val viewModel: HomeViewModel by viewModel()
-    private val filterTextService: FilterTextServiceImpl by inject()
 
     private val selectImageRequest = registerForActivityResult(GetContent()) { uri ->
         uri?.let {
