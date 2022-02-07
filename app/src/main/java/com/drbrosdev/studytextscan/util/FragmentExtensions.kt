@@ -102,8 +102,9 @@ its done in this project.
 
 fun Fragment.createLoadingDialog(): AlertDialog {
     val inflater = requireActivity().layoutInflater
-    return MaterialAlertDialogBuilder(requireContext())
+    return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
         .setView(inflater.inflate(R.layout.dialog_loading, null))
+        .setCancelable(false)
         .create()
 }
 

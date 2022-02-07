@@ -17,7 +17,6 @@ class ScanTextFromImageUseCase(
     private val filterService: TextFilterService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
-    //TODO maybe inject these to not create them everytime? - constructor injection
     private val recognizers = listOf(
         TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS),
         TextRecognition.getClient(DevanagariTextRecognizerOptions.Builder().build()),
@@ -26,10 +25,9 @@ class ScanTextFromImageUseCase(
         TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build()),
     )
 
-    //TODO: Error checking
     suspend operator fun invoke(image: InputImage) = withContext(dispatcher) {
-        val completeText = StringBuilder()
-        val chips = mutableListOf<Pair<String, String>>()
+        val chips = mutableSetOf<Pair<String, String>>()
+        val detectedText = mutableSetOf<String>()
 
         for (textRecognizer in recognizers) {
             val result = textRecognizer.process(image).await()
@@ -41,14 +39,15 @@ class ScanTextFromImageUseCase(
                             chips.addAll(filterService.filterTextForEmails(element.text))
                             chips.addAll(filterService.filterTextForPhoneNumbers(element.text))
                             chips.addAll(filterService.filterTextForLinks(element.text))
-                            completeText.append(element.text + " ")
+                            detectedText.add(element.text + " ")
                         }
                     }
                 }
-                //TODO Not break, test with image that has multiple scripts
-//                break
             }
         }
-        completeText.toString() to chips
+        val completeText = StringBuilder().also {
+            detectedText.forEach { text -> it.append(text) }
+        }
+        completeText.toString() to chips.toList()
     }
 }

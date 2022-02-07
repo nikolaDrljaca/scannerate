@@ -13,7 +13,7 @@ val viewModelModule = module {
             scanRepo = get(),
             filteredTextModelRepo = get(),
             prefs = get(),
-            filterService = get(), scanTextFromImageUseCase = get()
+            scanTextFromImageUseCase = get()
         )
     }
     viewModel { LicenceViewModel() }
