@@ -2,9 +2,9 @@ package com.drbrosdev.studytextscan.service.textFilter
 
 import org.junit.Test
 
-class FilterTextServiceImplTest {
+class TextFilterServiceImplTest {
 
-    private val service = FilterTextServiceImpl()
+    private val service = TextFilterServiceImpl()
 
     @Test
     fun filterText() {

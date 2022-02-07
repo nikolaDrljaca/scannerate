@@ -6,7 +6,7 @@ import com.drbrosdev.studytextscan.datastore.AppPreferences
 import com.drbrosdev.studytextscan.datastore.datastore
 import com.drbrosdev.studytextscan.persistence.database.ApplicationDatabase
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
-import com.drbrosdev.studytextscan.service.textFilter.FilterTextServiceImpl
+import com.drbrosdev.studytextscan.service.textFilter.TextFilterServiceImpl
 import com.drbrosdev.studytextscan.service.textFilter.TextFilterService
 import com.drbrosdev.studytextscan.ui.home.ScanTextFromImageUseCase
 import org.koin.android.ext.koin.androidContext
@@ -26,7 +26,7 @@ private fun providePdfExportService() =
 private fun providePreferences(context: Context) = AppPreferences(context.datastore)
 
 private fun provideFilterTextService() =
-    FilterTextServiceImpl()
+    TextFilterServiceImpl()
 
 private fun provideScanTextFromImageUseCase(filterTextService: TextFilterService) =
     ScanTextFromImageUseCase(filterTextService)

@@ -2,7 +2,7 @@ package com.drbrosdev.studytextscan.service.textFilter
 
 import java.util.regex.Pattern
 
-class FilterTextServiceImpl : TextFilterService {
+class TextFilterServiceImpl : TextFilterService {
 
     override fun filterTextForPhoneNumbers(text: String): List<Pair<String, String>> {
 

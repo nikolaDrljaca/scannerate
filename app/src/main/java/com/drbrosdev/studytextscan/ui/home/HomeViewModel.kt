@@ -13,7 +13,11 @@ import com.drbrosdev.studytextscan.util.getCurrentDateTime
 import com.drbrosdev.studytextscan.util.setState
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -30,7 +34,7 @@ class HomeViewModel(
 
     init {
         getScans()
-        initOnboarding()
+        initOnBoarding()
     }
 
     private fun createScan(text: String, filteredTextList: List<Pair<String, String>>) = viewModelScope.launch {
@@ -75,7 +79,7 @@ class HomeViewModel(
         scanRepo.insertScan(scan)
     }
 
-    private fun initOnboarding() = viewModelScope.launch {
+    private fun initOnBoarding() = viewModelScope.launch {
         val hasSeen = prefs.isFirstLaunch.first()
         if (!hasSeen) {
             _events.send(HomeEvents.ShowOnboarding)
@@ -98,7 +102,6 @@ class HomeViewModel(
     fun handleScan(image: InputImage) {
         showLoadingDialog()
         viewModelScope.launch {
-            //TODO: error check, wrap in try catch block
             try {
                 val (completeText, filteredText) = scanTextFromImageUseCase(image)
                 createScan(completeText, filteredText)
