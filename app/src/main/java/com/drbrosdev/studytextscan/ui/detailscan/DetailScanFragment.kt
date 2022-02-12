@@ -41,8 +41,8 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         requireActivity().window.navigationBarColor = getColor(R.color.bottom_bar_color)
 
 
-        collectFlow(viewModel.viewState) { state ->
-            state.scan()?.let { scan ->
+        collectFlow(viewModel.state) { state ->
+            state.scan?.let { scan ->
                 binding.apply {
                     textViewDateCreated.text =
                         getString(R.string.text_date_created, dateAsString(scan.dateCreated))
@@ -52,12 +52,11 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                     editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
 
                     val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
-                    else getColor(R.color.light_blue)
+                        else getColor(R.color.light_blue)
                     imageViewPin.setColorFilter(pinColor)
 
                     recyclerViewChips.withModels {
-
-                        state.filteredTextModels()?.let {
+                        state.filteredTextModels.let {
                             it.forEach { model ->
                                 chip {
                                     id(model.filteredTextModelId)
@@ -208,7 +207,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                                 editTextScanContent.text.toString(),
                                 TextToSpeech.QUEUE_ADD,
                                 null,
-                                viewModel.scanUtteranceId()
+                                viewModel.scanId.toString()
                             )
                         }
                     }

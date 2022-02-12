@@ -18,13 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
-import com.drbrosdev.studytextscan.util.collectFlow
-import com.drbrosdev.studytextscan.util.createLoadingDialog
-import com.drbrosdev.studytextscan.util.getColor
-import com.drbrosdev.studytextscan.util.showSnackbarLongWithAction
-import com.drbrosdev.studytextscan.util.showSnackbarShort
-import com.drbrosdev.studytextscan.util.updateWindowInsets
-import com.drbrosdev.studytextscan.util.viewBinding
+import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -62,7 +56,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
          */
         val loadingDialog = createLoadingDialog()
 
-        collectFlow(viewModel.viewState) { state ->
+        collectFlow(viewModel.state) { state ->
             binding.apply {
                 linearLayoutEmpty.isVisible = state.isEmpty
 
@@ -80,6 +74,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         id("scan_header")
                         numOfScans(getString(R.string.num_of_scans, state.itemCount))
                     }
+
+                    if (state.isLoading)
+                        loadingScans { id("loading_scans") }
 
                     if (state.pinnedScans.isNotEmpty()) {
                         listHeader {
@@ -104,12 +101,12 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         }
                     }
 
-                    if (state.otherScans.isNotEmpty()) {
+                    if (state.scans.isNotEmpty()) {
                         listHeader {
                             id("others_header")
                             headerTitle(getString(R.string.headers_other))
                         }
-                        state.otherScans.forEach {
+                        state.scans.forEach {
                             scanListItem {
                                 id(it.scanId)
                                 scan(it)
@@ -247,14 +244,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 buttonCreateScan.setOnClickListener {
                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-                    /*
-                    Code above is just a placeholder for initial testing,
-                    create button should
-                        -launch image request
-                        -show loading dialog while processing
-                        -once processing is finished, insert into db and save id (db insert returns this as long)
-                        -send an event after all is done to navigate to detail screen
-                     */
 
                     selectImageRequest.launch("image/*")
                 }

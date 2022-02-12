@@ -4,10 +4,7 @@ import androidx.core.view.isVisible
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.drbrosdev.studytextscan.R
-import com.drbrosdev.studytextscan.databinding.ModelPinnedHeaderBinding
-import com.drbrosdev.studytextscan.databinding.ModelScanHeaderBinding
-import com.drbrosdev.studytextscan.databinding.ModelScanTopBarBinding
-import com.drbrosdev.studytextscan.databinding.ScanListItemBinding
+import com.drbrosdev.studytextscan.databinding.*
 import com.drbrosdev.studytextscan.epoxy.ViewBindingKotlinModel
 import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.util.dateAsString
@@ -61,10 +58,17 @@ abstract class ScanListItemEpoxyModel :
 @EpoxyModelClass
 abstract class ListHeaderEpoxyModel :
     ViewBindingKotlinModel<ModelPinnedHeaderBinding>(R.layout.model_pinned_header) {
-        @EpoxyAttribute
-        lateinit var headerTitle: String
+    @EpoxyAttribute
+    lateinit var headerTitle: String
 
     override fun ModelPinnedHeaderBinding.bind() {
         textViewListHeader.text = headerTitle
     }
+}
+
+@EpoxyModelClass
+abstract class LoadingScansEpoxyModel :
+    ViewBindingKotlinModel<ModelScanLoadingBarBinding>(R.layout.model_scan_loading_bar) {
+
+    override fun ModelScanLoadingBarBinding.bind() {}
 }

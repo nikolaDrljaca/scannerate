@@ -8,16 +8,10 @@ import com.drbrosdev.studytextscan.persistence.entity.FilteredTextModel
 import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.persistence.repository.FilteredTextRepository
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
-import com.drbrosdev.studytextscan.util.Resource
 import com.drbrosdev.studytextscan.util.getCurrentDateTime
-import com.drbrosdev.studytextscan.util.setState
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -26,14 +20,35 @@ class HomeViewModel(
     private val filteredTextModelRepo: FilteredTextRepository,
     private val scanTextFromImageUseCase: ScanTextFromImageUseCase
 ): ViewModel() {
-    private val _viewState = MutableStateFlow(HomeState())
-    val viewState: StateFlow<HomeState> = _viewState
-
     private val _events = Channel<HomeEvents>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
+    private val isLoading = MutableStateFlow(true)
+
+    private val scans = scanRepo.allScans
+        .distinctUntilChanged()
+        .onEach { isLoading.value = false }
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed())
+
+    private val listOfScans = scans
+        .map { list -> list.filter { !it.isPinned } }
+
+    private val listOfPinnedScans = scans
+        .map { list -> list.filter { it.isPinned } }
+
+    val state = combine(
+        isLoading,
+        listOfScans,
+        listOfPinnedScans
+    ) { loading, scans, pinnedScans ->
+        HomeUiState(
+            isLoading = loading,
+            scans = scans,
+            pinnedScans = pinnedScans
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), HomeUiState())
+
     init {
-        getScans()
         initOnBoarding()
     }
 
@@ -52,9 +67,6 @@ class HomeViewModel(
 
             filteredTextList.forEach {
                 val model = FilteredTextModel(scanId = scanId, type = it.first, content = it.second)
-                /*
-                Now this needs to be inserted into the database.
-                 */
                 filteredTextModelRepo.insertModel(model)
                 Log.d("DEBUGn", "createScan: model inserted ${model.content}")
             }
@@ -84,18 +96,6 @@ class HomeViewModel(
         if (!hasSeen) {
             _events.send(HomeEvents.ShowOnboarding)
             prefs.firstLaunchComplete()
-        }
-    }
-
-    private fun getScans() = viewModelScope.launch {
-        try {
-            scanRepo.getAllScans().collect {
-                Log.d("DEBUGn", "getScans: ${it.size}")
-                _viewState.setState { copy(scanList = Resource.Success(it)) }
-            }
-        } catch (e: Exception) {
-            Log.e("DEBUGn", "getScans: ", e)
-            _viewState.setState { copy(scanList = Resource.Error(e)) }
         }
     }
 

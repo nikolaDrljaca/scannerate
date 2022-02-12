@@ -17,9 +17,7 @@ class PdfDialogViewModel(
 
     fun getScan(action: (Scan?) -> Unit) {
         viewModelScope.launch {
-            scanRepo.getScanById(scanId).collect {
-                action(it())
-            }
+            scanRepo.getScanById(scanId).collect(action)
         }
     }
 }
