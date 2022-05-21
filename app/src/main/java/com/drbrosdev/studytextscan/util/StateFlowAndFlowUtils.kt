@@ -7,7 +7,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -27,10 +26,6 @@ inline fun <T> Fragment.collectFlow(state: Flow<T>, crossinline render: ((T) -> 
         }
     }
 }
-
-//allows a code block to perform any other needed operations to the data before its set
-//with copy, syntax sugar essentially -- stateFlow.setState { ... copy(...) }
-inline fun <T> MutableStateFlow<T>.setState(action: T.() -> T) { this.value = this.value.action() }
 
 /*
 Similarly to the collect functions above, these are not scoped to the fragment

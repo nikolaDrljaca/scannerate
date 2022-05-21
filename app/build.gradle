@@ -15,13 +15,13 @@ sourceSets {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.drbrosdev.studytextscan"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 3
         versionName "1.1"
 
@@ -54,20 +54,18 @@ android {
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'androidx.activity:activity-ktx:1.3.0-rc02'
+    implementation 'androidx.activity:activity-ktx:1.5.0-alpha02'
     implementation "io.coil-kt:coil:1.2.2"
 
-    //Ml kit library for text recognition
-//    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:16.3.0'
     // To recognize Latin script
     implementation 'com.google.mlkit:text-recognition:16.0.0-beta3'
 
@@ -83,38 +81,36 @@ dependencies {
     // To recognize Korean script
     implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta3'
 
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha02'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-alpha02'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     //navigation
-    def nav_version = "2.3.5"
+    def nav_version = "2.4.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    //to fix Pending Intent flag, we dont even use workManager, yaaay android
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 
     //lottie animations
     implementation "com.airbnb.android:lottie:3.7.0"
 
     //jetpack preferences datastore (sharedPrefs)
-    implementation 'androidx.datastore:datastore-preferences:1.0.0-rc01'
-    implementation 'androidx.datastore:datastore-core:1.0.0-rc01'
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+    implementation 'androidx.datastore:datastore-core:1.0.0'
 
     //room database
-    def room_version = "2.3.0"
+    def room_version = "2.4.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
 
-    //activity
-    implementation "androidx.activity:activity-ktx:1.2.3"
-    //fragment
-    implementation 'androidx.fragment:fragment-ktx:1.3.5'
-
     // Koin main features for Android (Scope,ViewModel ...)
-    implementation "io.insert-koin:koin-android:3.1.2"
+    implementation "io.insert-koin:koin-android:3.1.4"
     // Koin core features
-    implementation "io.insert-koin:koin-core:3.1.2"
+    implementation "io.insert-koin:koin-core:3.1.4"
 
     //epoxy
     def epoxyVersion = "4.6.2"
@@ -123,7 +119,7 @@ dependencies {
     kapt "com.airbnb.android:epoxy-processor:$epoxyVersion"
 
     //entity extraction - text recognition
-    implementation 'com.google.mlkit:entity-extraction:16.0.0-beta2'
+    //implementation 'com.google.mlkit:entity-extraction:16.0.0-beta2'
 
     //Google ML-kit Task extensions
     //Source: https://github.com/Kotlin/kotlinx.coroutines/tree/master/integration/kotlinx-coroutines-play-services
