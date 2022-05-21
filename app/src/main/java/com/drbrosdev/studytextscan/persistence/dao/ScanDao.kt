@@ -1,10 +1,6 @@
 package com.drbrosdev.studytextscan.persistence.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.drbrosdev.studytextscan.persistence.entity.Scan
 import kotlinx.coroutines.flow.Flow
 
@@ -20,7 +16,7 @@ interface ScanDao {
     suspend fun deleteScan(scan: Scan)
 
     @Query("SELECT * FROM scan WHERE scan_id=:id")
-    suspend fun getScanById(id: Int): Scan
+    fun getScanById(id: Int): Flow<Scan>
 
     @Update
     suspend fun updateScan(scan: Scan)
