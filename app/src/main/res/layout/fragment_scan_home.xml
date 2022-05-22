@@ -72,7 +72,7 @@
         app:rippleColor="@color/heavy_blue"
         app:borderWidth="0dp"
         app:srcCompat="@drawable/ic_round_camera_alt_24"
-        app:tint="@color/mid_blue"
+        app:tint="@color/heavy_blue"
         tools:ignore="SpeakableTextPresentCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

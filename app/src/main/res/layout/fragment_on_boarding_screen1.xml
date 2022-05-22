@@ -28,17 +28,44 @@
         app:layout_constraintBottom_toTopOf="@id/guideline10"
         app:layout_constraintTop_toBottomOf="@id/text_view_header">
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/button_create_scan"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/heavy_blue"
-            android:enabled="false"
-            android:text="@string/create_scan"
-            android:textColor="@color/white"
-            app:rippleColor="@color/white" />
+            android:gravity="center"
+            android:paddingVertical="4dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_gallery_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/heavy_blue"
+                android:enabled="false"
+                android:clickable="false"
+                app:rippleColor="@color/white"
+                app:borderWidth="0dp"
+                app:srcCompat="@drawable/ic_round_photo_24"
+                app:tint="@color/white"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <Space
+                android:layout_width="12dp"
+                android:layout_height="0dp"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_camera_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:clickable="false"
+                android:backgroundTint="@color/light_blue"
+                app:rippleColor="@color/heavy_blue"
+                app:borderWidth="0dp"
+                app:srcCompat="@drawable/ic_round_camera_alt_24"
+                app:tint="@color/heavy_blue"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </LinearLayout>
 
         <Space
             android:layout_width="wrap_content"
@@ -59,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            app:layout_constraintTop_toBottomOf="@id/button_create_scan" />
+            app:layout_constraintTop_toBottomOf="@id/button_camera_scan" />
 
     </LinearLayout>
 

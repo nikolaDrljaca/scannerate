@@ -61,4 +61,6 @@
     <string name="export_as_pdf">Export as PDF!</string>
     <string name="export_your_scans_and_edits_in_pdf_format">Export your scans and edits in PDF format.</string>
     <string name="finish">Finish</string>
+    <string name="camera_permission_info">"The application needs access to the camera in order to capture and crop a photo from which text is extracted.\n\nPlease keep in mind, if the permission is denied twice you will need to change it manually in the settings. "</string>
+    <string name="okay">Okay</string>
 </resources>

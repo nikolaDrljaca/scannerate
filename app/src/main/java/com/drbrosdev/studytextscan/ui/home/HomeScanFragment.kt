@@ -1,12 +1,16 @@
 package com.drbrosdev.studytextscan.ui.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -32,6 +36,16 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val selectImageRequest = registerForActivityResult(CropImageContract()) {
         if (it.isSuccessful) {
             it.uriContent?.let { handleImage(it) }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (it) {
+            //permission granted. Continue workflow
+            selectImageRequest.launch(cropImageCameraOptions)
+        } else {
+            //Provide explanation on why the permission is needed. AlertDialog maybe?
+            viewModel.handlePermissionDenied()
         }
     }
 
@@ -244,6 +258,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         anchor = binding.buttonCameraScan
                     )
                 }
+                is HomeEvents.ShowPermissionInfo -> {
+                    showCameraPermissionInfoDialog()
+                }
             }
         }
 
@@ -258,11 +275,26 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 layoutAnimation =
                     AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_anim)
 
+                buttonCameraScan.setOnClickListener {
+                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+
+                    when {
+                        ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                                == PackageManager.PERMISSION_GRANTED -> {
+                                    //use the api that needs the permission
+                            selectImageRequest.launch(cropImageCameraOptions)
+                        }
+                        else -> {
+                            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+                        }
+                    }
+                }
+
                 buttonGalleryScan.setOnClickListener {
                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
 
-                    //selectImageRequest.launch("image/*")
                     selectImageRequest.launch(cropImageGalleryOptions)
                 }
                 /*

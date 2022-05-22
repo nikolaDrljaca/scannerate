@@ -50,4 +50,6 @@
     <string name="export_as_pdf">Izvezi kao PDF!</string>
     <string name="export_your_scans_and_edits_in_pdf_format">Izvezi svoje skenove u PDF formatu.</string>
     <string name="finish">Kraj</string>
+    <string name="okay">U redu</string>
+    <string name="camera_permission_info">Aplikaciji je potreban pristup kameri kako bi mogla snimiti sliku iz koje će izući tekst.\n\nAko ste odbili dozvolu dva puta, možete je promjeniti u podešavanjima telefona.</string>
 </resources>
