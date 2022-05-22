@@ -7,9 +7,9 @@ plugins {
 sourceSets {
     main {
         java {
-            srcDirs += 'build/generated/source/kapt/debug/ui/home'
-            srcDirs += 'build/generated/source/kapt/debug/ui/detailscan'
-            srcDirs += 'build/generated/source/kapt/debug/ui/licenses'
+            srcDirs += 'build/generated/source/kapt/debug/com/drbrosdev/studytextscan/ui/home'
+            srcDirs += 'build/generated/source/kapt/debug/com/drbrosdev/studytextscan/ui/detailscan'
+            srcDirs += 'build/generated/source/kapt/debug/com/drbrosdev/studytextscan/ui/licenses'
         }
     }
 }
@@ -124,4 +124,7 @@ dependencies {
     //Google ML-kit Task extensions
     //Source: https://github.com/Kotlin/kotlinx.coroutines/tree/master/integration/kotlinx-coroutines-play-services
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1'
+
+    //image cropper
+    implementation 'com.github.CanHub:Android-Image-Cropper:4.1.0'
 }

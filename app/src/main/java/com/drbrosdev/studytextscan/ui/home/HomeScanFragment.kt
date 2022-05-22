@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.animation.AnimationUtils
-import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -16,6 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.util.*
@@ -27,10 +29,22 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding()
     private val viewModel: HomeViewModel by viewModel()
 
-    private val selectImageRequest = registerForActivityResult(GetContent()) { uri ->
-        uri?.let {
-            handleImage(it)
+    private val selectImageRequest = registerForActivityResult(CropImageContract()) {
+        if (it.isSuccessful) {
+            it.uriContent?.let { handleImage(it) }
         }
+    }
+
+    /*
+    Be careful when chaning the options here. If any options access [Context] types, it
+    will result in a crash.
+
+    Ex: setActivityMenuIconColor(getColor(...)) -> Will cause a crash since the context object
+    is accessed before the fragment is created.
+     */
+    private val cropImageGalleryOptions = options {
+        setGuidelines(CropImageView.Guidelines.ON)
+        setImageSource(includeGallery = true, includeCamera = false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,10 +56,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         This is necessary in every fragment.
          */
         updateWindowInsets(binding.root)
-        /*
-        Set nav bar color back to transparent
-         */
-        requireActivity().window.navigationBarColor = getColor(android.R.color.transparent)
         /*
         Wait to animate recyclerView until the fragments view has been inflated.
          */
@@ -245,7 +255,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
 
-                    selectImageRequest.launch("image/*")
+                    //selectImageRequest.launch("image/*")
+                    selectImageRequest.launch(cropImageGalleryOptions)
                 }
                 /*
                 Sets the animation to loop only 3 times and then stop as to not be too annoying.
