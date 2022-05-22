@@ -67,19 +67,19 @@ dependencies {
     implementation "io.coil-kt:coil:1.2.2"
 
     // To recognize Latin script
-    implementation 'com.google.mlkit:text-recognition:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition:16.0.0-beta4'
 
     // To recognize Chinese script
-    implementation 'com.google.mlkit:text-recognition-chinese:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition-chinese:16.0.0-beta4'
 
     // To recognize Devanagari script
-    implementation 'com.google.mlkit:text-recognition-devanagari:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition-devanagari:16.0.0-beta4'
 
     // To recognize Japanese script
-    implementation 'com.google.mlkit:text-recognition-japanese:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition-japanese:16.0.0-beta4'
 
     // To recognize Korean script
-    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta4'
 
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-alpha02'
