@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 
 class ScanTextFromImageUseCase(
     private val filterService: TextFilterService,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val recognizers = listOf(
         TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS),
