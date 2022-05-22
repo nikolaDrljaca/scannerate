@@ -8,11 +8,10 @@
     android:id="@+id/card"
     android:layout_marginVertical="4dp"
     android:layout_marginHorizontal="14dp"
-    app:cardElevation="0dp"
+    app:cardElevation="2dp"
     app:cardCornerRadius="18dp"
     app:cardBackgroundColor="@color/light_blue"
     app:rippleColor="@color/heavy_blue">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

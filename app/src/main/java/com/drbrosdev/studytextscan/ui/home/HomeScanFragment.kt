@@ -47,6 +47,11 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         setImageSource(includeGallery = true, includeCamera = false)
     }
 
+    private val cropImageCameraOptions = options {
+        setGuidelines(CropImageView.Guidelines.ON)
+        setImageSource(includeGallery = false, includeCamera = true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /*
@@ -144,10 +149,12 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
             recyclerViewScans.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (dy > 0) {
-                        buttonCreateScan.hide()
+                        buttonCameraScan.hide()
+                        buttonGalleryScan.hide()
                     }
                     if (dy < 0) {
-                        buttonCreateScan.show()
+                        buttonCameraScan.show()
+                        buttonGalleryScan.show()
                     }
                 }
             })
@@ -215,13 +222,13 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.no_text_found),
-                        anchor = binding.buttonCreateScan
+                        anchor = binding.buttonCameraScan
                     )
                 }
                 is HomeEvents.ShowUndoDeleteScan -> {
                     showSnackbarLongWithAction(
                         message = getString(R.string.scan_deleted),
-                        anchor = binding.buttonCreateScan,
+                        anchor = binding.buttonCameraScan,
                         actionText = getString(R.string.undo)
                     ) {
                         viewModel.insertScan(homeEvents.scan)
@@ -234,7 +241,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.something_went_wrong),
-                        anchor = binding.buttonCreateScan
+                        anchor = binding.buttonCameraScan
                     )
                 }
             }
@@ -251,7 +258,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 layoutAnimation =
                     AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_anim)
 
-                buttonCreateScan.setOnClickListener {
+                buttonGalleryScan.setOnClickListener {
                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
 
