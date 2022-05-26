@@ -52,4 +52,5 @@
     <string name="finish">Крај</string>
     <string name="okay">У реду</string>
     <string name="camera_permission_info">Апликацији је потребан приступ камери да би могла да сними слику из које издваја текст.\n\nАко сте два пута одбили дозволу, можете је променити у подешавањима телефона.</string>
+    <string name="heads_up">Обавештење</string>
 </resources>

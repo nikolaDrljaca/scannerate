@@ -52,4 +52,5 @@
     <string name="finish">Fertig</string>
     <string name="okay">Okay</string>
     <string name="camera_permission_info">Die Anwendung benötigt Zugriff auf die Kamera, um ein Foto aufzunehmen und zuzuschneiden, aus dem Text extrahiert wird.\n\nBitte denken Sie daran, wenn die Berechtigung zweimal verweigert wird, müssen Sie sie manuell in den Einstellungen ändern.</string>
+    <string name="heads_up">Information</string>
 </resources>

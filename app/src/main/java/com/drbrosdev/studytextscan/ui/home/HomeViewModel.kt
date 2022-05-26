@@ -99,7 +99,6 @@ class HomeViewModel(
         val hasSeen = prefs.isFirstLaunch.first()
         if (!hasSeen) {
             _events.send(HomeEvents.ShowOnboarding)
-            prefs.firstLaunchComplete()
         }
     }
 
