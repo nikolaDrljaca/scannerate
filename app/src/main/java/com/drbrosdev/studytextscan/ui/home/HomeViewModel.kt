@@ -52,6 +52,10 @@ class HomeViewModel(
         initOnBoarding()
     }
 
+    fun handlePermissionDenied() = viewModelScope.launch {
+        _events.send(HomeEvents.ShowPermissionInfo)
+    }
+
     private fun createScan(text: String, filteredTextList: List<Pair<String, String>>) = viewModelScope.launch {
         if (text.isNotEmpty() or text.isNotBlank()) {
             val scan = Scan(
@@ -95,7 +99,6 @@ class HomeViewModel(
         val hasSeen = prefs.isFirstLaunch.first()
         if (!hasSeen) {
             _events.send(HomeEvents.ShowOnboarding)
-            prefs.firstLaunchComplete()
         }
     }
 

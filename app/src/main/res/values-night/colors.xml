@@ -12,4 +12,7 @@
     <color name="bottom_icon_color">#e1f5fe</color>
     <color name="detail_text_title_color">#e1f5fe</color>
 
+    <color name="scan_item_background">#01579b</color>
+    <color name="scan_item_text">#e1f5fe</color>
+
 </resources>

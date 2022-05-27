@@ -155,7 +155,9 @@
         android:background="@drawable/bottom_bar_background"
         android:orientation="horizontal"
         android:paddingTop="18dp"
-        android:paddingBottom="18dp">
+        android:paddingBottom="18dp"
+        android:layout_margin="8dp"
+        android:elevation="4dp">
 
         <ImageView
             android:id="@+id/image_view_copy"

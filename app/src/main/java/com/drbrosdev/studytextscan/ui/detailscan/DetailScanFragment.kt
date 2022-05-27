@@ -35,11 +35,6 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateWindowInsets(binding.root)
-        /*
-        Set color of navbar to match the bottom bar color.
-         */
-        requireActivity().window.navigationBarColor = getColor(R.color.bottom_bar_color)
-
 
         collectFlow(viewModel.state) { state ->
             state.scan?.let { scan ->

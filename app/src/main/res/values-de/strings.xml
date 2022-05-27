@@ -50,4 +50,14 @@
     <string name="export_as_pdf">Als PDF exportieren!</string>
     <string name="export_your_scans_and_edits_in_pdf_format">Exportieren Sie Ihre Scans im PDF-Format.</string>
     <string name="finish">Fertig</string>
+    <string name="okay">Okay</string>
+    <string name="camera_permission_info">Die Anwendung benötigt Zugriff auf die Kamera, um ein Foto aufzunehmen und zuzuschneiden und aus diesem Foto dem Text extrahieren.\\n\\nBitte denken Sie daran, wenn die Berechtigung zweimal verweigert wird, müssen Sie sie manuell in den Einstellungen ändern.</string>
+    <string name="heads_up">Information</string>
+    <string name="scan_title">Titel scannen</string>
+    <string name="placeholder_for_scanned_content">Platzhaltertext</string>
+    <string name="black_color">Schwarz</string>
+    <string name="red_color">Rot</string>
+    <string name="green_color">Grün</string>
+    <string name="blue_color">Blau</string>
+    <string name="yellow_color">Gelb</string>
 </resources>

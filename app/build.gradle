@@ -7,9 +7,9 @@ plugins {
 sourceSets {
     main {
         java {
-            srcDirs += 'build/generated/source/kapt/debug/ui/home'
-            srcDirs += 'build/generated/source/kapt/debug/ui/detailscan'
-            srcDirs += 'build/generated/source/kapt/debug/ui/licenses'
+            srcDirs += 'build/generated/source/kapt/debug/com/drbrosdev/studytextscan/ui/home'
+            srcDirs += 'build/generated/source/kapt/debug/com/drbrosdev/studytextscan/ui/detailscan'
+            srcDirs += 'build/generated/source/kapt/debug/com/drbrosdev/studytextscan/ui/licenses'
         }
     }
 }
@@ -56,7 +56,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
@@ -67,19 +67,19 @@ dependencies {
     implementation "io.coil-kt:coil:1.2.2"
 
     // To recognize Latin script
-    implementation 'com.google.mlkit:text-recognition:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition:16.0.0-beta4'
 
     // To recognize Chinese script
-    implementation 'com.google.mlkit:text-recognition-chinese:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition-chinese:16.0.0-beta4'
 
     // To recognize Devanagari script
-    implementation 'com.google.mlkit:text-recognition-devanagari:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition-devanagari:16.0.0-beta4'
 
     // To recognize Japanese script
-    implementation 'com.google.mlkit:text-recognition-japanese:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition-japanese:16.0.0-beta4'
 
     // To recognize Korean script
-    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta3'
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta4'
 
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-alpha02'
@@ -124,4 +124,7 @@ dependencies {
     //Google ML-kit Task extensions
     //Source: https://github.com/Kotlin/kotlinx.coroutines/tree/master/integration/kotlinx-coroutines-play-services
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1'
+
+    //image cropper
+    implementation 'com.github.CanHub:Android-Image-Cropper:4.1.0'
 }
