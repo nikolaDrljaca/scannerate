@@ -51,6 +51,13 @@
     <string name="export_your_scans_and_edits_in_pdf_format">Izvezi svoje skenove u PDF formatu.</string>
     <string name="finish">Kraj</string>
     <string name="okay">U redu</string>
-    <string name="camera_permission_info">Aplikaciji je potreban pristup kameri kako bi mogla snimiti sliku iz koje će izući tekst.\n\nAko ste odbili dozvolu dva puta, možete je promjeniti u podešavanjima telefona.</string>
+    <string name="camera_permission_info">Aplikaciji je potreban pristup kameri kako bi mogla snimiti sliku iz koje će izvući tekst.  Ako ste odbili dozvolu dva puta, možete je promjeniti u podešavanjima telefona.</string>
     <string name="heads_up">Obavještenje</string>
+    <string name="scan_title">Naslov</string>
+    <string name="placeholder_for_scanned_content">Primjer teksta</string>
+    <string name="black_color">Crna</string>
+    <string name="red_color">Crvena</string>
+    <string name="green_color">Zelena</string>
+    <string name="blue_color">Plava</string>
+    <string name="yellow_color">Žuta</string>
 </resources>
