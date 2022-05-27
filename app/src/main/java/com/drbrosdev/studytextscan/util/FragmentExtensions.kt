@@ -128,6 +128,19 @@ fun Fragment.showConfirmDialog(
         .create().show()
 }
 
+fun Fragment.showCameraPermissionInfoDialog(
+    onPositiveClick: () -> Unit = {},
+) {
+    val inflater = requireActivity().layoutInflater
+    MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+        .setView(inflater.inflate(R.layout.dialog_info, null))
+        .setPositiveButton(getString(R.string.okay)) { dialog, _ ->
+            onPositiveClick()
+            dialog.dismiss()
+        }
+        .create().show()
+}
+
 fun Fragment.showKeyboardOnEditText(editText: EditText) {
     editText.requestFocus()
     val imm: InputMethodManager =

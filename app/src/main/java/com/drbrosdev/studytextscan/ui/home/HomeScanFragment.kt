@@ -1,13 +1,16 @@
 package com.drbrosdev.studytextscan.ui.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.animation.AnimationUtils
-import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -16,6 +19,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.util.*
@@ -27,10 +33,37 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding()
     private val viewModel: HomeViewModel by viewModel()
 
-    private val selectImageRequest = registerForActivityResult(GetContent()) { uri ->
-        uri?.let {
-            handleImage(it)
+    private val selectImageRequest = registerForActivityResult(CropImageContract()) {
+        if (it.isSuccessful) {
+            it.uriContent?.let { handleImage(it) }
         }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (it) {
+            //permission granted. Continue workflow
+            selectImageRequest.launch(cropImageCameraOptions)
+        } else {
+            //Provide explanation on why the permission is needed. AlertDialog maybe?
+            viewModel.handlePermissionDenied()
+        }
+    }
+
+    /*
+    Be careful when chaning the options here. If any options access [Context] types, it
+    will result in a crash.
+
+    Ex: setActivityMenuIconColor(getColor(...)) -> Will cause a crash since the context object
+    is accessed before the fragment is created.
+     */
+    private val cropImageGalleryOptions = options {
+        setGuidelines(CropImageView.Guidelines.ON)
+        setImageSource(includeGallery = true, includeCamera = false)
+    }
+
+    private val cropImageCameraOptions = options {
+        setGuidelines(CropImageView.Guidelines.ON)
+        setImageSource(includeGallery = false, includeCamera = true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,10 +75,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         This is necessary in every fragment.
          */
         updateWindowInsets(binding.root)
-        /*
-        Set nav bar color back to transparent
-         */
-        requireActivity().window.navigationBarColor = getColor(android.R.color.transparent)
         /*
         Wait to animate recyclerView until the fragments view has been inflated.
          */
@@ -134,10 +163,12 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
             recyclerViewScans.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (dy > 0) {
-                        buttonCreateScan.hide()
+                        buttonCameraScan.hide()
+                        buttonGalleryScan.hide()
                     }
                     if (dy < 0) {
-                        buttonCreateScan.show()
+                        buttonCameraScan.show()
+                        buttonGalleryScan.show()
                     }
                 }
             })
@@ -205,13 +236,13 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.no_text_found),
-                        anchor = binding.buttonCreateScan
+                        anchor = binding.buttonCameraScan
                     )
                 }
                 is HomeEvents.ShowUndoDeleteScan -> {
                     showSnackbarLongWithAction(
                         message = getString(R.string.scan_deleted),
-                        anchor = binding.buttonCreateScan,
+                        anchor = binding.buttonCameraScan,
                         actionText = getString(R.string.undo)
                     ) {
                         viewModel.insertScan(homeEvents.scan)
@@ -224,8 +255,11 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.something_went_wrong),
-                        anchor = binding.buttonCreateScan
+                        anchor = binding.buttonCameraScan
                     )
+                }
+                is HomeEvents.ShowPermissionInfo -> {
+                    showCameraPermissionInfoDialog()
                 }
             }
         }
@@ -241,11 +275,27 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 layoutAnimation =
                     AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_anim)
 
-                buttonCreateScan.setOnClickListener {
+                buttonCameraScan.setOnClickListener {
                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
 
-                    selectImageRequest.launch("image/*")
+                    when {
+                        ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                                == PackageManager.PERMISSION_GRANTED -> {
+                                    //use the api that needs the permission
+                            selectImageRequest.launch(cropImageCameraOptions)
+                        }
+                        else -> {
+                            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+                        }
+                    }
+                }
+
+                buttonGalleryScan.setOnClickListener {
+                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+
+                    selectImageRequest.launch(cropImageGalleryOptions)
                 }
                 /*
                 Sets the animation to loop only 3 times and then stop as to not be too annoying.

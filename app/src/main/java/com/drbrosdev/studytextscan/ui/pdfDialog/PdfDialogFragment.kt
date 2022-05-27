@@ -25,7 +25,13 @@ class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
     Text fields work as exposed menus when clicked. These are the options to be displayed in the
     dropdown menu.
      */
-    private val colorOptionsList = listOf("Black", "Blue", "Red", "Green", "Yellow")
+    private val colorOptionsList = listOf(
+        getString(R.string.black_color),
+        getString(R.string.blue_color),
+        getString(R.string.red_color),
+        getString(R.string.green_color),
+        getString(R.string.yellow_color)
+    )
     private val fontSizeOptionsList = listOf(
         "8",
         "9",

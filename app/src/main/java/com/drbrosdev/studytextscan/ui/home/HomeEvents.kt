@@ -9,4 +9,5 @@ sealed class HomeEvents {
     data class ShowUndoDeleteScan(val scan: Scan): HomeEvents()
     object ShowOnboarding: HomeEvents()
     object ShowErrorWhenScanning: HomeEvents()
+    object ShowPermissionInfo: HomeEvents()
 }

@@ -50,4 +50,14 @@
     <string name="export_as_pdf">Извези у PDF формату!</string>
     <string name="export_your_scans_and_edits_in_pdf_format">Извезите скениране датотеке у ПДФ формат.</string>
     <string name="finish">Крај</string>
+    <string name="okay">У реду</string>
+    <string name="camera_permission_info">Апликацији је потребан приступ камери да би могла да сними слику из које издваја текст.\n\nАко сте два пута одбили дозволу, можете је променити у подешавањима телефона.</string>
+    <string name="heads_up">Обавештење</string>
+    <string name="scan_title">Наслов</string>
+    <string name="placeholder_for_scanned_content">Пример текста</string>
+    <string name="black_color">Црна</string>
+    <string name="red_color">Црвена</string>
+    <string name="green_color">Зелена</string>
+    <string name="blue_color">Плава</string>
+    <string name="yellow_color">Жута</string>
 </resources>
