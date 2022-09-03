@@ -8,9 +8,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
+import com.drbrosdev.studytextscan.anim.InsetsWithKeyboardAnimationCallback
+import com.drbrosdev.studytextscan.anim.InsetsWithKeyboardCallback
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.util.*
@@ -35,6 +38,13 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateWindowInsets(binding.root)
+
+        val insetsWithKeyboardCallback = InsetsWithKeyboardCallback(requireActivity().window)
+        ViewCompat.setWindowInsetsAnimationCallback(binding.root, insetsWithKeyboardCallback)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root, insetsWithKeyboardCallback)
+
+        val insetsWithKeyboardAnimationCallback = InsetsWithKeyboardAnimationCallback(binding.bottomBar)
+        ViewCompat.setWindowInsetsAnimationCallback(binding.bottomBar, insetsWithKeyboardAnimationCallback)
 
         collectFlow(viewModel.state) { state ->
             state.scan?.let { scan ->
