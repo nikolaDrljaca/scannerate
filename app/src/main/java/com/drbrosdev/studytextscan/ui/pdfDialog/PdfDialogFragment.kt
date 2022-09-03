@@ -21,17 +21,7 @@ class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
     private val pdfDialogViewModel: PdfDialogViewModel by stateViewModel(state = { requireArguments() })
     private val pdfExportService: PdfExportServiceImpl by inject()
 
-    /*
-    Text fields work as exposed menus when clicked. These are the options to be displayed in the
-    dropdown menu.
-     */
-    private val colorOptionsList = listOf(
-        getString(R.string.black_color),
-        getString(R.string.blue_color),
-        getString(R.string.red_color),
-        getString(R.string.green_color),
-        getString(R.string.yellow_color)
-    )
+
     private val fontSizeOptionsList = listOf(
         "8",
         "9",
@@ -61,6 +51,14 @@ class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentPdfDialogBinding.bind(view)
+
+        val colorOptionsList = listOf(
+            getString(R.string.black_color),
+            getString(R.string.blue_color),
+            getString(R.string.red_color),
+            getString(R.string.green_color),
+            getString(R.string.yellow_color)
+        )
 
         /*
         Transparent background for the dialog so that the rounded corners can show.
