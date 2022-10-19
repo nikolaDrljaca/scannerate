@@ -294,8 +294,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 buttonGalleryScan.setOnClickListener {
                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-
-                    selectImageRequest.launch(cropImageGalleryOptions)
+                    findNavController().navigate(R.id.action_homeScanFragment_to_supportFragment)
+                    //selectImageRequest.launch(cropImageGalleryOptions)
                 }
                 /*
                 Sets the animation to loop only 3 times and then stop as to not be too annoying.
