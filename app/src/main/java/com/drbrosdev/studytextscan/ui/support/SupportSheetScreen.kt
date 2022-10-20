@@ -9,18 +9,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.QueryProductDetailsParams
 import com.drbrosdev.studytextscan.ui.support.theme.HeavyBlue
 import com.drbrosdev.studytextscan.ui.support.theme.LightBlue
 import com.drbrosdev.studytextscan.ui.support.theme.DarkTextGray
 
 @Composable
 fun SupportScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: SupportUiState,
+    onProductSelected: (ProductDetails) -> Unit,
+    onVendorSelected: (Vendor) -> Unit,
+    onSupportClicked: () -> Unit
 ) {
     Surface(
         color = MaterialTheme.colors.background,
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.padding(4.dp).then(modifier)
+        shape = RoundedCornerShape(18.dp),
+        modifier = Modifier
+            .padding(4.dp)
+            .then(modifier)
     ) {
         Column(
             modifier = Modifier
@@ -44,14 +52,11 @@ fun SupportScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
-                items(4) {
-                    SupportItemChip(num = it)
-                }
-            }
+            ProductsList(
+                products = state.products,
+                onProductClicked = onProductSelected
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
@@ -61,7 +66,9 @@ fun SupportScreen(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+
             Spacer(modifier = Modifier.height(4.dp))
+
             Text(
                 text = "More options will be added later on.",
                 color = MaterialTheme.colors.onSurface,
@@ -70,14 +77,11 @@ fun SupportScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
-                item {
-                    VendorChip()
-                }
-            }
+            VendorList(
+                vendors = state.vendors,
+                onVendorSelected = onVendorSelected
+            )
+
             Spacer(modifier = Modifier.height(48.dp))
 
             Button(

@@ -135,21 +135,11 @@ class BillingClientService(context: Context) : PurchasesUpdatedListener {
     }
 
     private fun createProductList() = buildList {
-        add(
-            QueryProductDetailsParams.Product.newBuilder().setProductId("scannerate_item_1")
-                .setProductType(ProductType.INAPP).build()
-        )
-        add(
-            QueryProductDetailsParams.Product.newBuilder().setProductId("scannerate_item_2")
-                .setProductType(ProductType.INAPP).build()
-        )
-        add(
-            QueryProductDetailsParams.Product.newBuilder().setProductId("scannerate_item_3")
-                .setProductType(ProductType.INAPP).build()
-        )
-        add(
-            QueryProductDetailsParams.Product.newBuilder().setProductId("scannerate_item_4")
-                .setProductType(ProductType.INAPP).build()
-        )
+        addAll(ProductId.allProducts().map {
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(it.id)
+                .setProductType(ProductType.INAPP)
+                .build()
+        })
     }
 }

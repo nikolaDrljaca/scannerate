@@ -6,6 +6,8 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -21,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.billingclient.api.ProductDetails
 import com.drbrosdev.studytextscan.ui.support.theme.*
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.*
@@ -29,19 +32,19 @@ import kotlin.random.Random
 @Composable
 fun SupportItemChip(
     modifier: Modifier = Modifier,
-    num: Int = 0,
-    isClicked: Boolean = false,
-    onClick: () -> Unit = {}
+    productDetails: ProductDetails,
+    isSelected: Boolean = false,
+    onClick: (ProductDetails) -> Unit = {}
 ) {
-    val elevation by animateDpAsState(targetValue = if (isClicked) 4.dp else 0.dp)
+    val elevation by animateDpAsState(targetValue = if (isSelected) 4.dp else 0.dp)
     val strokeColor by animateColorAsState(
-        targetValue = if (isClicked) MaterialTheme.colors.onSecondary else Color.Transparent
+        targetValue = if (isSelected) MaterialTheme.colors.onSecondary else Color.Transparent
     )
 
     Surface(
         modifier = Modifier
             .clip(RoundedCornerShape(10.dp))
-            .clickable { onClick() }
+            .clickable { onClick(productDetails) }
             .then(modifier),
         color = LightBlue,
         shape = RoundedCornerShape(10.dp),
@@ -55,8 +58,12 @@ fun SupportItemChip(
                 .padding(horizontal = 12.dp, vertical = 6.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = "$13.99", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-            Text(text = "Item $num", color = DarkTextGray, fontSize = 10.sp)
+            Text(
+                text = productDetails.oneTimePurchaseOfferDetails?.formattedPrice ?: "",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(text = productDetails.name, color = DarkTextGray, fontSize = 10.sp)
         }
     }
 }
@@ -64,30 +71,34 @@ fun SupportItemChip(
 @Composable
 fun VendorChip(
     modifier: Modifier = Modifier,
-    isClicked: Boolean = true,
-    onClick: () -> Unit = {}
+    vendor: Vendor,
+    isSelected: Boolean = true,
+    onClick: (Vendor) -> Unit = {}
 ) {
-    val elevation by animateDpAsState(targetValue = if (isClicked) 3.dp else 0.dp)
+    val elevation by animateDpAsState(targetValue = if (isSelected) 3.dp else 0.dp)
     val strokeColor by animateColorAsState(
-        targetValue = if (isClicked) MaterialTheme.colors.onSecondary else Color.Transparent
+        targetValue = if (isSelected) MaterialTheme.colors.onSecondary else Color.Transparent
     )
+    val vendorIcon = remember(vendor) {
+        Vendor.vendorIcon(vendor)
+    }
 
     Button(
         modifier = Modifier
             .then(modifier),
-        onClick = onClick,
+        onClick = { onClick(vendor) },
         colors = ButtonDefaults.buttonColors(backgroundColor = LightBlue, contentColor = HeavyBlue),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(width = 2.dp, strokeColor),
         elevation = ButtonDefaults.elevation(defaultElevation = elevation)
     ) {
         Icon(
-            imageVector = LineAwesomeIcons.GooglePlay,
+            imageVector = vendorIcon,
             contentDescription = "",
             modifier = Modifier.size(32.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "Google Play")
+        Text(text = vendor.vendorName)
     }
 }
 
@@ -140,6 +151,50 @@ fun SupportTopBar(
             Text(text = iconName, fontSize = 20.sp, color = MaterialTheme.colors.onPrimary)
         }
         AnimatedRandomIcon(iconVector = icon)
+    }
+}
+
+@Composable
+fun ProductsList(
+    modifier: Modifier = Modifier,
+    products: List<ProductUiModel>,
+    onProductClicked: (ProductDetails) -> Unit
+) {
+    LazyRow(
+        modifier = Modifier
+            .then(modifier),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(products) {
+            SupportItemChip(
+                productDetails = it.product,
+                isSelected = it.isSelected,
+                onClick = { onProductClicked(it) }
+            )
+        }
+    }
+}
+
+@Composable
+fun VendorList(
+    modifier: Modifier = Modifier,
+    vendors: List<VendorUiModel>,
+    onVendorSelected: (Vendor) -> Unit
+) {
+    LazyRow(
+        modifier = Modifier
+            .then(modifier),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(vendors) { vendorModel ->
+            VendorChip(
+                vendor = vendorModel.vendor,
+                isSelected = vendorModel.isSelected,
+                onClick = onVendorSelected
+            )
+        }
     }
 }
 

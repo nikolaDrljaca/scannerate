@@ -3,8 +3,8 @@ package com.drbrosdev.studytextscan.ui.support
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.billingclient.api.ProductDetails
 import com.drbrosdev.studytextscan.service.billing.BillingClientService
+import com.drbrosdev.studytextscan.service.billing.ProductId
 import com.drbrosdev.studytextscan.service.billing.PurchaseResult
 import com.drbrosdev.studytextscan.service.billing.QueriedProducts
 import kotlinx.coroutines.channels.Channel
@@ -18,15 +18,17 @@ class SupportViewModel(
     val events = _events.receiveAsFlow()
 
     private val loading = MutableStateFlow(false)
+    private val vendors = MutableStateFlow(VendorUiModel.vendorUiModels)
+    private val selectedProductId = MutableStateFlow(ProductId.ITEM_1)
 
     private val products = billingClient.productsFlow
         .map {
             when (it) {
                 is QueriedProducts.Failure -> {
                     _events.send(SupportEvents.ErrorOccured(it.errorMessage))
-                    emptyList<ProductDetails>()
+                    emptyList<ProductUiModel>()
                 }
-                is QueriedProducts.Success -> it.products
+                is QueriedProducts.Success -> it.products.map { ProductUiModel(it) }
             }
         }
         .onStart { loading.update { true } }
@@ -43,9 +45,25 @@ class SupportViewModel(
         }
         .launchIn(viewModelScope)
 
-    val state = combine(products, loading) { p0, p1 ->
-        SupportUiState(products = p0, loading = p1)
+    val state = combine(products, loading, vendors, selectedProductId) { p0, p1, p2, p3 ->
+        val updated = p0.map {
+            ProductUiModel(it.product, isSelected = it.product.productId == p3.id)
+        }
+        SupportUiState(products = updated, loading = p1, vendors = p2)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), SupportUiState())
+
+    fun selectProduct(productId: String) {
+        val selectedProduct = ProductId.allProducts().find { it.id == productId } ?: ProductId.ITEM_1
+        selectedProductId.update { selectedProduct }
+    }
+
+    fun selectVendor(vendor: Vendor) {
+        vendors.update {
+            it.map {
+                VendorUiModel(it.vendor, isSelected = it.vendor.vendorName == vendor.vendorName)
+            }
+        }
+    }
 
     fun queryProducts() {
         viewModelScope.launch {
@@ -53,8 +71,10 @@ class SupportViewModel(
         }
     }
 
-    fun makePurchase(activity: Activity, product: ProductDetails) {
-        billingClient.purchase(activity, product)
+    fun makePurchase(activity: Activity) {
+        state.value.products.find { it.product.productId == selectedProductId.value.id }?.let {
+            billingClient.purchase(activity, it.product)
+        }
     }
 
     fun retryToConsumePurchases() {
