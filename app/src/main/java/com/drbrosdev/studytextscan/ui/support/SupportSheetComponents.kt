@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -166,6 +167,9 @@ fun ProductsList(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
+        if (products.isEmpty()) {
+            item { PlaceholderItem() }
+        }
         items(products) {
             SupportItemChip(
                 productDetails = it.product,
@@ -188,6 +192,9 @@ fun VendorList(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
+        if (vendors.isEmpty()) {
+            item { PlaceholderItem() }
+        }
         items(vendors) { vendorModel ->
             VendorChip(
                 vendor = vendorModel.vendor,
@@ -195,6 +202,34 @@ fun VendorList(
                 onClick = onVendorSelected
             )
         }
+    }
+}
+
+@Composable
+private fun PlaceholderItem(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .height(64.dp)
+            .fillMaxWidth()
+            .graphicsLayer { alpha = 0.7f }
+            .then(modifier),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Icon(
+            imageVector = LineAwesomeIcons.GhostSolid,
+            contentDescription = "",
+            modifier = Modifier.size(32.dp),
+            tint = MaterialTheme.colors.onSurface
+        )
+        Text(
+            text = "It's empty here. Something went wrong.",
+            //modifier = Modifier.weight(1f),
+            fontSize = 12.sp,
+            color = MaterialTheme.colors.onSurface
+        )
     }
 }
 

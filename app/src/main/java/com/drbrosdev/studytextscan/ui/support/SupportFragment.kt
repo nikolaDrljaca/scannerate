@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -54,7 +56,7 @@ class SupportFragment : BottomSheetDialogFragment() {
                     }
 
                     SupportScreen(
-                        modifier = Modifier.padding(top = 16.dp),
+                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                         state = state,
                         onProductSelected = { viewModel.selectProduct(it.productId) },
                         onVendorSelected = viewModel::selectVendor,

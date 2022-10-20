@@ -32,6 +32,7 @@ fun SupportScreen(
     ) {
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .then(modifier)
         ) {
             SupportTopBar(modifier = Modifier.padding(horizontal = 16.dp))
@@ -53,6 +54,7 @@ fun SupportScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             ProductsList(
+                modifier = Modifier.fillMaxWidth(),
                 products = state.products,
                 onProductClicked = onProductSelected
             )
@@ -78,6 +80,7 @@ fun SupportScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             VendorList(
+                modifier = Modifier.fillMaxWidth(),
                 vendors = state.vendors,
                 onVendorSelected = onVendorSelected
             )
@@ -90,7 +93,7 @@ fun SupportScreen(
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 12.dp)
                     .height(64.dp),
-                onClick = { /*TODO*/ },
+                onClick = { onSupportClicked() },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = LightBlue,
                     contentColor = HeavyBlue
