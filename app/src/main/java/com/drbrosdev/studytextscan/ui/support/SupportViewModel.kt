@@ -1,6 +1,7 @@
 package com.drbrosdev.studytextscan.ui.support
 
 import android.app.Activity
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.drbrosdev.studytextscan.service.billing.BillingClientService
@@ -13,12 +14,12 @@ import kotlinx.coroutines.launch
 
 class SupportViewModel(
     private val billingClient: BillingClientService
-): ViewModel() {
+) : ViewModel() {
     private val _events = Channel<SupportEvents>()
     val events = _events.receiveAsFlow()
 
     private val loading = MutableStateFlow(false)
-    private val vendors = MutableStateFlow(VendorUiModel.vendorUiModels)
+    private val selectedVendor = MutableStateFlow(Vendor.GOOGLE)
     private val selectedProductId = MutableStateFlow(ProductId.ITEM_1)
 
     private val products = billingClient.productsFlow
@@ -31,12 +32,15 @@ class SupportViewModel(
                 is QueriedProducts.Success -> it.products.map { ProductUiModel(it) }
             }
         }
-        .onStart { loading.update { true } }
+        .onStart {
+            emit(emptyList())
+            loading.update { true }
+        }
         .onEach { loading.update { false } }
 
     private val purchaseFlowJob = billingClient.purchaseFlow
         .onEach {
-            when(it) {
+            when (it) {
                 is PurchaseResult.Failure ->
                     _events.send(SupportEvents.ErrorOccured(it.errorMessage))
                 is PurchaseResult.Success ->
@@ -45,24 +49,29 @@ class SupportViewModel(
         }
         .launchIn(viewModelScope)
 
-    val state = combine(products, loading, vendors, selectedProductId) { p0, p1, p2, p3 ->
+    val state = combine(products, loading, selectedVendor, selectedProductId) { p0, p1, p2, p3 ->
         val updated = p0.map {
             ProductUiModel(it.product, isSelected = it.product.productId == p3.id)
         }
-        SupportUiState(products = updated, loading = p1, vendors = p2)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), SupportUiState())
+        val updatedVendors = VendorUiModel.vendorUiModels.map {
+            VendorUiModel(it.vendor, isSelected = it.vendor.vendorName == p2.vendorName)
+        }
+        Log.d("DEBUGn", "combine: $p0 || $p1 || $p2 || $p3")
+        SupportUiState(products = updated, loading = p1, vendors = updatedVendors)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        SupportUiState(vendors = VendorUiModel.vendorUiModels)
+    )
 
     fun selectProduct(productId: String) {
-        val selectedProduct = ProductId.allProducts().find { it.id == productId } ?: ProductId.ITEM_1
+        val selectedProduct =
+            ProductId.allProducts().find { it.id == productId } ?: ProductId.ITEM_1
         selectedProductId.update { selectedProduct }
     }
 
     fun selectVendor(vendor: Vendor) {
-        vendors.update {
-            it.map {
-                VendorUiModel(it.vendor, isSelected = it.vendor.vendorName == vendor.vendorName)
-            }
-        }
+        selectedVendor.update { vendor }
     }
 
     fun queryProducts() {

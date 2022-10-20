@@ -74,7 +74,7 @@ fun VendorChip(
     modifier: Modifier = Modifier,
     vendor: Vendor,
     isSelected: Boolean = true,
-    onClick: (Vendor) -> Unit = {}
+    onClick: (Vendor) -> Unit,
 ) {
     val elevation by animateDpAsState(targetValue = if (isSelected) 3.dp else 0.dp)
     val strokeColor by animateColorAsState(
