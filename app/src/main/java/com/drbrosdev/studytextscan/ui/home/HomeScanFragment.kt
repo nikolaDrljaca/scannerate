@@ -11,6 +11,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -24,6 +25,8 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
+import com.drbrosdev.studytextscan.ui.home.reward.setupComposeSnackbar
+import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
 import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
@@ -263,6 +266,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 }
             }
         }
+
+        binding.setupComposeSnackbar()
 
         /*
         RecyclerView setup
