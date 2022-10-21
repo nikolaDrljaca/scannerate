@@ -71,9 +71,7 @@ class SupportFragment : BottomSheetDialogFragment() {
                     }
 
                     SupportScreen(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp),
+                        modifier = Modifier.padding(top = 16.dp),
                         state = state,
                         onProductSelected = { viewModel.selectProduct(it.productId) },
                         onVendorSelected = viewModel::selectVendor,

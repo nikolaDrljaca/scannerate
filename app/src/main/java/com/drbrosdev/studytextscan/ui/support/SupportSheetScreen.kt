@@ -27,7 +27,8 @@ fun SupportScreen(
         color = MaterialTheme.colors.background,
         shape = RoundedCornerShape(18.dp),
         modifier = Modifier
-            .padding(4.dp)
+            .fillMaxWidth()
+            .padding(top = 16.dp, start = 4.dp, end = 4.dp, bottom = 4.dp)
             .then(modifier)
     ) {
         Column(
@@ -36,7 +37,9 @@ fun SupportScreen(
                 .then(modifier)
         ) {
             SupportTopBar(modifier = Modifier.padding(horizontal = 16.dp))
+
             Spacer(modifier = Modifier.height(18.dp))
+
             Text(
                 text = "Select Amount",
                 color = MaterialTheme.colors.onSurface,
@@ -44,18 +47,22 @@ fun SupportScreen(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+
             Spacer(modifier = Modifier.height(4.dp))
+
             Text(
                 text = "You can support our work\nby selecting one of the options below.",
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+
             Spacer(modifier = Modifier.height(24.dp))
 
             ProductsList(
                 modifier = Modifier.fillMaxWidth(),
                 products = state.products,
+                loading = state.loading,
                 onProductClicked = onProductSelected
             )
 

@@ -30,6 +30,7 @@ import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.*
 import kotlin.random.Random
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SupportItemChip(
     modifier: Modifier = Modifier,
@@ -37,21 +38,21 @@ fun SupportItemChip(
     isSelected: Boolean = false,
     onClick: (ProductDetails) -> Unit = {}
 ) {
-    val elevation by animateDpAsState(targetValue = if (isSelected) 4.dp else 0.dp)
+    val elevation by animateDpAsState(targetValue = if (isSelected) 3.dp else 0.dp)
     val strokeColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colors.onSecondary else Color.Transparent
     )
+    val shape = RoundedCornerShape(10.dp)
 
     Surface(
         modifier = Modifier
-            .clip(RoundedCornerShape(10.dp))
-            .clickable { onClick(productDetails) }
             .then(modifier),
         color = LightBlue,
-        shape = RoundedCornerShape(10.dp),
+        shape = shape,
         contentColor = HeavyBlue,
         border = BorderStroke(width = 2.dp, color = strokeColor),
-        elevation = elevation
+        elevation = elevation,
+        onClick = { onClick(productDetails) }
     ) {
         Column(
             modifier = Modifier
@@ -158,15 +159,24 @@ fun SupportTopBar(
 @Composable
 fun ProductsList(
     modifier: Modifier = Modifier,
+    loading: Boolean,
     products: List<ProductUiModel>,
     onProductClicked: (ProductDetails) -> Unit
 ) {
     LazyRow(
         modifier = Modifier
             .then(modifier),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically,
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
+        if (loading) {
+           item {
+               CircularProgressIndicator(
+                   color = MaterialTheme.colors.onPrimary,
+               )
+           }
+        }
         if (products.isEmpty()) {
             item { PlaceholderItem() }
         }
