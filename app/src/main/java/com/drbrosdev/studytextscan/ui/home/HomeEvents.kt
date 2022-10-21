@@ -10,4 +10,5 @@ sealed class HomeEvents {
     object ShowOnboarding: HomeEvents()
     object ShowErrorWhenScanning: HomeEvents()
     object ShowPermissionInfo: HomeEvents()
+    object ShowSupportDialog: HomeEvents()
 }

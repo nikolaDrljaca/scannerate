@@ -177,7 +177,7 @@ fun ProductsList(
                )
            }
         }
-        if (products.isEmpty()) {
+        if (products.isEmpty() and !loading) {
             item { PlaceholderItem() }
         }
         items(products) {

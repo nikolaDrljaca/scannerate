@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.findNavController
 import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -60,12 +61,8 @@ class SupportFragment : BottomSheetDialogFragment() {
                     LaunchedEffect(viewModel.events) {
                         viewModel.events.collect {
                             when (it) {
-                                is SupportEvents.ErrorOccured -> {
-                                    Log.d("DEBUGn", "error occured ${it.message} || ${it.debugMessage}")
-                                }
-                                SupportEvents.NavigateToReward -> {
-
-                                }
+                                is SupportEvents.ErrorOccured -> { }
+                                SupportEvents.SupportGiven -> { dismiss() }
                             }
                         }
                     }

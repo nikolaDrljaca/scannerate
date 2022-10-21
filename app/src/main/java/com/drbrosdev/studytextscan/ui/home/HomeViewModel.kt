@@ -20,7 +20,7 @@ class HomeViewModel(
     private val filteredTextModelRepo: FilteredTextRepository,
     private val scanTextFromImageUseCase: ScanTextFromImageUseCase
 ): ViewModel() {
-    private val _events = Channel<HomeEvents>(Channel.BUFFERED)
+    private val _events = Channel<HomeEvents>(capacity = 1)
     val events = _events.receiveAsFlow()
 
     private val isLoading = MutableStateFlow(true)
@@ -35,6 +35,18 @@ class HomeViewModel(
 
     private val listOfPinnedScans = scans
         .map { list -> list.filter { it.isPinned } }
+
+    private val supportCount = prefs.scanCount
+        .onEach {
+            val hasSeen = prefs.isFirstLaunch.first()
+            if (it % 6 == 0 && hasSeen) {
+                _events.send(HomeEvents.ShowSupportDialog)
+                prefs.incrementSupportCount()
+            }
+        }
+        .launchIn(viewModelScope)
+
+    val showReward = prefs.showReward
 
     val state = combine(
         isLoading,
@@ -75,7 +87,9 @@ class HomeViewModel(
                 Log.d("DEBUGn", "createScan: model inserted ${model.content}")
             }
 
-            _events.send(HomeEvents.ShowCurrentScanSaved(scanId))
+            _events.send(HomeEvents.ShowCurrentScanSaved(scanId)).also {
+                prefs.incrementSupportCount()
+            }
         } else {
             _events.send(HomeEvents.ShowScanEmpty)
         }
@@ -112,6 +126,18 @@ class HomeViewModel(
                 Log.e("DEBUGn", "Error: ${e.localizedMessage}")
                 _events.send(HomeEvents.ShowErrorWhenScanning)
             }
+        }
+    }
+
+    fun showReward() {
+        viewModelScope.launch {
+            prefs.showReward()
+        }
+    }
+
+    fun rewardShown() {
+        viewModelScope.launch {
+            prefs.rewardShown()
         }
     }
 }

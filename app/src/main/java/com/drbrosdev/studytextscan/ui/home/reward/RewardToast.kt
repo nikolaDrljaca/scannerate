@@ -8,19 +8,26 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 
-fun FragmentScanHomeBinding.setupComposeSnackbar() {
+fun FragmentScanHomeBinding.setupComposeSnackbar(
+    rewardCount: Flow<Boolean>,
+    onRewardShown: () -> Unit
+) {
     composeViewSnackBar.apply {
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         setContent {
             ScannerateTheme {
-                val scope = rememberCoroutineScope()
                 val snackbarHostState = remember { SnackbarHostState() }
 
                 LaunchedEffect(Unit) {
-                    while (true) {
-                        delay(2000)
-                        snackbarHostState.showSnackbar("")
+                    rewardCount.collect {
+                        delay(1000)
+                        if (it) {
+                            snackbarHostState.showSnackbar("")
+                            onRewardShown()
+                        }
                     }
                 }
                 RewardToast(snackbarHostState = snackbarHostState)

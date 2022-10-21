@@ -14,9 +14,9 @@ val Context.datastore: DataStore<Preferences> by preferencesDataStore(name = "pr
 
 class AppPreferences(private val dataStore: DataStore<Preferences>) {
 
-    val rewardCount: Flow<Int>
+    val showReward: Flow<Boolean>
         get() = dataStore.data.map {
-            it[REWARD_COUNT] ?: 0
+            it[SHOW_REWARD] ?: false
         }
 
     val scanCount: Flow<Int>
@@ -35,10 +35,15 @@ class AppPreferences(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    suspend fun incrementRewardCount() {
+    suspend fun showReward() {
         dataStore.edit {
-            val current = it[REWARD_COUNT] as Int
-            it[REWARD_COUNT] = current + 1
+            it[SHOW_REWARD] = true
+        }
+    }
+
+    suspend fun rewardShown() {
+        dataStore.edit {
+            it[SHOW_REWARD] = false
         }
     }
 
@@ -52,7 +57,7 @@ class AppPreferences(private val dataStore: DataStore<Preferences>) {
 
     private companion object {
         val FIRST_LAUNCH = booleanPreferencesKey(name = "first_launch")
-        val REWARD_COUNT = intPreferencesKey(name = "reward_count")
+        val SHOW_REWARD = booleanPreferencesKey(name = "show_reward")
         val SCAN_COUNT = intPreferencesKey(name = "scan_count")
     }
 }

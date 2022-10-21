@@ -9,9 +9,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -25,16 +23,20 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
+import com.drbrosdev.studytextscan.service.billing.BillingClientService
+import com.drbrosdev.studytextscan.service.billing.PurchaseResult
 import com.drbrosdev.studytextscan.ui.home.reward.setupComposeSnackbar
-import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
 import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding()
-    private val viewModel: HomeViewModel by viewModel()
+    private val viewModel: HomeViewModel by sharedViewModel()
+    private val billingClient: BillingClientService by inject()
 
     private val selectImageRequest = registerForActivityResult(CropImageContract()) {
         if (it.isSuccessful) {
@@ -52,13 +54,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         }
     }
 
-    /*
-    Be careful when chaning the options here. If any options access [Context] types, it
-    will result in a crash.
-
-    Ex: setActivityMenuIconColor(getColor(...)) -> Will cause a crash since the context object
-    is accessed before the fragment is created.
-     */
     private val cropImageGalleryOptions = options {
         setGuidelines(CropImageView.Guidelines.ON)
         setImageSource(includeGallery = true, includeCamera = false)
@@ -69,24 +64,24 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         setImageSource(includeGallery = false, includeCamera = true)
     }
 
+    override fun onResume() {
+        super.onResume()
+        billingClient.retryToConsumePurchases()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*
-        App draws UI behind system bars (status bar, navigation bar).
-        This is to update padding to screen elements to fit regardless of system bar sizes.
-
-        This is necessary in every fragment.
-         */
         updateWindowInsets(binding.root)
-        /*
-        Wait to animate recyclerView until the fragments view has been inflated.
-         */
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-        /*
-        Create loading dialog.
-         */
         val loadingDialog = createLoadingDialog()
+
+        collectFlow(billingClient.purchaseFlow) {
+            when (it) {
+                is PurchaseResult.Failure -> Unit
+                is PurchaseResult.Success -> viewModel.showReward()
+            }
+        }
 
         collectFlow(viewModel.state) { state ->
             binding.apply {
@@ -160,9 +155,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         }
 
         binding.apply {
-            /*
-                Scrolling listener to hide the create scan FAB
-                 */
             recyclerViewScans.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (dy > 0) {
@@ -176,9 +168,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 }
             })
 
-            /*
-            Swipe support, swipe to delete
-             */
             val delete = ContextCompat.getDrawable(
                 requireContext(),
                 R.drawable.ic_round_delete_white_24
@@ -264,19 +253,19 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 is HomeEvents.ShowPermissionInfo -> {
                     showCameraPermissionInfoDialog()
                 }
+                is HomeEvents.ShowSupportDialog -> {
+                    findNavController().navigate(R.id.action_homeScanFragment_to_supportFragment)
+                }
             }
         }
 
-        binding.setupComposeSnackbar()
+        binding.setupComposeSnackbar(
+            rewardCount = viewModel.showReward,
+            onRewardShown = { viewModel.rewardShown() }
+        )
 
-        /*
-        RecyclerView setup
-         */
         binding.apply {
             recyclerViewScans.apply {
-                /*
-                Gives an animation to all list items individually
-                 */
                 layoutAnimation =
                     AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_anim)
 
@@ -299,12 +288,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 buttonGalleryScan.setOnClickListener {
                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                     reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-                    findNavController().navigate(R.id.action_homeScanFragment_to_supportFragment)
-                    //selectImageRequest.launch(cropImageGalleryOptions)
+                    selectImageRequest.launch(cropImageGalleryOptions)
                 }
-                /*
-                Sets the animation to loop only 3 times and then stop as to not be too annoying.
-                 */
                 animationView.repeatCount = 2
             }
         }

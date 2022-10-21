@@ -62,7 +62,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
             }
 
             tvSupport.setOnClickListener {
-                showShortToast("Coming soon!!!")
+                findNavController().navigate(R.id.action_infoFragment_to_supportFragment)
             }
 
             tvShare.setOnClickListener {

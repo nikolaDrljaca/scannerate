@@ -41,7 +41,7 @@ fun SupportScreen(
             Spacer(modifier = Modifier.height(18.dp))
 
             Text(
-                text = "Select Amount",
+                text = "Consider supporting our work!",
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -51,7 +51,7 @@ fun SupportScreen(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "You can support our work\nby selecting one of the options below.",
+                text = "You can do that by\nchoosing one of the options below.",
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(horizontal = 16.dp)

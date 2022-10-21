@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.drbrosdev.studytextscan.datastore.AppPreferences
 import com.drbrosdev.studytextscan.service.billing.BillingClientService
 import com.drbrosdev.studytextscan.service.billing.ProductId
 import com.drbrosdev.studytextscan.service.billing.PurchaseResult
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class SupportViewModel(
-    private val billingClient: BillingClientService
+    private val billingClient: BillingClientService,
+    private val preferences: AppPreferences
 ) : ViewModel() {
     private val _events = Channel<SupportEvents>()
     val events = _events.receiveAsFlow()
@@ -41,10 +43,11 @@ class SupportViewModel(
     private val purchaseFlowJob = billingClient.purchaseFlow
         .onEach {
             when (it) {
-                is PurchaseResult.Failure ->
-                    _events.send(SupportEvents.ErrorOccured(it.errorMessage, it.debug))
-                is PurchaseResult.Success ->
-                    _events.send(SupportEvents.NavigateToReward)
+                is PurchaseResult.Failure -> {  }
+                is PurchaseResult.Success -> {
+                    _events.send(SupportEvents.SupportGiven)
+                    preferences.showReward()
+                }
             }
         }
         .launchIn(viewModelScope)
@@ -56,7 +59,6 @@ class SupportViewModel(
         val updatedVendors = VendorUiModel.vendorUiModels.map {
             VendorUiModel(it.vendor, isSelected = it.vendor.vendorName == p2.vendorName)
         }
-        Log.d("DEBUGn", "combine: $p0 || $p1 || $p2 || $p3")
         SupportUiState(products = updated, loading = p1, vendors = updatedVendors)
     }.stateIn(
         viewModelScope,

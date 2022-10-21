@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_infoFragment_to_licencesFragment"
             app:destination="@id/licencesFragment" />
+        <action
+            android:id="@+id/action_infoFragment_to_supportFragment"
+            app:destination="@id/supportFragment" />
     </fragment>
     <fragment
         android:id="@+id/licencesFragment"
