@@ -26,7 +26,7 @@ class SupportViewModel(
         .map {
             when (it) {
                 is QueriedProducts.Failure -> {
-                    _events.send(SupportEvents.ErrorOccured(it.errorMessage))
+                    _events.send(SupportEvents.ErrorOccured(it.errorMessage, it.debug))
                     emptyList<ProductUiModel>()
                 }
                 is QueriedProducts.Success -> it.products.map { ProductUiModel(it) }
@@ -42,7 +42,7 @@ class SupportViewModel(
         .onEach {
             when (it) {
                 is PurchaseResult.Failure ->
-                    _events.send(SupportEvents.ErrorOccured(it.errorMessage))
+                    _events.send(SupportEvents.ErrorOccured(it.errorMessage, it.debug))
                 is PurchaseResult.Success ->
                     _events.send(SupportEvents.NavigateToReward)
             }
@@ -82,7 +82,9 @@ class SupportViewModel(
 
     fun makePurchase(activity: Activity) {
         state.value.products.find { it.product.productId == selectedProductId.value.id }?.let {
-            billingClient.purchase(activity, it.product)
+            viewModelScope.launch {
+                billingClient.purchase(activity, it.product)
+            }
         }
     }
 

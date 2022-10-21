@@ -7,6 +7,8 @@ import com.android.billingclient.api.BillingClient.ProductType
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class BillingClientService(context: Context) : PurchasesUpdatedListener {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -30,7 +32,7 @@ class BillingClientService(context: Context) : PurchasesUpdatedListener {
                     scope.launch { _purchaseFlow.send(PurchaseResult.Success(null)) }
                     return
                 }
-                p1.forEach(::processPurchase)
+                scope.launch { p1.forEach { processPurchase(it) } }
             }
             else -> {
                 scope.launch {
@@ -45,7 +47,7 @@ class BillingClientService(context: Context) : PurchasesUpdatedListener {
         }
     }
 
-    fun purchase(activity: Activity, product: ProductDetails) {
+    suspend fun purchase(activity: Activity, product: ProductDetails) {
         val productDetails = BillingFlowParams.ProductDetailsParams
             .newBuilder()
             .setProductDetails(product)
@@ -54,14 +56,15 @@ class BillingClientService(context: Context) : PurchasesUpdatedListener {
             .setProductDetailsParamsList(listOf(productDetails))
             .build()
 
-        onConnected {
-            activity.runOnUiThread {
-                //LaunchBillingFlow has no callback, it invokes onPurchasesUpdated above
-                billingClient.launchBillingFlow(
-                    activity,
-                    billingFlowParams
-                )
-            }
+        val connectionStatus = establishConnection()
+        if (!connectionStatus) return
+
+        activity.runOnUiThread {
+            //LaunchBillingFlow has no callback, it invokes onPurchasesUpdated above
+            billingClient.launchBillingFlow(
+                activity,
+                billingFlowParams
+            )
         }
     }
 
@@ -74,35 +77,40 @@ class BillingClientService(context: Context) : PurchasesUpdatedListener {
         queryInAppProducts(params)
     }
 
+    //make suspendable and switch context to IO
     fun retryToConsumePurchases() {
         val queryPurchaseParams = QueryPurchasesParams.newBuilder()
             .setProductType(BillingClient.ProductType.INAPP)
             .build()
         billingClient.queryPurchasesAsync(queryPurchaseParams) { billingResult, purchaseList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                purchaseList.forEach(::processPurchase)
-            }
-        }
-    }
-
-    private fun processPurchase(purchase: Purchase) {
-        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-            scope.launch { _purchaseFlow.send(PurchaseResult.Success(purchase)) }
-
-            onConnected {
-                billingClient.consumeAsync(
-                    ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
-                ) { billingResult, token ->
-                    //save the token or whatever
-                    if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
-                        //implement retry logic or try to consume again in onResume()->fragment
-                    }
+                scope.launch {
+                    purchaseList.forEach { processPurchase(it) }
                 }
             }
         }
     }
 
+    private suspend fun processPurchase(purchase: Purchase) {
+        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+            scope.launch { _purchaseFlow.send(PurchaseResult.Success(purchase)) }
+
+            val consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+
+            val consumeResult = withContext(Dispatchers.IO) {
+                billingClient.consumePurchase(consumeParams)
+            }
+            if(consumeResult.billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
+                //implement retry logic or try to consume again in onResume()->fragment
+                //save the token or whatever with consumeResult.purchaseToken
+            }
+        }
+    }
+
     private suspend fun queryInAppProducts(params: QueryProductDetailsParams) {
+        val connectionStatus = establishConnection()
+        if (!connectionStatus) return
+
         val result = withContext(Dispatchers.IO) {
             billingClient.queryProductDetails(params)
         }
@@ -124,12 +132,14 @@ class BillingClientService(context: Context) : PurchasesUpdatedListener {
         }
     }
 
-    private fun onConnected(block: () -> Unit) {
+    private suspend fun establishConnection() = suspendCoroutine<Boolean> { continuation ->
         billingClient.startConnection(object : BillingClientStateListener {
-            override fun onBillingServiceDisconnected() {  }
+            override fun onBillingServiceDisconnected() {
+                continuation.resume(false)
+            }
 
             override fun onBillingSetupFinished(p0: BillingResult) {
-                block()
+                continuation.resume(true)
             }
         })
     }

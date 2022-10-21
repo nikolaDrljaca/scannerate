@@ -3,6 +3,7 @@ package com.drbrosdev.studytextscan.ui.support
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SupportFragment : BottomSheetDialogFragment() {
@@ -52,11 +54,26 @@ class SupportFragment : BottomSheetDialogFragment() {
                     val state by viewModel.state.collectAsStateWithLifecycle()
 
                     LaunchedEffect(Unit) {
-                        //viewModel.queryProducts()
+                        viewModel.queryProducts()
+                    }
+
+                    LaunchedEffect(viewModel.events) {
+                        viewModel.events.collect {
+                            when (it) {
+                                is SupportEvents.ErrorOccured -> {
+                                    Log.d("DEBUGn", "error occured ${it.message} || ${it.debugMessage}")
+                                }
+                                SupportEvents.NavigateToReward -> {
+
+                                }
+                            }
+                        }
                     }
 
                     SupportScreen(
-                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
                         state = state,
                         onProductSelected = { viewModel.selectProduct(it.productId) },
                         onVendorSelected = viewModel::selectVendor,
