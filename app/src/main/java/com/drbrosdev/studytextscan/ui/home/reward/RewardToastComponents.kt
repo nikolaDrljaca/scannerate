@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.ui.support.theme.HeavyBlue
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.Gratipay
@@ -70,13 +72,13 @@ fun RewardSnackbar() {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Your purchase has been verified!",
+                    text = stringResource(R.string.purchase_verified),
                     fontSize = 12.sp,
                     color = Color.White,
                     modifier = Modifier.alpha(0.7f)
                 )
                 Text(
-                    text = "Keep supporting open source!",
+                    text = stringResource(R.string.open_source),
                     fontSize = 16.sp,
                     color = Color.White
                 )

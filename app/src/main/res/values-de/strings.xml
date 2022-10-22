@@ -60,4 +60,11 @@
     <string name="green_color">Grün</string>
     <string name="blue_color">Blau</string>
     <string name="yellow_color">Gelb</string>
+    <string name="purchase_verified">Ihr Kauf wurde bestätigt!</string>
+    <string name="open_source">Unterstützen Sie weiterhin Open Source!</string>
+    <string name="went_wrong">Hier ist es leer. Etwas ist schief gelaufen.</string>
+    <string name="consider_support">Erwägen Sie, unsere Arbeit zu unterstützen!</string>
+    <string name="payment_method">Zahlungsmethode</string>
+    <string name="payment_options">Weitere Optionen werden später hinzugefügt.</string>
+    <string name="support_btn">Unterstützung</string>
 </resources>

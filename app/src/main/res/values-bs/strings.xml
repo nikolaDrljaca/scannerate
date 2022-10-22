@@ -60,4 +60,11 @@
     <string name="green_color">Zelena</string>
     <string name="blue_color">Plava</string>
     <string name="yellow_color">Žuta</string>
+    <string name="purchase_verified">Vaša kupovina je potvrđena!</string>
+    <string name="open_source">Nastavite podržavati open-source!</string>
+    <string name="went_wrong">Nešto nije u redu.</string>
+    <string name="consider_support">Podržite naš rad!</string>
+    <string name="payment_method">Metoda uplate</string>
+    <string name="payment_options">Više opcija će biti dostupno kasnije.</string>
+    <string name="support_btn">Podrži</string>
 </resources>

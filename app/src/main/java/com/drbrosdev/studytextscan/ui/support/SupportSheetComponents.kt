@@ -20,11 +20,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.billingclient.api.ProductDetails
+import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.ui.support.theme.*
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.*
@@ -235,8 +237,7 @@ private fun PlaceholderItem(
             tint = MaterialTheme.colors.onSurface
         )
         Text(
-            text = "It's empty here. Something went wrong.",
-            //modifier = Modifier.weight(1f),
+            text = stringResource(R.string.went_wrong),
             fontSize = 12.sp,
             color = MaterialTheme.colors.onSurface
         )

@@ -6,11 +6,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.QueryProductDetailsParams
+import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.ui.support.theme.HeavyBlue
 import com.drbrosdev.studytextscan.ui.support.theme.LightBlue
 import com.drbrosdev.studytextscan.ui.support.theme.DarkTextGray
@@ -41,7 +43,7 @@ fun SupportScreen(
             Spacer(modifier = Modifier.height(18.dp))
 
             Text(
-                text = "Consider supporting our work!",
+                text = stringResource(R.string.consider_support),
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -69,7 +71,7 @@ fun SupportScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Payment Method",
+                text = stringResource(R.string.payment_method),
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -79,7 +81,7 @@ fun SupportScreen(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "More options will be added later on.",
+                text = stringResource(R.string.payment_options),
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(horizontal = 16.dp)
@@ -107,7 +109,7 @@ fun SupportScreen(
                 ),
                 shape = RoundedCornerShape(18.dp)
             ) {
-                Text(text = "Support", fontSize = 20.sp)
+                Text(text = stringResource(R.string.support_btn), fontSize = 20.sp)
             }
         }
     }
