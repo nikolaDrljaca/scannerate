@@ -33,21 +33,21 @@ class ScanTextFromImageUseCase(
             val result = textRecognizer.process(image).await()
 
             if (result.text.isNotBlank()) {
+                detectedText.add(result.text)
                 result.textBlocks.forEach { block ->
                     block.lines.forEach { line ->
                         line.elements.forEach { element ->
                             chips.addAll(filterService.filterTextForEmails(element.text))
                             chips.addAll(filterService.filterTextForPhoneNumbers(element.text))
                             chips.addAll(filterService.filterTextForLinks(element.text))
-                            detectedText.add(element.text + " ")
                         }
                     }
                 }
             }
         }
-        val completeText = StringBuilder().also {
-            detectedText.forEach { text -> it.append(text) }
+        val completeText = buildString {
+            detectedText.forEach { text -> append(text) }
         }
-        completeText.toString() to chips.toList()
+        completeText to chips.toList()
     }
 }
