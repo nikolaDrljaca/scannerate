@@ -112,7 +112,9 @@ class HomeViewModel(
     private fun initOnBoarding() = viewModelScope.launch {
         val hasSeen = prefs.isFirstLaunch.first()
         if (!hasSeen) {
-            _events.send(HomeEvents.ShowOnboarding)
+            _events.send(HomeEvents.ShowOnboarding).also {
+                prefs.incrementSupportCount()
+            }
         }
     }
 

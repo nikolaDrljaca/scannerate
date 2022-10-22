@@ -49,7 +49,7 @@ class AppPreferences(private val dataStore: DataStore<Preferences>) {
 
     suspend fun incrementSupportCount() {
         dataStore.edit {
-            var current = it[SCAN_COUNT] ?: 0
+            var current = it[SCAN_COUNT] ?: 6
             current += 1
             it[SCAN_COUNT] = current
         }
