@@ -135,7 +135,7 @@ class BillingClientService(context: Context) : PurchasesUpdatedListener {
     private suspend fun establishConnection() = suspendCoroutine<Boolean> { continuation ->
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingServiceDisconnected() {
-                continuation.resume(false)
+                //continuation.resume(false)
             }
 
             override fun onBillingSetupFinished(p0: BillingResult) {

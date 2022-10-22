@@ -67,4 +67,5 @@
     <string name="payment_method">Zahlungsmethode</string>
     <string name="payment_options">Weitere Optionen werden später hinzugefügt.</string>
     <string name="support_btn">Unterstützung</string>
+    <string name="choose_option">Sie können dies tun, indem Sie eine der folgenden Optionen auswählen.</string>
 </resources>
