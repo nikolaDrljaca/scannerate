@@ -14,7 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LicencesFragment : Fragment(R.layout.fragment_licences) {
 
-    private val binding: FragmentLicencesBinding by viewBinding()
+    private val binding: FragmentLicencesBinding by viewBinding(FragmentLicencesBinding::bind)
     private val viewModel: LicenceViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

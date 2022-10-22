@@ -34,7 +34,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
-    private val binding: FragmentScanHomeBinding by viewBinding()
+    private val binding: FragmentScanHomeBinding by viewBinding(FragmentScanHomeBinding::bind)
     private val viewModel: HomeViewModel by sharedViewModel()
     private val billingClient: BillingClientService by inject()
 

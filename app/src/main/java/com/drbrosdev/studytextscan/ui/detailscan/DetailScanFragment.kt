@@ -24,7 +24,7 @@ import java.util.*
 
 
 class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
-    private val binding: FragmentScanDetailBinding by viewBinding()
+    private val binding: FragmentScanDetailBinding by viewBinding(FragmentScanDetailBinding::bind)
     private val viewModel: DetailScanViewModel by stateViewModel(state = { requireArguments() })
     private val pdfExportService: PdfExportServiceImpl by inject()
     private lateinit var textToSpeech: TextToSpeech
