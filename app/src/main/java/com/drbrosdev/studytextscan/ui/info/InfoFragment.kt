@@ -16,7 +16,7 @@ import com.drbrosdev.studytextscan.util.viewBinding
 import com.google.android.material.transition.MaterialSharedAxis
 
 class InfoFragment : Fragment(R.layout.fragment_info) {
-    private val binding: FragmentInfoBinding by viewBinding()
+    private val binding: FragmentInfoBinding by viewBinding(FragmentInfoBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,7 +62,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
             }
 
             tvSupport.setOnClickListener {
-                showShortToast("Coming soon!!!")
+                findNavController().navigate(R.id.action_infoFragment_to_supportFragment)
             }
 
             tvShare.setOnClickListener {

@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_homeScanFragment_to_viewPagerFragment"
             app:destination="@id/viewPagerFragment" />
+        <action
+            android:id="@+id/action_homeScanFragment_to_supportFragment"
+            app:destination="@id/supportFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailScanFragment"
@@ -34,6 +37,9 @@
         <action
             android:id="@+id/action_infoFragment_to_licencesFragment"
             app:destination="@id/licencesFragment" />
+        <action
+            android:id="@+id/action_infoFragment_to_supportFragment"
+            app:destination="@id/supportFragment" />
     </fragment>
     <fragment
         android:id="@+id/licencesFragment"
@@ -47,5 +53,11 @@
         android:id="@+id/viewPagerFragment"
         android:name="com.drbrosdev.studytextscan.ui.onBoarding.ViewPagerFragment"
         android:label="fragment_view_pager"
+        tools:layout="@layout/fragment_view_pager" />
+
+    <dialog
+        android:id="@+id/supportFragment"
+        android:name="com.drbrosdev.studytextscan.ui.support.SupportFragment"
+        android:label="fragment_support"
         tools:layout="@layout/fragment_view_pager" />
 </navigation>

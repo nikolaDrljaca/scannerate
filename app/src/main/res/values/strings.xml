@@ -71,4 +71,12 @@
     <string name="green_color">Green</string>
     <string name="blue_color">Blue</string>
     <string name="yellow_color">Black</string>
+    <string name="open_source">Keep supporting open source!</string>
+    <string name="went_wrong">It\'s empty here. Something went wrong.</string>
+    <string name="consider_support">Consider supporting our work!</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="payment_options">More options will be added later on.</string>
+    <string name="support_btn">Support</string>
+    <string name="purchase_verified">Your purchase has been verified!</string>
+    <string name="choose_option">You can do that by choosing one of the options below.</string>
 </resources>

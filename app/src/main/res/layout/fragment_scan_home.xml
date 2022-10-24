@@ -13,6 +13,11 @@
         android:layout_height="match_parent"
         />
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view_snack_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_layout_empty"
         android:layout_width="match_parent"
