@@ -34,8 +34,8 @@ android {
         applicationId "com.drbrosdev.studytextscan"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 8
-        versionName "1.5"
+        versionCode 9
+        versionName "1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,7 +50,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            debuggable true
         }
     }
     compileOptions {
