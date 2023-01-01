@@ -34,8 +34,8 @@ android {
         applicationId "com.drbrosdev.studytextscan"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 9
-        versionName "1.6"
+        versionCode 10
+        versionName "1.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -143,7 +143,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
 
     //image cropper
-    implementation 'com.github.CanHub:Android-Image-Cropper:4.1.0'
+    implementation 'com.vanniktech:android-image-cropper:4.5.0'
 
     //COMPOSE
     // When using a MDC theme
@@ -160,4 +160,7 @@ dependencies {
     //billing
     def billing_version = "5.0.0"
     implementation "com.android.billingclient:billing-ktx:$billing_version"
+
+    //in-app review
+    implementation 'com.google.android.play:review-ktx:2.0.1'
 }

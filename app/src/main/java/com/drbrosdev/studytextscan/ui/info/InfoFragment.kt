@@ -14,9 +14,12 @@ import com.drbrosdev.studytextscan.util.showShortToast
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
 import com.google.android.material.transition.MaterialSharedAxis
+import com.google.android.play.core.review.ReviewManager
+import org.koin.android.ext.android.inject
 
 class InfoFragment : Fragment(R.layout.fragment_info) {
     private val binding: FragmentInfoBinding by viewBinding(FragmentInfoBinding::bind)
+    private val reviewManager: ReviewManager by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,9 +48,12 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
             }
 
             tvRateApp.setOnClickListener {
-                val page =
-                    Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
-                startActivity(Intent(Intent.ACTION_VIEW, page))
+                val reviewRequest = reviewManager.requestReviewFlow()
+                reviewRequest.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        //show something?
+                    }
+                }
             }
 
             tvReportBug.setOnClickListener {

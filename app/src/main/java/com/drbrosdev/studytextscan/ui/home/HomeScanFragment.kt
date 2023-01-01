@@ -18,9 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageView
-import com.canhub.cropper.options
+import com.canhub.cropper.*
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.service.billing.BillingClientService
@@ -44,25 +42,31 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         }
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-        if (it) {
-            //permission granted. Continue workflow
-            selectImageRequest.launch(cropImageCameraOptions)
-        } else {
-            //Provide explanation on why the permission is needed. AlertDialog maybe?
-            viewModel.handlePermissionDenied()
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                //permission granted. Continue workflow
+                //selectImageRequest.launch(cropImageCameraOptions)
+                selectImageRequest.launch(cropImageCameraOptions)
+            } else {
+                //Provide explanation on why the permission is needed. AlertDialog maybe?
+                viewModel.handlePermissionDenied()
+            }
         }
-    }
 
-    private val cropImageGalleryOptions = options {
-        setGuidelines(CropImageView.Guidelines.ON)
-        setImageSource(includeGallery = true, includeCamera = false)
-    }
+    private val cropImageGalleryOptions = CropImageContractOptions(
+        null,
+        CropImageOptions().apply {
+            imageSourceIncludeCamera = false
+            imageSourceIncludeGallery = true
+        })
 
-    private val cropImageCameraOptions = options {
-        setGuidelines(CropImageView.Guidelines.ON)
-        setImageSource(includeGallery = false, includeCamera = true)
-    }
+    private val cropImageCameraOptions = CropImageContractOptions(
+        null,
+        CropImageOptions().apply {
+            imageSourceIncludeCamera = true
+            imageSourceIncludeGallery = false
+        })
 
     override fun onResume() {
         super.onResume()
@@ -276,7 +280,8 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     when {
                         ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                                 == PackageManager.PERMISSION_GRANTED -> {
-                                    //use the api that needs the permission
+                            //use the api that needs the permission
+                            //selectImageRequest.launch(cropImageCameraOptions)
                             selectImageRequest.launch(cropImageCameraOptions)
                         }
                         else -> {

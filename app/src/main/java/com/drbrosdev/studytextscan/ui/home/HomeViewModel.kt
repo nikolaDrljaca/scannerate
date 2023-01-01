@@ -39,7 +39,7 @@ class HomeViewModel(
     private val supportCount = prefs.scanCount
         .onEach {
             val hasSeen = prefs.isFirstLaunch.first()
-            if (it % 6 == 0 && hasSeen) {
+            if (it % 12 == 0 && hasSeen) {
                 _events.send(HomeEvents.ShowSupportDialog)
                 prefs.incrementSupportCount()
             }
