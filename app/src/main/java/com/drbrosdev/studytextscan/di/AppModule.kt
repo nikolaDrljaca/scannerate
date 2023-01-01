@@ -10,6 +10,8 @@ import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.service.textFilter.TextFilterServiceImpl
 import com.drbrosdev.studytextscan.service.textFilter.TextFilterService
 import com.drbrosdev.studytextscan.ui.home.ScanTextFromImageUseCase
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -35,6 +37,9 @@ private fun provideScanTextFromImageUseCase(filterTextService: TextFilterService
 private fun provideBillingService(context: Context) =
     BillingClientService(context)
 
+private fun provideReviewManager(context: Context): ReviewManager =
+    ReviewManagerFactory.create(context)
+
 val appModule = module {
     single { provideDatabase(context = androidContext()) }
     single { providePdfExportService() }
@@ -42,4 +47,5 @@ val appModule = module {
     single { provideFilterTextService() } bind TextFilterService::class
     factory { provideScanTextFromImageUseCase(get()) }
     single { provideBillingService(androidContext()) }
+    single { provideReviewManager(androidContext()) }
 }
