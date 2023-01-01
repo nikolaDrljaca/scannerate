@@ -51,7 +51,8 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                 val reviewRequest = reviewManager.requestReviewFlow()
                 reviewRequest.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        //show something?
+                        val reviewInfo = task.result
+                        val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
                     }
                 }
             }
