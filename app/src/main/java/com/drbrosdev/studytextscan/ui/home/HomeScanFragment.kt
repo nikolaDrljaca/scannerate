@@ -98,7 +98,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                             exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
                             reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
 
-                            findNavController().navigate(R.id.action_homeScanFragment_to_infoFragment)
+                            findNavController().navigate(R.id.to_about_fragment)
                         }
                     }
                     scanHeader {
