@@ -56,22 +56,6 @@ fun ScannerateTheme(
         LightColorPalette
     }
 
-    //changes the status bar and nav bar colors
-    val view = LocalView.current
-    val statusBarColor = if (darkTheme) BackgroundBlue else Color.White
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = statusBarColor.toArgb()
-            window.navigationBarColor = statusBarColor.toArgb()
-
-            WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightStatusBars = !darkTheme
-            WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightNavigationBars = !darkTheme
-        }
-    }
-
     MaterialTheme(
         colors = colors,
         typography = Typography,
