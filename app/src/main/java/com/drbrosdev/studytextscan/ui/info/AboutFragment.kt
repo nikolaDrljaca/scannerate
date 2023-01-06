@@ -1,5 +1,6 @@
 package com.drbrosdev.studytextscan.ui.info
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,9 +8,14 @@ import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
@@ -38,7 +44,6 @@ class AboutFragment : Fragment() {
 
             setContent {
                 ScannerateTheme {
-
                     ScannerateAboutScreen(
                         modifier = Modifier,
                         onActionClick = { handleActions(it) },
