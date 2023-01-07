@@ -22,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.ui.info.components.SupportAction
 import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
+import com.drbrosdev.studytextscan.util.safeNav
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.google.android.material.transition.MaterialSharedAxis
 
@@ -63,11 +64,11 @@ class AboutFragment : Fragment() {
             SupportAction.Licenses -> {
                 reenterTransition = Fade()
                 val action = AboutFragmentDirections.toLicensesFragment()
-                findNavController().navigate(action)
+                findNavController().safeNav(action)
             }
             SupportAction.SupportDev -> {
                 val action = AboutFragmentDirections.toSupportFragment()
-                findNavController().navigate(action)
+                findNavController().safeNav(action)
             }
             SupportAction.BugReport -> {
                 val addresses =
