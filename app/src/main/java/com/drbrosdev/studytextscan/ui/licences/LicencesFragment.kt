@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.drbrosdev.studytextscan.R
-import com.drbrosdev.studytextscan.databinding.FragmentLicencesBinding
 import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
 import com.drbrosdev.studytextscan.util.updateWindowInsets
 import com.drbrosdev.studytextscan.util.viewBinding
