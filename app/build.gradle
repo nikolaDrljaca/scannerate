@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs'
+    id 'org.jetbrains.kotlin.android'
 }
 
 sourceSets {
@@ -82,6 +83,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.core:core-ktx:+'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -137,7 +139,7 @@ dependencies {
     kapt "com.airbnb.android:epoxy-processor:$epoxyVersion"
 
     //entity extraction - text recognition
-    //implementation 'com.google.mlkit:entity-extraction:16.0.0-beta2'
+    implementation 'com.google.mlkit:entity-extraction:16.0.0-beta4'
 
     //Google ML-kit Task extensions
     //Source: https://github.com/Kotlin/kotlinx.coroutines/tree/master/integration/kotlinx-coroutines-play-services

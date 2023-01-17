@@ -8,6 +8,9 @@ import com.drbrosdev.studytextscan.persistence.entity.FilteredTextModel
 import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.persistence.repository.FilteredTextRepository
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
+import com.drbrosdev.studytextscan.service.entityextraction.EntityExtractionUseCase
+import com.drbrosdev.studytextscan.service.entityextraction.ExtractionResultModel
+import com.drbrosdev.studytextscan.service.textextract.ScanTextFromImageUseCase
 import com.drbrosdev.studytextscan.util.getCurrentDateTime
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.channels.Channel
@@ -18,23 +21,21 @@ class HomeViewModel(
     private val prefs: AppPreferences,
     private val scanRepo: ScanRepository,
     private val filteredTextModelRepo: FilteredTextRepository,
-    private val scanTextFromImageUseCase: ScanTextFromImageUseCase
+    private val scanTextFromImageUseCase: ScanTextFromImageUseCase,
+    private val entityExtractionUseCase: EntityExtractionUseCase
 ): ViewModel() {
     private val _events = Channel<HomeEvents>(capacity = 1)
     val events = _events.receiveAsFlow()
 
     private val isLoading = MutableStateFlow(true)
 
-    private val scans = scanRepo.allScans
+    private val listOfScans = scanRepo.allScans
         .distinctUntilChanged()
         .onEach { isLoading.value = false }
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed())
 
-    private val listOfScans = scans
-        .map { list -> list.filter { !it.isPinned } }
-
-    private val listOfPinnedScans = scans
-        .map { list -> list.filter { it.isPinned } }
+    private val listOfPinnedScans = scanRepo.allPinnedScans
+        .distinctUntilChanged()
+        .onEach { isLoading.value = false }
 
     private val supportCount = prefs.scanCount
         .onEach {
@@ -68,7 +69,7 @@ class HomeViewModel(
         _events.send(HomeEvents.ShowPermissionInfo)
     }
 
-    private fun createScan(text: String, filteredTextList: List<Pair<String, String>>) = viewModelScope.launch {
+    private fun createScan(text: String, extractionResultModels: List<ExtractionResultModel>) = viewModelScope.launch {
         if (text.isNotEmpty() or text.isNotBlank()) {
             val scan = Scan(
                 scanText = text,
@@ -79,10 +80,14 @@ class HomeViewModel(
             )
 
             val result = scanRepo.insertScan(scan)
-            val scanId = Integer.parseInt(result.toString())
+            val scanId = result.toInt()
 
-            filteredTextList.forEach {
-                val model = FilteredTextModel(scanId = scanId, type = it.first, content = it.second)
+            extractionResultModels.forEach { extractedModel ->
+                val model = FilteredTextModel(
+                    scanId = scanId,
+                    type = extractedModel.type.name.lowercase(),
+                    content = extractedModel.content
+                )
                 filteredTextModelRepo.insertModel(model)
                 Log.d("DEBUGn", "createScan: model inserted ${model.content}")
             }
@@ -121,11 +126,17 @@ class HomeViewModel(
     fun handleScan(image: InputImage) {
         showLoadingDialog()
         viewModelScope.launch {
-            try {
-                val (completeText, filteredText) = scanTextFromImageUseCase(image)
-                createScan(completeText, filteredText)
-            } catch (e: Exception) {
-                Log.e("DEBUGn", "Error: ${e.localizedMessage}")
+            val completeTextResult = scanTextFromImageUseCase(image)
+            completeTextResult.onSuccess { completeText ->
+                val extractedEntitiesResult = entityExtractionUseCase(completeText)
+                    .fold(
+                        onSuccess = { it },
+                        onFailure = { emptyList() }
+                    )
+                createScan(completeText, extractedEntitiesResult)
+            }
+            completeTextResult.onFailure {
+                Log.e("DEBUGn", "Error: ${it.localizedMessage}")
                 _events.send(HomeEvents.ShowErrorWhenScanning)
             }
         }
