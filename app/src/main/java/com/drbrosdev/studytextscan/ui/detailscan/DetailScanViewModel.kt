@@ -16,7 +16,7 @@ class DetailScanViewModel(
     private val scanRepository: ScanRepository,
     private val filteredModelsRepository: FilteredTextRepository
 ) : ViewModel() {
-
+    //get args using safeargs
     val scanId = savedStateHandle.get<Int>("scan_id") ?: 0
     private val isJustCreated = savedStateHandle.get<Int>("is_created") ?: 0
 
