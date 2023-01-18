@@ -1,5 +1,6 @@
 package com.drbrosdev.studytextscan.ui.detailscan
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,12 +33,6 @@ fun ScannerateDetailScreen(
     onDeleteClick: () -> Unit
 ) {
     val topBarHeight = 72.dp
-    //debounced, local state to represent truth
-    var title by remember { mutableStateOf(state.scan?.scanTitle ?: "") }
-    //debounced, local state to represent truth
-    var content by remember { mutableStateOf(state.scan?.scanText ?: "") }
-    //pinning can be instant
-
     val columnScrollState = rememberLazyListState()
 
     val topBarState by remember {
@@ -48,91 +43,126 @@ fun ScannerateDetailScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
+    if (state.scan == null) {
+        ScannerateLoadingScreen()
+    }
+
+    state.scan?.let { scan ->
+        //debounced, local state to represent truth
+        var title by remember { mutableStateOf(scan.scanTitle) }
+        //debounced, local state to represent truth
+        var content by remember { mutableStateOf(scan.scanText) }
+
+        Box(
             modifier = Modifier
-                .fillMaxSize(),
-            state = columnScrollState
+                .then(modifier)
+                .fillMaxSize()
+                .statusBarsPadding()
         ) {
-            item { Spacer(modifier = Modifier.height(56.dp)) }
-
-            item { //header
-                Column {
-                    ScannerateTextField(
-                        text = title,
-                        onTextChanged = {
-                            title = it
-                            onTitleTextChanged(it)
-                        },
-                        maxLines = 2
-                    )
-                    ScannerateDateText(
-                        text = stringResource(
-                            R.string.text_date_created,
-                            dateAsString(state.scan?.dateCreated ?: 0L)
-                        )
-                    )
-                    ScannerateDateText(
-                        text = stringResource(
-                            R.string.text_date_modified,
-                            dateAsString(state.scan?.dateModified ?: 0L)
-                        )
-                    )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .imePadding(),
+                state = columnScrollState
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(56.dp))
                 }
-            }
 
-            item {
-                LazyHorizontalStaggeredGrid(
-                    rows = StaggeredGridCells.Fixed(2),
-                    modifier = Modifier
-                        .padding(top = 10.dp)
-                        .height(88.dp)
-                        .fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(
-                        2.dp,
-                        alignment = Alignment.CenterVertically
-                    ),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    items(state.filteredTextModels) {
-//                        TextEntityChip(
-//                            entity = it,
-//                            onClick = { onChipClicked(it) }
-//                        )
+                item { //header
+                    Column {
+                        ScannerateTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = title,
+                            onTextChanged = {
+                                title = it
+                                onTitleTextChanged(it)
+                            },
+                            maxLines = 2
+                        )
+                        ScannerateDateText(
+                            text = stringResource(
+                                R.string.text_date_created,
+                                dateAsString(scan.dateCreated)
+                            )
+                        )
+                        ScannerateDateText(
+                            text = stringResource(
+                                R.string.text_date_modified,
+                                dateAsString(scan.dateModified)
+                            )
+                        )
                     }
                 }
+
+                if (state.filteredTextModels.isNotEmpty()) {
+                    item {
+                        LazyHorizontalStaggeredGrid(
+                            rows = StaggeredGridCells.Fixed(2),
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                                .height(88.dp)
+                                .fillMaxWidth(),
+                            contentPadding = PaddingValues(horizontal = 12.dp),
+                            verticalArrangement = Arrangement.spacedBy(
+                                2.dp,
+                                alignment = Alignment.CenterVertically
+                            ),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            items(state.filteredTextModels) {
+                                TextEntityChip(
+                                    entity = it,
+                                    onClick = { onChipClicked(it) }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                item {
+                    ScannerateTextField(
+                        modifier = Modifier,
+                        text = content,
+                        onTextChanged = {
+                            content = it
+                            onContentChanged(it)
+                        },
+                        fontSize = 17.sp
+                    )
+
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(72.dp))
+                }
             }
 
-            item { //content
-                ScannerateTextField(
-                    text = content, //scan content as text
-                    onTextChanged = {
-                        content = it
-                        onContentChanged(it)
-                    },
-                    fontSize = 17.sp
+            ScanDetailTopBar(
+                height = topBarHeight,
+                topBarState = topBarState,
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
+                isPinned = scan.isPinned,
+                onPinClicked = onPinClicked,
+                onBackClicked = onBackClick,
+                onPdfExportClicked = onPdfExport,
+                onDeleteClicked = onDeleteClick,
+                onSaveClicked = { } //can do nothing
+            )
+
+            AnimatedVisibility(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding(),
+                visible = columnScrollState.isScrollingUp(),
+                enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
+                exit = fadeOut() + shrinkOut(shrinkTowards = Alignment.Center)
+            ) {
+                ScanDetailBottomBar(
+                    modifier = Modifier
                 )
             }
-
-            item { Spacer(modifier = Modifier.height(72.dp)) }
         }
-
-        ScanDetailTopBar(
-            height = topBarHeight,
-            topBarState = topBarState,
-            modifier = Modifier
-                .align(Alignment.TopEnd),
-            isPinned = state.scan?.isPinned ?: false,
-            onPinClicked = onPinClicked,
-            onBackClicked = onBackClick,
-            onPdfExportClicked = onPdfExport,
-            onDeleteClicked = onDeleteClick,
-            onSaveClicked = {} //can do nothing
-        )
-
-        ScanDetailBottomBar(
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
     }
 }

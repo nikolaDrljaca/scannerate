@@ -11,14 +11,15 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
-import com.canhub.cropper.*
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.service.billing.BillingClientService
@@ -29,7 +30,6 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding(FragmentScanHomeBinding::bind)
@@ -122,11 +122,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                     reenterTransition =
                                         MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
-                                    findNavController().navigate(
-                                        R.id.action_homeScanFragment_to_detailScanFragment,
-                                        arg
-                                    )
+                                    //val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                    val action = HomeScanFragmentDirections.toDetailScanFragment(it.scanId.toInt(), 0)
+                                    findNavController().safeNav(action)
                                 }
                             }
                         }
@@ -145,11 +143,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                     reenterTransition =
                                         MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
-                                    findNavController().navigate(
-                                        R.id.action_homeScanFragment_to_detailScanFragment,
-                                        arg
-                                    )
+                                    //val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                    val action = HomeScanFragmentDirections.toDetailScanFragment(it.scanId.toInt(), 0)
+                                    findNavController().safeNav(action)
                                 }
                             }
                         }
@@ -219,11 +215,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
             when (homeEvents) {
                 is HomeEvents.ShowCurrentScanSaved -> {
                     loadingDialog.dismiss()
-                    val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
-                    findNavController().navigate(
-                        R.id.action_homeScanFragment_to_detailScanFragment,
-                        arg
-                    )
+                    //val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
+                    val action = HomeScanFragmentDirections.toDetailScanFragment(homeEvents.id, 1)
+                    findNavController().safeNav(action)
                 }
                 is HomeEvents.ShowLoadingDialog -> {
                     loadingDialog.show()
