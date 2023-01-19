@@ -126,7 +126,7 @@ fun ScannerateDetailScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(72.dp))
+                Spacer(modifier = Modifier.height(82.dp))
             }
         }
 
@@ -143,21 +143,14 @@ fun ScannerateDetailScreen(
             onSaveClicked = { } //can do nothing
         )
 
-        AnimatedVisibility(
+        ScanDetailBottomBar(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding(),
-            visible = columnScrollState.isScrollingUp(),
-            enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
-            exit = fadeOut() + shrinkOut(shrinkTowards = Alignment.Center)
-        ) {
-            ScanDetailBottomBar(
-                modifier = Modifier,
-                onCopyClick = onCopyClick,
-                onShareClick = onShareClick,
-                onTosClick = onTtsClick,
-                onTranslateClick = onTranslateClick
-            )
-        }
+            onCopyClick = onCopyClick,
+            onShareClick = onShareClick,
+            onTosClick = onTtsClick,
+            onTranslateClick = onTranslateClick
+        )
     }
 }
