@@ -7,26 +7,41 @@ import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.persistence.entity.ExtractionModel
 import com.drbrosdev.studytextscan.persistence.entity.ExtractionModelType
+import com.drbrosdev.studytextscan.ui.support.theme.HeavyBlue
+import com.drbrosdev.studytextscan.ui.support.theme.LightBlue
 import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
 import com.drbrosdev.studytextscan.util.safeNav
 import com.drbrosdev.studytextscan.util.showConfirmDialog
 import com.google.android.material.transition.MaterialSharedAxis
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class DetailScanFragment : Fragment() {
     private val viewModel: DetailScanViewModel by viewModel()
     private lateinit var textToSpeech: TextToSpeech
+    private val snackbarHostState = SnackbarHostState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,20 +67,39 @@ class DetailScanFragment : Fragment() {
                 ScannerateTheme {
                     val state by viewModel.state.collectAsStateWithLifecycle()
 
-                    ScannerateDetailScreen(
-                        state = state,
-                        onTitleTextChanged = { viewModel.onTitleChange(it) } ,
-                        onContentChanged = { viewModel.onContentChanged(it) },
-                        onPinClicked = { viewModel.updateScanPinned() },
-                        onChipClicked = { launchExtractedModelIntent(it) },
-                        onBackClick = { findNavController().navigateUp() },
-                        onPdfExport = { navigateToPdfExport(state.scan?.scanId) },
-                        onDeleteClick = { onDeleteClick() },
-                        onCopyClick = { copyToClipboard(state.scan?.scanText) },
-                        onTranslateClick = { openInTranslate(state.scan?.scanText) },
-                        onShareClick = { share(state.scan?.scanText) },
-                        onTtsClick = { tts(state.scan?.scanText) }
-                    )
+                    Box(modifier = Modifier.fillMaxSize()) {
+
+                        SnackbarHost(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 72.dp)
+                                .navigationBarsPadding(),
+                            hostState = snackbarHostState,
+                            snackbar = {
+                                Snackbar(
+                                    snackbarData = it,
+                                    backgroundColor = LightBlue,
+                                    contentColor = HeavyBlue
+                                )
+                            }
+                        )
+
+                        ScannerateDetailScreen(
+                            state = state,
+                            onTitleTextChanged = { viewModel.onTitleChange(it) },
+                            onContentChanged = { viewModel.onContentChanged(it) },
+                            onPinClicked = { viewModel.updateScanPinned() },
+                            onChipClicked = { launchExtractedModelIntent(it) },
+                            onBackClick = { findNavController().navigateUp() },
+                            onPdfExport = { navigateToPdfExport(state.scan?.scanId) },
+                            onDeleteClick = { onDeleteClick() },
+                            onCopyClick = { copyToClipboard(state.scan?.scanText) },
+                            onTranslateClick = { openInTranslate(state.scan?.scanText) },
+                            onShareClick = { share(state.scan?.scanText) },
+                            onTtsClick = { tts(state.scan?.scanText) }
+                        )
+                    }
+
                 }
             }
         }
@@ -97,9 +131,13 @@ class DetailScanFragment : Fragment() {
             if (status == TextToSpeech.SUCCESS) {
                 val hasLanguage = textToSpeech.setLanguage(Locale.US)
                 if (hasLanguage == TextToSpeech.LANG_MISSING_DATA || hasLanguage == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    //snackbar - No supported language found
+                    lifecycleScope.launch {
+                        snackbarHostState.showSnackbar(message = getString(R.string.unsupported_language))
+                    }
                 } else {
-                    //snackbar - loading
+                    lifecycleScope.launch {
+                        snackbarHostState.showSnackbar(message = getString(R.string.loading))
+                    }
                     textToSpeech.speak(
                         text,
                         TextToSpeech.QUEUE_ADD,
@@ -117,6 +155,7 @@ class DetailScanFragment : Fragment() {
         val clip = ClipData.newPlainText("raw_data", text)
         clipboardManager.setPrimaryClip(clip)
         //fire off snackbar
+        lifecycleScope.launch { snackbarHostState.showSnackbar(message = getString(R.string.copied_clip)) }
     }
 
     private fun share(input: String?) = input?.let { text ->
@@ -146,7 +185,7 @@ class DetailScanFragment : Fragment() {
 
     private fun launchExtractedModelIntent(model: ExtractionModel) {
         try {
-            when(model.type) {
+            when (model.type) {
                 ExtractionModelType.EMAIL -> {
                     val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                         data = Uri.parse("mailto:")
@@ -172,7 +211,7 @@ class DetailScanFragment : Fragment() {
                 ExtractionModelType.OTHER -> Unit
             }
         } catch (e: ActivityNotFoundException) {
-
+            lifecycleScope.launch { snackbarHostState.showSnackbar(message = getString(R.string.something_went_wrong)) }
         }
     }
 }
