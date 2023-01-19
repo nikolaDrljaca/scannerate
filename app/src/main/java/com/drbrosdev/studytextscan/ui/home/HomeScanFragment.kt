@@ -29,11 +29,11 @@ import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding(FragmentScanHomeBinding::bind)
-    private val viewModel: HomeViewModel by sharedViewModel()
+    private val viewModel: HomeViewModel by activityViewModel()
     private val billingClient: BillingClientService by inject()
 
     private val selectImageRequest = registerForActivityResult(CropImageContract()) {
