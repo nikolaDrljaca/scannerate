@@ -1,7 +1,6 @@
 package com.drbrosdev.studytextscan.ui.detailscan
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -23,6 +22,7 @@ import com.drbrosdev.studytextscan.util.safeNav
 import com.drbrosdev.studytextscan.util.showConfirmDialog
 import com.google.android.material.transition.MaterialSharedAxis
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class DetailScanFragment : Fragment() {
     private val viewModel: DetailScanViewModel by viewModel()
@@ -60,11 +60,73 @@ class DetailScanFragment : Fragment() {
                         onChipClicked = { launchExtractedModelIntent(it) },
                         onBackClick = { findNavController().navigateUp() },
                         onPdfExport = { navigateToPdfExport(state.scan?.scanId) },
-                        onDeleteClick = { onDeleteClick() }
+                        onDeleteClick = { onDeleteClick() },
+                        onCopyClick = { copyToClipboard(state.scan?.scanText) },
+                        onTranslateClick = { openInTranslate(state.scan?.scanText) },
+                        onShareClick = { share(state.scan?.scanText) },
+                        onTtsClick = { tts(state.scan?.scanText) }
                     )
                 }
             }
         }
+    }
+
+    private fun openInTranslate(input: String?) = input?.let { text ->
+        try {
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT, text)
+            intent.putExtra("key_text_input", text)
+            intent.putExtra("key_text_output", "")
+            intent.putExtra("key_language_from", "en")
+            intent.putExtra("key_language_to", "mal")
+            intent.putExtra("key_suggest_translation", "")
+            intent.putExtra("key_from_floating_window", false)
+            intent.component = ComponentName(
+                "com.google.android.apps.translate",
+                "com.google.android.apps.translate.TranslateActivity"
+            )
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            //snackbar - it seems you don't have translate installed.
+        }
+    }
+
+    private fun tts(input: String?) = input?.let { text ->
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val hasLanguage = textToSpeech.setLanguage(Locale.US)
+                if (hasLanguage == TextToSpeech.LANG_MISSING_DATA || hasLanguage == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    //snackbar - No supported language found
+                } else {
+                    //snackbar - loading
+                    textToSpeech.speak(
+                        text,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        viewModel.state.value.scan?.scanId.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun copyToClipboard(input: String?) = input?.let { text ->
+        val clipboardManager =
+            requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("raw_data", text)
+        clipboardManager.setPrimaryClip(clip)
+        //fire off snackbar
+    }
+
+    private fun share(input: String?) = input?.let { text ->
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, text)
+            type = "text/plain"
+        }
+        val intent = Intent.createChooser(shareIntent, null)
+        startActivity(intent)
     }
 
     private fun navigateToPdfExport(scanId: Long?) = scanId?.let {
@@ -77,7 +139,6 @@ class DetailScanFragment : Fragment() {
             message = getString(R.string.delete_scanned_text),
             onPositiveClick = {
                 viewModel.deleteScan()
-                //hideKeyboard()
                 findNavController().navigateUp()
             }
         )

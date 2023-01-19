@@ -30,7 +30,11 @@ fun ScannerateDetailScreen(
     onChipClicked: (ExtractionModel) -> Unit,
     onBackClick: () -> Unit,
     onPdfExport: () -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onCopyClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onTtsClick: () -> Unit,
+    onTranslateClick: () -> Unit
 ) {
     val topBarHeight = 72.dp
     val columnScrollState = rememberLazyListState()
@@ -110,7 +114,7 @@ fun ScannerateDetailScreen(
                 item {
                     var content by remember { mutableStateOf(scan.scanText) }
                     ScannerateTextField(
-                        modifier = Modifier,
+                        modifier = Modifier.fillMaxWidth(),
                         text = content,
                         onTextChanged = {
                             content = it
@@ -148,7 +152,11 @@ fun ScannerateDetailScreen(
             exit = fadeOut() + shrinkOut(shrinkTowards = Alignment.Center)
         ) {
             ScanDetailBottomBar(
-                modifier = Modifier
+                modifier = Modifier,
+                onCopyClick = onCopyClick,
+                onShareClick = onShareClick,
+                onTosClick = onTtsClick,
+                onTranslateClick = onTranslateClick
             )
         }
     }
