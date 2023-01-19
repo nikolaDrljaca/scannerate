@@ -7,7 +7,6 @@ import com.drbrosdev.studytextscan.persistence.entity.toExtractionModel
 import com.drbrosdev.studytextscan.persistence.repository.FilteredTextRepository
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
 import com.drbrosdev.studytextscan.util.getCurrentDateTime
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -17,9 +16,6 @@ class DetailScanViewModel(
     private val filteredModelsRepository: FilteredTextRepository
 ) : ViewModel() {
     private val args = DetailScanFragmentArgs.fromSavedStateHandle(savedStateHandle)
-
-    private val _events = Channel<DetailScanEvents>(Channel.BUFFERED)
-    val events = _events.receiveAsFlow()
 
     private val loading = MutableStateFlow(true)
 
@@ -76,34 +72,6 @@ class DetailScanViewModel(
     fun deleteScan() = viewModelScope.launch {
         val current = state.value.scan
         current?.let { scanRepository.deleteScan(it) }
-    }
-
-    fun onNavigateUp(title: String, content: String) {
-        state.value.scan?.let {
-            if (it.scanTitle != title || it.scanText != content)
-                viewModelScope.launch {
-                    _events.send(DetailScanEvents.ShowUnsavedChanges)
-                }
-            else
-                viewModelScope.launch {
-                    _events.send(DetailScanEvents.NavigateUp)
-                }
-        }
-    }
-
-    fun updateScan(title: String, content: String) {
-        viewModelScope.launch {
-            state.value.scan?.let { scan ->
-                val updated = scan.copy(
-                    scanTitle = title,
-                    scanText = content,
-                    dateModified = getCurrentDateTime()
-                )
-                scanRepository.updateScan(updated)
-                _events.send(DetailScanEvents.ShowScanUpdated)
-                return@launch
-            }
-        }
     }
 
     fun updateScanPinned() = viewModelScope.launch {

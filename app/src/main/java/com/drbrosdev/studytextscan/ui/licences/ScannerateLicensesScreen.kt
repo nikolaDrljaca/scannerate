@@ -49,7 +49,7 @@ fun LicenseCard(
             .fillMaxWidth()
             .then(modifier),
         shape = RoundedCornerShape(16.dp),
-        elevation = 0.dp,
+        elevation = 2.dp,
         backgroundColor = MaterialTheme.colors.primary
     ) {
         Column(

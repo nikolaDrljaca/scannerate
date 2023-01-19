@@ -11,7 +11,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.drbrosdev.studytextscan.ui.info.components.*
 
@@ -38,7 +37,7 @@ fun ScannerateAboutScreen(
                 Card(
                     modifier = Modifier,
                     shape = RoundedCornerShape(16.dp),
-                    elevation = 0.dp,
+                    elevation = 2.dp,
                     backgroundColor = MaterialTheme.colors.primary
                 ) {
                     Column(
