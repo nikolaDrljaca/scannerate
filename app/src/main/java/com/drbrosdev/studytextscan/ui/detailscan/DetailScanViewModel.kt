@@ -8,7 +8,6 @@ import com.drbrosdev.studytextscan.persistence.repository.FilteredTextRepository
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
 import com.drbrosdev.studytextscan.util.getCurrentDateTime
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -23,15 +22,9 @@ class DetailScanViewModel(
     val events = _events.receiveAsFlow()
 
     private val loading = MutableStateFlow(true)
-    private val toShowKeyboard = MutableStateFlow(true)
 
     private val scan = scanRepository.getScanById(args.scanId)
-        .onEach {
-            loading.value = false
-            delay(100)
-            if (args.isCreated == 1 && toShowKeyboard.value) _events.send(DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad)
-            toShowKeyboard.value = false
-        }
+        .onEach { loading.value = false }
 
     private val filteredModels = scan
         .flatMapLatest { filteredModelsRepository.getModelsByScanId(it.scanId.toInt()) }

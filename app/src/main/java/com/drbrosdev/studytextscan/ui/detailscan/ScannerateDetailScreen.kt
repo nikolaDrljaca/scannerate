@@ -43,33 +43,28 @@ fun ScannerateDetailScreen(
         }
     }
 
-    if (state.scan == null) {
+    if (state.isLoading) {
         ScannerateLoadingScreen()
     }
 
-    state.scan?.let { scan ->
-        //debounced, local state to represent truth
-        var title by remember { mutableStateOf(scan.scanTitle) }
-        //debounced, local state to represent truth
-        var content by remember { mutableStateOf(scan.scanText) }
-
-        Box(
+    Box(
+        modifier = Modifier
+            .then(modifier)
+            .fillMaxSize()
+            .statusBarsPadding()
+    ) {
+        LazyColumn(
             modifier = Modifier
-                .then(modifier)
                 .fillMaxSize()
-                .statusBarsPadding()
+                .imePadding(),
+            state = columnScrollState
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .imePadding(),
-                state = columnScrollState
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(56.dp))
-                }
+            item {
+                Spacer(modifier = Modifier.height(56.dp))
+            }
 
-                item {
+            item {
+                state.scan?.let { scan ->
                     ScanDetailHeader(
                         title = scan.scanTitle,
                         onTitleChanged = { onTitleTextChanged(it) },
@@ -84,33 +79,36 @@ fun ScannerateDetailScreen(
                         isCreated = state.isCreated
                     )
                 }
+            }
 
-                if (state.filteredTextModels.isNotEmpty()) {
-                    item {
-                        LazyHorizontalStaggeredGrid(
-                            rows = StaggeredGridCells.Fixed(2),
-                            modifier = Modifier
-                                .padding(top = 10.dp)
-                                .height(88.dp)
-                                .fillMaxWidth(),
-                            contentPadding = PaddingValues(horizontal = 12.dp),
-                            verticalArrangement = Arrangement.spacedBy(
-                                2.dp,
-                                alignment = Alignment.CenterVertically
-                            ),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        ) {
-                            items(state.filteredTextModels) {
-                                TextEntityChip(
-                                    entity = it,
-                                    onClick = { onChipClicked(it) }
-                                )
-                            }
+            if (state.filteredTextModels.isNotEmpty()) {
+                item {
+                    LazyHorizontalStaggeredGrid(
+                        rows = StaggeredGridCells.Fixed(2),
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                            .height(88.dp)
+                            .fillMaxWidth(),
+                        contentPadding = PaddingValues(horizontal = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(
+                            2.dp,
+                            alignment = Alignment.CenterVertically
+                        ),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        items(state.filteredTextModels) {
+                            TextEntityChip(
+                                entity = it,
+                                onClick = { onChipClicked(it) }
+                            )
                         }
                     }
                 }
+            }
 
+            state.scan?.let { scan ->
                 item {
+                    var content by remember { mutableStateOf(scan.scanText) }
                     ScannerateTextField(
                         modifier = Modifier,
                         text = content,
@@ -120,39 +118,38 @@ fun ScannerateDetailScreen(
                         },
                         fontSize = 17.sp
                     )
-
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(72.dp))
                 }
             }
 
-            ScanDetailTopBar(
-                height = topBarHeight,
-                topBarState = topBarState,
+            item {
+                Spacer(modifier = Modifier.height(72.dp))
+            }
+        }
+
+        ScanDetailTopBar(
+            height = topBarHeight,
+            topBarState = topBarState,
+            modifier = Modifier
+                .align(Alignment.TopEnd),
+            isPinned = state.scan?.isPinned ?: false,
+            onPinClicked = onPinClicked,
+            onBackClicked = onBackClick,
+            onPdfExportClicked = onPdfExport,
+            onDeleteClicked = onDeleteClick,
+            onSaveClicked = { } //can do nothing
+        )
+
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding(),
+            visible = columnScrollState.isScrollingUp(),
+            enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
+            exit = fadeOut() + shrinkOut(shrinkTowards = Alignment.Center)
+        ) {
+            ScanDetailBottomBar(
                 modifier = Modifier
-                    .align(Alignment.TopEnd),
-                isPinned = scan.isPinned,
-                onPinClicked = onPinClicked,
-                onBackClicked = onBackClick,
-                onPdfExportClicked = onPdfExport,
-                onDeleteClicked = onDeleteClick,
-                onSaveClicked = { } //can do nothing
             )
-
-            AnimatedVisibility(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .navigationBarsPadding(),
-                visible = columnScrollState.isScrollingUp(),
-                enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
-                exit = fadeOut() + shrinkOut(shrinkTowards = Alignment.Center)
-            ) {
-                ScanDetailBottomBar(
-                    modifier = Modifier
-                )
-            }
         }
     }
 }
