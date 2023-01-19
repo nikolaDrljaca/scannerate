@@ -13,9 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.drbrosdev.studytextscan.persistence.entity.ExtractionModel
 import com.drbrosdev.studytextscan.persistence.entity.ExtractionModelType
-import com.drbrosdev.studytextscan.ui.support.theme.ChipGreen
-import com.drbrosdev.studytextscan.ui.support.theme.ChipOrange
-import com.drbrosdev.studytextscan.ui.support.theme.ChipYellow
+import com.drbrosdev.studytextscan.ui.support.theme.*
 import compose.icons.TablerIcons
 import compose.icons.tablericons.At
 import compose.icons.tablericons.LetterCase
@@ -33,7 +31,7 @@ fun TextEntityChip(
         ExtractionModelType.EMAIL -> ChipYellow
         ExtractionModelType.PHONE -> ChipGreen
         ExtractionModelType.URL -> ChipOrange
-        ExtractionModelType.OTHER -> Color.White
+        ExtractionModelType.OTHER -> ChipBlue
     }
 
     val icon = when (entity.type) {
@@ -71,7 +69,7 @@ fun TextEntityChip(
 
             Icon(
                 modifier = Modifier
-                    .size(22.dp)
+                    .size(20.dp)
                     .drawBehind {
                         drawCircle(
                             color = Color.White.copy(alpha = 0.6f),
