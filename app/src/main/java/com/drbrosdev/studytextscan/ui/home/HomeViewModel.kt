@@ -28,6 +28,7 @@ class HomeViewModel(
     val events = _events.receiveAsFlow()
 
     private val isLoading = MutableStateFlow(true)
+    private var homeFragActive = true
 
     private val listOfScans = scanRepo.allScans
         .distinctUntilChanged()
@@ -92,8 +93,10 @@ class HomeViewModel(
                 Log.d("DEBUGn", "createScan: model inserted ${model.content}")
             }
 
-            _events.send(HomeEvents.ShowCurrentScanSaved(scanId)).also {
-                prefs.incrementSupportCount()
+            if (homeFragActive) {
+                _events.send(HomeEvents.ShowCurrentScanSaved(scanId)).also {
+                    prefs.incrementSupportCount()
+                }
             }
         } else {
             _events.send(HomeEvents.ShowScanEmpty)
@@ -152,5 +155,11 @@ class HomeViewModel(
         viewModelScope.launch {
             prefs.rewardShown()
         }
+    }
+
+    fun onHomeFrag() { homeFragActive = true }
+
+    fun moveAwayFromScreen() {
+        homeFragActive = false
     }
 }

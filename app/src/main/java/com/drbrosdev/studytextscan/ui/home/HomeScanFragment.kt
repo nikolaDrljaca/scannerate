@@ -76,9 +76,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateWindowInsets(binding.root)
+        viewModel.onHomeFrag()
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-        val loadingDialog = createLoadingDialog()
 
         collectFlow(billingClient.purchaseFlow) {
             when (it) {
@@ -98,7 +98,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                             exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
                             reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
 
-                            findNavController().navigate(R.id.to_about_fragment)
+                            findNavController().navigate(R.id.to_about_fragment).also {
+                                viewModel.moveAwayFromScreen()
+                            }
                         }
                     }
                     scanHeader {
@@ -124,7 +126,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                         MaterialSharedAxis(MaterialSharedAxis.X, false)
                                     //val arg = bundleOf("scan_id" to it.scanId.toInt())
                                     val action = HomeScanFragmentDirections.toDetailScanFragment(it.scanId.toInt(), 0)
-                                    findNavController().safeNav(action)
+                                    findNavController().safeNav(action).also {
+                                        viewModel.moveAwayFromScreen()
+                                    }
                                 }
                             }
                         }
@@ -145,7 +149,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                         MaterialSharedAxis(MaterialSharedAxis.X, false)
                                     //val arg = bundleOf("scan_id" to it.scanId.toInt())
                                     val action = HomeScanFragmentDirections.toDetailScanFragment(it.scanId.toInt(), 0)
-                                    findNavController().safeNav(action)
+                                    findNavController().safeNav(action).also {
+                                        viewModel.moveAwayFromScreen()
+                                    }
                                 }
                             }
                         }
@@ -214,16 +220,17 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         collectFlow(viewModel.events) { homeEvents ->
             when (homeEvents) {
                 is HomeEvents.ShowCurrentScanSaved -> {
-                    loadingDialog.dismiss()
                     //val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
                     val action = HomeScanFragmentDirections.toDetailScanFragment(homeEvents.id, 1)
                     findNavController().safeNav(action)
                 }
                 is HomeEvents.ShowLoadingDialog -> {
-                    loadingDialog.show()
+                    //loadingDialog.show()
+                    binding.cardViewLoading.animate().translationX(0f)
+                    binding.buttonCameraScan.isEnabled = false
+                    binding.buttonGalleryScan.isEnabled = false
                 }
                 is HomeEvents.ShowScanEmpty -> {
-                    loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.no_text_found),
                         anchor = binding.buttonCameraScan
@@ -242,7 +249,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     findNavController().navigate(R.id.action_homeScanFragment_to_viewPagerFragment)
                 }
                 is HomeEvents.ShowErrorWhenScanning -> {
-                    loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.something_went_wrong),
                         anchor = binding.buttonCameraScan
