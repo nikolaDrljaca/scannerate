@@ -45,7 +45,8 @@ class DetailScanViewModel(
         DetailScanUiState(
             isLoading = isLoading,
             scan = scan,
-            filteredTextModels = textModels
+            filteredTextModels = textModels,
+            isCreated = args.isCreated
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), DetailScanUiState())
 

@@ -69,30 +69,20 @@ fun ScannerateDetailScreen(
                     Spacer(modifier = Modifier.height(56.dp))
                 }
 
-                item { //header
-                    Column {
-                        ScannerateTextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = title,
-                            onTextChanged = {
-                                title = it
-                                onTitleTextChanged(it)
-                            },
-                            maxLines = 2
-                        )
-                        ScannerateDateText(
-                            text = stringResource(
-                                R.string.text_date_created,
-                                dateAsString(scan.dateCreated)
-                            )
-                        )
-                        ScannerateDateText(
-                            text = stringResource(
-                                R.string.text_date_modified,
-                                dateAsString(scan.dateModified)
-                            )
-                        )
-                    }
+                item {
+                    ScanDetailHeader(
+                        title = scan.scanTitle,
+                        onTitleChanged = { onTitleTextChanged(it) },
+                        dateCreated = stringResource(
+                            R.string.text_date_created,
+                            dateAsString(scan.dateCreated)
+                        ),
+                        dateModified = stringResource(
+                            R.string.text_date_modified,
+                            dateAsString(scan.dateModified)
+                        ),
+                        isCreated = state.isCreated
+                    )
                 }
 
                 if (state.filteredTextModels.isNotEmpty()) {

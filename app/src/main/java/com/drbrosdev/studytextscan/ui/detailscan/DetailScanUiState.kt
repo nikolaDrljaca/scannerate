@@ -7,4 +7,5 @@ data class DetailScanUiState(
     val scan: Scan? = null,
     val filteredTextModels: List<ExtractionModel> = emptyList(),
     val isLoading: Boolean = true,
+    val isCreated: Int = 0
 )
