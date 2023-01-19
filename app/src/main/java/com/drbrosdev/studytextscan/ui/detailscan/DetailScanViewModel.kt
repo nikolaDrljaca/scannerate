@@ -24,11 +24,11 @@ class DetailScanViewModel(
     private val loading = MutableStateFlow(true)
 
     private val scan = scanRepository.getScanById(args.scanId)
-        .onEach { loading.value = false }
 
     private val filteredModels = scan
         .flatMapLatest { filteredModelsRepository.getModelsByScanId(it.scanId.toInt()) }
         .map { it.map { filteredTextModel -> filteredTextModel.toExtractionModel() } }
+        .onEach { loading.value = false }
 
     val state = combine(
         loading,

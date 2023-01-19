@@ -7,7 +7,6 @@ import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.TextView
 import androidx.activity.addCallback
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -244,11 +243,11 @@ class DetailScanFragment3 : Fragment(R.layout.fragment_scan_detail) {
             }
 
             imageViewPdf.setOnClickListener {
-                val arg = bundleOf("pdf_scan_id" to viewModel.state.value.scan?.scanId)
-                findNavController().navigate(
-                    R.id.action_detailScanFragment_to_pdfDialogFragment,
-                    arg
-                )
+//                val arg = bundleOf("pdf_scan_id" to viewModel.state.value.scan?.scanId)
+//                findNavController().navigate(
+//                    R.id.action_detailScanFragment_to_pdfDialogFragment,
+//                    arg
+//                )
             }
         }
     }

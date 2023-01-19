@@ -19,6 +19,7 @@ import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.persistence.entity.ExtractionModel
 import com.drbrosdev.studytextscan.persistence.entity.ExtractionModelType
 import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
+import com.drbrosdev.studytextscan.util.safeNav
 import com.drbrosdev.studytextscan.util.showConfirmDialog
 import com.google.android.material.transition.MaterialSharedAxis
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,12 +59,17 @@ class DetailScanFragment : Fragment() {
                         onPinClicked = { viewModel.updateScanPinned() },
                         onChipClicked = { launchExtractedModelIntent(it) },
                         onBackClick = { findNavController().navigateUp() },
-                        onPdfExport = { /*TODO*/ },
+                        onPdfExport = { navigateToPdfExport(state.scan?.scanId) },
                         onDeleteClick = { onDeleteClick() }
                     )
                 }
             }
         }
+    }
+
+    private fun navigateToPdfExport(scanId: Long?) = scanId?.let {
+        val action = DetailScanFragmentDirections.toPdfDialogFragment(it.toInt())
+        findNavController().safeNav(action)
     }
 
     private fun onDeleteClick() {
