@@ -206,7 +206,7 @@ class DetailScanFragment : Fragment() {
                     if (requireActivity().packageManager != null)
                         startActivity(urlIntent)
                 }
-                ExtractionModelType.OTHER -> Unit
+                ExtractionModelType.OTHER -> copyToClipboard(model.content)
             }
         } catch (e: ActivityNotFoundException) {
             lifecycleScope.launch { snackbarHostState.showSnackbar(message = getString(R.string.something_went_wrong)) }
