@@ -147,7 +147,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                     reenterTransition =
                                         MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                    //val arg = bundleOf("scan_id" to it.scanId.toInt())
                                     val action = HomeScanFragmentDirections.toDetailScanFragment(it.scanId.toInt(), 0)
                                     findNavController().safeNav(action).also {
                                         viewModel.moveAwayFromScreen()
@@ -220,12 +219,10 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         collectFlow(viewModel.events) { homeEvents ->
             when (homeEvents) {
                 is HomeEvents.ShowCurrentScanSaved -> {
-                    //val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
                     val action = HomeScanFragmentDirections.toDetailScanFragment(homeEvents.id, 1)
                     findNavController().safeNav(action)
                 }
                 is HomeEvents.ShowLoadingDialog -> {
-                    //loadingDialog.show()
                     binding.cardViewLoading.animate().translationX(0f)
                     binding.buttonCameraScan.isEnabled = false
                     binding.buttonGalleryScan.isEnabled = false
@@ -280,8 +277,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     when {
                         ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                                 == PackageManager.PERMISSION_GRANTED -> {
-                            //use the api that needs the permission
-                            //selectImageRequest.launch(cropImageCameraOptions)
                             selectImageRequest.launch(cropImageCameraOptions)
                         }
                         else -> {

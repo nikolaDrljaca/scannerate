@@ -68,4 +68,5 @@
     <string name="payment_options">Више опција ће бити доступно касније.</string>
     <string name="support_btn">Подржи</string>
     <string name="choose_option">Можете изабрати једну опцију испод.</string>
+    <string name="scanning_in_progress">Скенирање у току.</string>
 </resources>
