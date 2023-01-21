@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,6 +29,8 @@
         app:cardElevation="2dp"
         app:cardBackgroundColor="@color/background"
         app:cardCornerRadius="14dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/loading_outline"
         android:layout_marginStart="14dp"
         android:layout_marginTop="4dp">
 
@@ -63,7 +65,7 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_layout_empty"

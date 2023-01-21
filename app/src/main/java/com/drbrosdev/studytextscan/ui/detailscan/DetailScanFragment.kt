@@ -68,6 +68,20 @@ class DetailScanFragment : Fragment() {
                     val state by viewModel.state.collectAsStateWithLifecycle()
 
                     Box(modifier = Modifier.fillMaxSize()) {
+                        ScannerateDetailScreen(
+                            state = state,
+                            onTitleTextChanged = { viewModel.onTitleChange(it) },
+                            onContentChanged = { viewModel.onContentChanged(it) },
+                            onPinClicked = { viewModel.updateScanPinned() },
+                            onChipClicked = { launchExtractedModelIntent(it) },
+                            onBackClick = { findNavController().navigateUp() },
+                            onPdfExport = { navigateToPdfExport(state.scan?.scanId) },
+                            onDeleteClick = { onDeleteClick() },
+                            onCopyClick = { copyToClipboard(state.scan?.scanText) },
+                            onTranslateClick = { openInTranslate(state.scan?.scanText) },
+                            onShareClick = { share(state.scan?.scanText) },
+                            onTtsClick = { tts(state.scan?.scanText) }
+                        )
 
                         SnackbarHost(
                             modifier = Modifier
@@ -83,23 +97,7 @@ class DetailScanFragment : Fragment() {
                                 )
                             }
                         )
-
-                        ScannerateDetailScreen(
-                            state = state,
-                            onTitleTextChanged = { viewModel.onTitleChange(it) },
-                            onContentChanged = { viewModel.onContentChanged(it) },
-                            onPinClicked = { viewModel.updateScanPinned() },
-                            onChipClicked = { launchExtractedModelIntent(it) },
-                            onBackClick = { findNavController().navigateUp() },
-                            onPdfExport = { navigateToPdfExport(state.scan?.scanId) },
-                            onDeleteClick = { onDeleteClick() },
-                            onCopyClick = { copyToClipboard(state.scan?.scanText) },
-                            onTranslateClick = { openInTranslate(state.scan?.scanText) },
-                            onShareClick = { share(state.scan?.scanText) },
-                            onTtsClick = { tts(state.scan?.scanText) }
-                        )
                     }
-
                 }
             }
         }

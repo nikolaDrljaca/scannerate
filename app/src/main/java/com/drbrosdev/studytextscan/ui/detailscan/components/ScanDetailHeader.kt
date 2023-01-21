@@ -30,7 +30,7 @@ fun ScanDetailHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
-            text = title,
+            text = titleText,
             onTextChanged = {
                 titleText = it
                 onTitleChanged(it)
