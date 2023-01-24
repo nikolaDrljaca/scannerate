@@ -39,8 +39,8 @@ class DetailScanViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), DetailScanUiState())
 
-    private val scanTitle = MutableStateFlow(state.value.scan?.scanTitle)
-    private val scanContent = MutableStateFlow(state.value.scan?.scanText)
+    private val scanTitle = savedStateHandle.getStateFlow("scan_title", state.value.scan?.scanTitle)
+    private val scanContent = savedStateHandle.getStateFlow("scan_content", state.value.scan?.scanText)
 
     private val updateTitleJob = scanTitle
         .debounce(200)
@@ -66,8 +66,8 @@ class DetailScanViewModel(
         }
         .launchIn(viewModelScope)
 
-    fun onTitleChange(newValue: String) = scanTitle.update { newValue }
-    fun onContentChanged(newValue: String) = scanContent.update { newValue }
+    fun onTitleChange(newValue: String) = savedStateHandle.set("scan_title", newValue)
+    fun onContentChanged(newValue: String) = savedStateHandle.set("scan_content", newValue)
 
     fun deleteScan() = viewModelScope.launch {
         val current = state.value.scan

@@ -232,6 +232,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         message = getString(R.string.no_text_found),
                         anchor = binding.buttonCameraScan
                     )
+                    binding.cardViewLoading.animate().translationX(-1000f)
+                    binding.buttonCameraScan.isEnabled = true
+                    binding.buttonGalleryScan.isEnabled = true
                 }
                 is HomeEvents.ShowUndoDeleteScan -> {
                     showSnackbarLongWithAction(
