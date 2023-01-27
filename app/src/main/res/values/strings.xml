@@ -49,6 +49,7 @@
     <string name="export">Export</string>
     <string name="cancel">Cancel</string>
     <string name="font_size">Font size</string>
+    <string name="linkedin_nikola" translatable="false">https://linkedin.com/in/nikola-drljacaa</string>
 
     <string name="scan_deleted">Scan deleted.</string>
     <string name="undo">Undo</string>

@@ -1,30 +1,39 @@
 package com.drbrosdev.studytextscan.ui.support.theme
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200,
+    primary = HeavyBlue,
+    primaryVariant = TextColorLight,
+    secondary = Color.White,
+    secondaryVariant = MidBlue,
     onPrimary = LightBlue,
     background = BackgroundBlue,
     onSecondary = MidBlue,
-    onSurface = LightBlue
+    onSurface = LightBlue,
+    onBackground = LightBlue
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200,
+    primary = LightBlue,
+    primaryVariant = TextColorDark,
+    secondary = Color.Black,
+    secondaryVariant = Color.Transparent,
     onPrimary = HeavyBlue,
     background = Color.White,
     onSecondary = HeavyBlue,
-    onSurface = DarkTextGray
+    onSurface = DarkTextGray,
+    onBackground = HeavyBlue
 
     /* Other default colors to override
     background = Color.White,

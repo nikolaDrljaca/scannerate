@@ -2,7 +2,6 @@ package com.drbrosdev.studytextscan.di
 
 import com.drbrosdev.studytextscan.ui.detailscan.DetailScanViewModel
 import com.drbrosdev.studytextscan.ui.home.HomeViewModel
-import com.drbrosdev.studytextscan.ui.licences.LicenceViewModel
 import com.drbrosdev.studytextscan.ui.pdfDialog.PdfDialogViewModel
 import com.drbrosdev.studytextscan.ui.support.SupportViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -18,7 +17,7 @@ val viewModelModule = module {
             scanTextFromImageUseCase = get()
         )
     }
-    viewModel { LicenceViewModel() }
+
     viewModel {
         DetailScanViewModel(
             savedStateHandle = get(),

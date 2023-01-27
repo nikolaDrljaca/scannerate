@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs'
 }
 
 sourceSets {
@@ -147,14 +148,14 @@ dependencies {
 
     //COMPOSE
     // When using a MDC theme
-    implementation 'androidx.compose.material:material:1.2.1'
-    implementation 'androidx.compose.foundation:foundation:1.2.1'
-    implementation 'androidx.compose.ui:ui:1.2.1'
-    implementation 'androidx.compose.ui:ui-tooling-preview:1.2.1'
-    debugImplementation 'androidx.compose.ui:ui-tooling:1.2.1'
-    implementation 'androidx.activity:activity-compose:1.6.0'
+    implementation 'androidx.compose.material:material:1.3.1'
+    implementation 'androidx.compose.foundation:foundation:1.3.1'
+    implementation 'androidx.compose.ui:ui:1.3.2'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.3.2'
+    debugImplementation 'androidx.compose.ui:ui-tooling:1.3.2'
+    implementation 'androidx.activity:activity-compose:1.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha02'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha03'
     implementation "br.com.devsrsouza.compose.icons.android:line-awesome:1.0.0"
 
     //billing
@@ -163,4 +164,9 @@ dependencies {
 
     //in-app review
     implementation 'com.google.android.play:review-ktx:2.0.1'
+
+    //Icons
+    implementation "br.com.devsrsouza.compose.icons.android:tabler-icons:1.0.0"
+    //google fonts
+    implementation "androidx.compose.ui:ui-text-google-fonts:1.3.2"
 }
