@@ -3,21 +3,17 @@ package com.drbrosdev.studytextscan.ui.pdfDialog
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.persistence.repository.ScanRepository
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 
 class PdfDialogViewModel(
     val savedStateHandle: SavedStateHandle,
     private val scanRepo: ScanRepository
 ) : ViewModel() {
+    private val args = PdfDialogFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
-    private val scanId = savedStateHandle.get<Int>("pdf_scan_id") ?: 0
+    val scan = scanRepo.getScanById(args.pdfScanId)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
-    fun getScan(action: (Scan?) -> Unit) {
-        viewModelScope.launch {
-            scanRepo.getScanById(scanId).collect(action)
-        }
-    }
 }

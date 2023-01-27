@@ -32,11 +32,11 @@ fun PdfDialog(
     )
 
     var selectedFont by remember {
-        mutableStateOf("")
+        mutableStateOf(fontSizeList.first())
     }
 
     var selectedColor by remember {
-        mutableStateOf("")
+        mutableStateOf(colorList.first())
     }
 
     Surface(
