@@ -1,83 +1,93 @@
 package com.drbrosdev.studytextscan.ui.pdfDialog
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.unit.sp
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.ui.pdfDialog.components.PdfDropdownMenu
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PdfDialog(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    colorList: List<String>,
+    fontSizeList: List<String>,
+    onCancelClick: () -> Unit,
+    onExportClick: (String, String) -> Unit
 ) {
-    Dialog(
-        onDismissRequest = {
-            /*TODO*/
-        },
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false
-        )
+    val titleTextStyle = TextStyle(
+        color = MaterialTheme.colors.primaryVariant,
+        fontSize = 22.sp,
+        fontWeight = FontWeight.Medium
+    )
+
+    var selectedFont by remember {
+        mutableStateOf("")
+    }
+
+    var selectedColor by remember {
+        mutableStateOf("")
+    }
+
+    Surface(
+        color = MaterialTheme.colors.background,
+        shape = RoundedCornerShape(14.dp),
+        modifier = Modifier.then(modifier)
     ) {
-        Row(
-            modifier = Modifier
-                .then(modifier),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Center
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            Text(
+                text = stringResource(id = R.string.customize_your_export),
+                style = titleTextStyle,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
 
+            PdfDropdownMenu(
+                items = colorList,
+                label = stringResource(id = R.string.color),
+                onSelected = { selectedColor = it }
+            )
+
+            PdfDropdownMenu(
+                items = fontSizeList,
+                label = stringResource(id = R.string.font_size),
+                onSelected = { selectedFont = it }
+            )
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(vertical = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(
+                    12.dp,
+                    alignment = Alignment.CenterHorizontally
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                TextButton(
+                    onClick = onCancelClick,
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.primaryVariant)
+                ) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
+
+                Button(onClick = { onExportClick(selectedColor, selectedFont) }) {
+                    Text(text = stringResource(id = R.string.export))
+                }
+            }
         }
-        PdfDropdownMenu(
-            listOf(
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "20",
-                "22",
-                "24",
-                "26",
-                "28",
-                "30",
-                "32",
-                "36",
-                "40",
-                "44"
-            ),
-            modifier = Modifier.padding(
-                start = 10.dp,
-                top = 12.dp
-            )
-        )
-
-        PdfDropdownMenu(
-            listOf(
-                stringResource(R.string.black_color),
-                stringResource(R.string.blue_color),
-                stringResource(R.string.red_color),
-                stringResource(R.string.green_color),
-                stringResource(R.string.yellow_color)
-            ),
-            modifier = Modifier.padding(
-                start = 10.dp,
-                top = 12.dp
-            )
-        )
     }
 }

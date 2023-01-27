@@ -1,24 +1,16 @@
 package com.drbrosdev.studytextscan.ui.pdfDialog.components
 
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.ExposedDropdownMenuDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PdfDropdownMenu(
+    modifier: Modifier = Modifier,
     items: List<String>,
-    label: String = "",
-    modifier: Modifier = Modifier
+    label: String,
+    onSelected: (String) -> Unit,
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -29,13 +21,12 @@ fun PdfDropdownMenu(
     }
 
     ExposedDropdownMenuBox(
+        modifier = Modifier.then(modifier),
         expanded = expanded,
-        onExpandedChange = {
-            expanded != expanded
-        }
+        onExpandedChange = { expanded = !expanded }
     ) {
 
-        TextField(
+        OutlinedTextField(
             value = item,
             onValueChange = {},
             readOnly = true,
@@ -43,7 +34,13 @@ fun PdfDropdownMenu(
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(
+                focusedLabelColor = MaterialTheme.colors.primaryVariant,
+                unfocusedLabelColor = MaterialTheme.colors.onSurface,
+                focusedBorderColor = MaterialTheme.colors.primaryVariant,
+                unfocusedBorderColor = MaterialTheme.colors.onSurface,
+                focusedTrailingIconColor = MaterialTheme.colors.primaryVariant
+            )
         )
 
         ExposedDropdownMenu(
@@ -53,10 +50,13 @@ fun PdfDropdownMenu(
             }
         ) {
             items.forEach { selectedItem ->
-                DropdownMenuItem(onClick = {
-                    item = selectedItem
-                    expanded = false
-                }) {
+                DropdownMenuItem(
+                    onClick = {
+                        item = selectedItem
+                        expanded = false
+                        onSelected(selectedItem)
+                    }
+                ) {
                     Text(text = selectedItem)
                 }
             }
