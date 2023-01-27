@@ -10,7 +10,7 @@
         android:name="com.drbrosdev.studytextscan.ui.home.HomeScanFragment"
         android:label="HomeScanFragment" >
         <action
-            android:id="@+id/action_homeScanFragment_to_detailScanFragment"
+            android:id="@+id/to_detailScanFragment"
             app:destination="@id/detailScanFragment" />
         <action
             android:id="@+id/action_homeScanFragment_to_viewPagerFragment"
@@ -26,8 +26,16 @@
         android:name="com.drbrosdev.studytextscan.ui.detailscan.DetailScanFragment"
         android:label="DetailScanFragment" >
         <action
-            android:id="@+id/action_detailScanFragment_to_pdfDialogFragment"
+            android:id="@+id/to_pdfDialogFragment"
             app:destination="@id/pdfDialogFragment" />
+        <argument
+            android:name="scan_id"
+            app:argType="integer" />
+        <argument
+            android:name="is_created"
+            app:argType="integer"
+
+            />
     </fragment>
 
     <fragment
@@ -51,7 +59,11 @@
     <dialog
         android:id="@+id/pdfDialogFragment"
         android:name="com.drbrosdev.studytextscan.ui.pdfDialog.PdfDialogFragment"
-        android:label="PdfDialogFragment" />
+        android:label="PdfDialogFragment">
+
+        <argument android:name="pdf_scan_id" app:argType="integer"/>
+
+    </dialog>
     <fragment
         android:id="@+id/viewPagerFragment"
         android:name="com.drbrosdev.studytextscan.ui.onBoarding.ViewPagerFragment"

@@ -14,7 +14,7 @@
         android:theme="@style/Theme.StudyTextScan"
         android:name=".MyApp">
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>

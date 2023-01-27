@@ -14,7 +14,8 @@ val viewModelModule = module {
             scanRepo = get(),
             filteredTextModelRepo = get(),
             prefs = get(),
-            scanTextFromImageUseCase = get()
+            scanTextFromImageUseCase = get(),
+            entityExtractionUseCase = get()
         )
     }
 

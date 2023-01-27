@@ -11,14 +11,15 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
-import com.canhub.cropper.*
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
 import com.drbrosdev.studytextscan.service.billing.BillingClientService
@@ -28,12 +29,11 @@ import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding(FragmentScanHomeBinding::bind)
-    private val viewModel: HomeViewModel by sharedViewModel()
+    private val viewModel: HomeViewModel by activityViewModel()
     private val billingClient: BillingClientService by inject()
 
     private val selectImageRequest = registerForActivityResult(CropImageContract()) {
@@ -76,9 +76,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateWindowInsets(binding.root)
+        viewModel.onHomeFrag()
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-        val loadingDialog = createLoadingDialog()
 
         collectFlow(billingClient.purchaseFlow) {
             when (it) {
@@ -98,7 +98,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                             exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
                             reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
 
-                            findNavController().navigate(R.id.to_about_fragment)
+                            findNavController().navigate(R.id.to_about_fragment).also {
+                                viewModel.moveAwayFromScreen()
+                            }
                         }
                     }
                     scanHeader {
@@ -122,11 +124,11 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                     reenterTransition =
                                         MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
-                                    findNavController().navigate(
-                                        R.id.action_homeScanFragment_to_detailScanFragment,
-                                        arg
-                                    )
+                                    //val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                    val action = HomeScanFragmentDirections.toDetailScanFragment(it.scanId.toInt(), 0)
+                                    findNavController().safeNav(action).also {
+                                        viewModel.moveAwayFromScreen()
+                                    }
                                 }
                             }
                         }
@@ -145,11 +147,10 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                     exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                     reenterTransition =
                                         MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
-                                    findNavController().navigate(
-                                        R.id.action_homeScanFragment_to_detailScanFragment,
-                                        arg
-                                    )
+                                    val action = HomeScanFragmentDirections.toDetailScanFragment(it.scanId.toInt(), 0)
+                                    findNavController().safeNav(action).also {
+                                        viewModel.moveAwayFromScreen()
+                                    }
                                 }
                             }
                         }
@@ -218,22 +219,22 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         collectFlow(viewModel.events) { homeEvents ->
             when (homeEvents) {
                 is HomeEvents.ShowCurrentScanSaved -> {
-                    loadingDialog.dismiss()
-                    val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
-                    findNavController().navigate(
-                        R.id.action_homeScanFragment_to_detailScanFragment,
-                        arg
-                    )
+                    val action = HomeScanFragmentDirections.toDetailScanFragment(homeEvents.id, 1)
+                    findNavController().safeNav(action)
                 }
                 is HomeEvents.ShowLoadingDialog -> {
-                    loadingDialog.show()
+                    binding.cardViewLoading.animate().translationX(0f)
+                    binding.buttonCameraScan.isEnabled = false
+                    binding.buttonGalleryScan.isEnabled = false
                 }
                 is HomeEvents.ShowScanEmpty -> {
-                    loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.no_text_found),
                         anchor = binding.buttonCameraScan
                     )
+                    binding.cardViewLoading.animate().translationX(-1000f)
+                    binding.buttonCameraScan.isEnabled = true
+                    binding.buttonGalleryScan.isEnabled = true
                 }
                 is HomeEvents.ShowUndoDeleteScan -> {
                     showSnackbarLongWithAction(
@@ -248,7 +249,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     findNavController().navigate(R.id.action_homeScanFragment_to_viewPagerFragment)
                 }
                 is HomeEvents.ShowErrorWhenScanning -> {
-                    loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.something_went_wrong),
                         anchor = binding.buttonCameraScan
@@ -280,8 +280,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     when {
                         ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                                 == PackageManager.PERMISSION_GRANTED -> {
-                            //use the api that needs the permission
-                            //selectImageRequest.launch(cropImageCameraOptions)
                             selectImageRequest.launch(cropImageCameraOptions)
                         }
                         else -> {
