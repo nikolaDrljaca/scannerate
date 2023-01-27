@@ -6,8 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ScanDao {
-    @Query("SELECT * FROM scan ORDER BY date_created DESC")
+    @Query("SELECT * FROM scan WHERE is_pinned=0 ORDER BY date_created DESC")
     fun getAllScans(): Flow<List<Scan>>
+    @Query("SELECT * FROM scan WHERE is_pinned=1 ORDER BY date_created DESC")
+    fun getAllPinnedScans(): Flow<List<Scan>>
 
     @Insert
     suspend fun insertScan(scan: Scan): Long

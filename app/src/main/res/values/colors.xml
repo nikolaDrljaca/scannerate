@@ -29,6 +29,8 @@
     <color name="chip_yellow">#ffd600</color>
     <color name="chip_orange">#ff6d00</color>
 
+    <color name="loading_outline">#ffffffff</color>
+
     <color name="scan_item_background">#e1f5fe</color>
     <color name="scan_item_text">#01579b</color>
 

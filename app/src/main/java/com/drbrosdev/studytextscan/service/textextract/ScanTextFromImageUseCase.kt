@@ -1,6 +1,5 @@
-package com.drbrosdev.studytextscan.ui.home
+package com.drbrosdev.studytextscan.service.textextract
 
-import com.drbrosdev.studytextscan.service.textFilter.TextFilterService
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions
@@ -14,7 +13,6 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ScanTextFromImageUseCase(
-    private val filterService: TextFilterService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val recognizers = listOf(
@@ -26,28 +24,19 @@ class ScanTextFromImageUseCase(
     )
 
     suspend operator fun invoke(image: InputImage) = withContext(dispatcher) {
-        val chips = mutableSetOf<Pair<String, String>>()
-        val detectedText = mutableSetOf<String>()
-
-        for (textRecognizer in recognizers) {
-            val result = textRecognizer.process(image).await()
-
-            if (result.text.isNotBlank()) {
-                detectedText.add(result.text)
-                result.textBlocks.forEach { block ->
-                    block.lines.forEach { line ->
-                        line.elements.forEach { element ->
-                            chips.addAll(filterService.filterTextForEmails(element.text))
-                            chips.addAll(filterService.filterTextForPhoneNumbers(element.text))
-                            chips.addAll(filterService.filterTextForLinks(element.text))
-                        }
-                    }
+        kotlin.runCatching {
+            val detectedText = mutableSetOf<String>()
+            recognizers.forEach { textRecognizer ->
+                val result = textRecognizer.process(image).await()
+                if (result.text.isNotBlank()) {
+                    detectedText.add(result.text)
                 }
             }
+
+            val completeText = buildString {
+                detectedText.forEach { text -> append(text) }
+            }
+            completeText
         }
-        val completeText = buildString {
-            detectedText.forEach { text -> append(text) }
-        }
-        completeText to chips.toList()
     }
 }

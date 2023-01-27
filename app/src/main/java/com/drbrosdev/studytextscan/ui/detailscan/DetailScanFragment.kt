@@ -4,30 +4,44 @@ import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
-import androidx.activity.addCallback
-import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
+import android.view.ViewGroup
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.drbrosdev.studytextscan.R
-import com.drbrosdev.studytextscan.anim.InsetsWithKeyboardAnimationCallback
-import com.drbrosdev.studytextscan.anim.InsetsWithKeyboardCallback
-import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
-import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
-import com.drbrosdev.studytextscan.util.*
+import com.drbrosdev.studytextscan.persistence.entity.ExtractionModel
+import com.drbrosdev.studytextscan.persistence.entity.ExtractionModelType
+import com.drbrosdev.studytextscan.ui.support.theme.HeavyBlue
+import com.drbrosdev.studytextscan.ui.support.theme.LightBlue
+import com.drbrosdev.studytextscan.ui.support.theme.ScannerateTheme
+import com.drbrosdev.studytextscan.util.safeNav
+import com.drbrosdev.studytextscan.util.showConfirmDialog
 import com.google.android.material.transition.MaterialSharedAxis
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-
-class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
-    private val binding: FragmentScanDetailBinding by viewBinding(FragmentScanDetailBinding::bind)
-    private val viewModel: DetailScanViewModel by stateViewModel(state = { requireArguments() })
-    private val pdfExportService: PdfExportServiceImpl by inject()
+class DetailScanFragment : Fragment() {
+    private val viewModel: DetailScanViewModel by viewModel()
     private lateinit var textToSpeech: TextToSpeech
+    private val snackbarHostState = SnackbarHostState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,264 +49,167 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        updateWindowInsets(binding.root)
-
-        val insetsWithKeyboardCallback = InsetsWithKeyboardCallback(requireActivity().window)
-        ViewCompat.setWindowInsetsAnimationCallback(binding.root, insetsWithKeyboardCallback)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root, insetsWithKeyboardCallback)
-
-        val insetsWithKeyboardAnimationCallback = InsetsWithKeyboardAnimationCallback(binding.bottomBar)
-        ViewCompat.setWindowInsetsAnimationCallback(binding.bottomBar, insetsWithKeyboardAnimationCallback)
-
-        collectFlow(viewModel.state) { state ->
-            state.scan?.let { scan ->
-                binding.apply {
-                    textViewDateCreated.text =
-                        getString(R.string.text_date_created, dateAsString(scan.dateCreated))
-                    textViewDateModified.text =
-                        getString(R.string.text_date_modified, dateAsString(scan.dateModified))
-                    editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
-                    editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
-
-                    val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
-                        else getColor(R.color.light_blue)
-                    imageViewPin.setColorFilter(pinColor)
-
-                    recyclerViewChips.withModels {
-                        state.filteredTextModels.let {
-                            it.forEach { model ->
-                                chip {
-                                    id(model.filteredTextModelId)
-                                    onModelClick {
-                                        processFilteredModelIntent(model.type, model.content)
-                                    }
-                                    model(model)
-                                    initCard { cardView ->
-                                        when (model.type) {
-                                            "phone" -> {
-                                                cardView.setCardBackgroundColor(getColor(R.color.chip_green))
-                                            }
-                                            "email" -> {
-                                                cardView.setCardBackgroundColor(getColor(R.color.chip_orange))
-                                            }
-                                            "link" -> {
-                                                cardView.setCardBackgroundColor(getColor(R.color.chip_yellow))
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        collectFlow(viewModel.events) {
-            when (it) {
-                is DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad -> {
-                    showKeyboardOnEditText(binding.editTextScanTitle)
-                }
-                is DetailScanEvents.ShowScanUpdated -> {
-                    showSnackbarShort(
-                        getString(R.string.scan_updated),
-                        anchor = binding.imageViewCopy
-                    )
-                }
-                is DetailScanEvents.ShowUnsavedChanges -> {
-                    showConfirmDialog(
-                        title = getString(R.string.save_changes),
-                        message = getString(R.string.unsaved_changes),
-                        onPositiveClick = {
-                            binding.apply {
-                                viewModel.updateScan(
-                                    title = editTextScanTitle.text.toString(),
-                                    content = editTextScanContent.text.toString()
-                                )
-                            }
-                            hideKeyboard()
-                            findNavController().navigateUp()
-                        },
-                        onNegativeClick = {
-                            hideKeyboard()
-                            findNavController().navigateUp()
-                        }
-                    )
-                }
-                is DetailScanEvents.NavigateUp -> {
-                    hideKeyboard()
-                    findNavController().navigateUp()
-                }
-            }
-        }
-
-        /*
-        Attach a callback when the back button is pressed to act the same way as the
-        imageViewBack does.
-         */
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            binding.apply {
-                viewModel.onNavigateUp(
-                    title = editTextScanTitle.text.toString(),
-                    content = editTextScanContent.text.toString()
-                )
-            }
-        }
-
-        /*
-        Click events
-         */
-        binding.apply {
-            imageViewPin.setOnClickListener {
-                viewModel.updateScanPinned()
-                imageViewPin.setColorFilter(getColor(R.color.light_blue))
-            }
-
-            imageViewSave.setOnClickListener {
-                viewModel.updateScan(
-                    title = editTextScanTitle.text.toString(),
-                    content = editTextScanContent.text.toString()
-                )
-                hideKeyboard()
-            }
-
-            imageViewBack.setOnClickListener {
-                viewModel.onNavigateUp(
-                    title = editTextScanTitle.text.toString(),
-                    content = editTextScanContent.text.toString()
-                )
-            }
-
-            imageViewDelete.setOnClickListener {
-                showConfirmDialog(
-                    message = getString(R.string.delete_scanned_text),
-                    onPositiveClick = {
-                        viewModel.deleteScan()
-                        hideKeyboard()
-                        findNavController().navigateUp()
-                    }
-                )
-            }
-
-            imageViewCopy.setOnClickListener {
-                val clipboardManager =
-                    requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("raw_data", editTextScanContent.text.toString())
-                clipboardManager.setPrimaryClip(clip)
-                showSnackbarShort(
-                    message = getString(R.string.copied_clip),
-                    anchor = binding.imageViewTranslate
-                )
-            }
-
-            imageViewShare.setOnClickListener {
-                val shareIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, editTextScanContent.text.toString())
-                    type = "text/plain"
-                }
-                val intent = Intent.createChooser(shareIntent, null)
-                startActivity(intent)
-            }
-
-            imageViewVoice.setOnClickListener {
-                textToSpeech = TextToSpeech(requireContext()) { status ->
-                    if (status == TextToSpeech.SUCCESS) {
-                        val hasLanguage = textToSpeech.setLanguage(Locale.US)
-                        if (hasLanguage == TextToSpeech.LANG_MISSING_DATA || hasLanguage == TextToSpeech.LANG_NOT_SUPPORTED) {
-                            showSnackbarShort(
-                                getString(R.string.unsupported_language),
-                                anchor = imageViewShare
-                            )
-                        } else {
-                            showSnackbarShort(getString(R.string.loading), anchor = imageViewShare)
-                            textToSpeech.speak(
-                                editTextScanContent.text.toString(),
-                                TextToSpeech.QUEUE_ADD,
-                                null,
-                                viewModel.scanId.toString()
-                            )
-                        }
-                    }
-                }
-            }
-
-            imageViewTranslate.setOnClickListener {
-                try {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_SEND
-                    intent.putExtra(Intent.EXTRA_TEXT, editTextScanContent.text.toString().trim())
-                    intent.putExtra("key_text_input", editTextScanContent.text.toString().trim())
-                    intent.putExtra("key_text_output", "")
-                    intent.putExtra("key_language_from", "en")
-                    intent.putExtra("key_language_to", "mal")
-                    intent.putExtra("key_suggest_translation", "")
-                    intent.putExtra("key_from_floating_window", false)
-                    intent.component = ComponentName(
-                        "com.google.android.apps.translate",
-                        "com.google.android.apps.translate.TranslateActivity"
-                    )
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    showSnackbarShort(
-                        message = getString(R.string.no_google_translate),
-                        anchor = binding.imageViewShare
-                    )
-                }
-            }
-
-            imageViewPdf.setOnClickListener {
-                val arg = bundleOf("pdf_scan_id" to viewModel.scanId)
-                findNavController().navigate(
-                    R.id.action_detailScanFragment_to_pdfDialogFragment,
-                    arg
-                )
-            }
-        }
-    }
-
     override fun onDestroyView() {
-        /*
-        First check if TTS is initialized and if it is (this means its reading)
-        stop reading once fragment is closed.
-         */
         if (this::textToSpeech.isInitialized) textToSpeech.stop()
         super.onDestroyView()
     }
 
-    private fun processFilteredModelIntent(type: String, content: String) {
-        try {
-            when (type) {
-                "phone" -> {
-                    val dialIntent = Intent(Intent.ACTION_DIAL).apply {
-                        data = Uri.parse("tel:$content")
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            transitionName = "detail_frag_2"
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+
+            setContent {
+                ScannerateTheme {
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        ScannerateDetailScreen(
+                            state = state,
+                            onTitleTextChanged = { viewModel.onTitleChange(it) },
+                            onContentChanged = { viewModel.onContentChanged(it) },
+                            onPinClicked = { viewModel.updateScanPinned() },
+                            onChipClicked = { launchExtractedModelIntent(it) },
+                            onBackClick = { findNavController().navigateUp() },
+                            onPdfExport = { navigateToPdfExport(state.scan?.scanId) },
+                            onDeleteClick = { onDeleteClick() },
+                            onCopyClick = { copyToClipboard(state.scan?.scanText) },
+                            onTranslateClick = { openInTranslate(state.scan?.scanText) },
+                            onShareClick = { share(state.scan?.scanText) },
+                            onTtsClick = { tts(state.scan?.scanText) }
+                        )
+
+                        SnackbarHost(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 72.dp)
+                                .navigationBarsPadding(),
+                            hostState = snackbarHostState,
+                            snackbar = {
+                                Snackbar(
+                                    snackbarData = it,
+                                    backgroundColor = LightBlue,
+                                    contentColor = HeavyBlue
+                                )
+                            }
+                        )
                     }
-                    if (requireActivity().packageManager != null)
-                        startActivity(dialIntent)
                 }
-                "email" -> {
+            }
+        }
+    }
+
+    private fun openInTranslate(input: String?) = input?.let { text ->
+        try {
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT, text)
+            intent.putExtra("key_text_input", text)
+            intent.putExtra("key_text_output", "")
+            intent.putExtra("key_language_from", "en")
+            intent.putExtra("key_language_to", "mal")
+            intent.putExtra("key_suggest_translation", "")
+            intent.putExtra("key_from_floating_window", false)
+            intent.component = ComponentName(
+                "com.google.android.apps.translate",
+                "com.google.android.apps.translate.TranslateActivity"
+            )
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            //snackbar - it seems you don't have translate installed.
+        }
+    }
+
+    private fun tts(input: String?) = input?.let { text ->
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val hasLanguage = textToSpeech.setLanguage(Locale.US)
+                if (hasLanguage == TextToSpeech.LANG_MISSING_DATA || hasLanguage == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    lifecycleScope.launch {
+                        snackbarHostState.showSnackbar(message = getString(R.string.unsupported_language))
+                    }
+                } else {
+                    lifecycleScope.launch {
+                        snackbarHostState.showSnackbar(message = getString(R.string.loading))
+                    }
+                    textToSpeech.speak(
+                        text,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        viewModel.state.value.scan?.scanId.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun copyToClipboard(input: String?) = input?.let { text ->
+        val clipboardManager =
+            requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("raw_data", text)
+        clipboardManager.setPrimaryClip(clip)
+        //fire off snackbar
+        lifecycleScope.launch { snackbarHostState.showSnackbar(message = getString(R.string.copied_clip)) }
+    }
+
+    private fun share(input: String?) = input?.let { text ->
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, text)
+            type = "text/plain"
+        }
+        val intent = Intent.createChooser(shareIntent, null)
+        startActivity(intent)
+    }
+
+    private fun navigateToPdfExport(scanId: Long?) = scanId?.let {
+        val action = DetailScanFragmentDirections.toPdfDialogFragment(it.toInt())
+        findNavController().safeNav(action)
+    }
+
+    private fun onDeleteClick() {
+        showConfirmDialog(
+            message = getString(R.string.delete_scanned_text),
+            onPositiveClick = {
+                viewModel.deleteScan()
+                findNavController().navigateUp()
+            }
+        )
+    }
+
+    private fun launchExtractedModelIntent(model: ExtractionModel) {
+        try {
+            when (model.type) {
+                ExtractionModelType.EMAIL -> {
                     val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                         data = Uri.parse("mailto:")
-                        putExtra(Intent.EXTRA_EMAIL, arrayOf(content))
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf(model.content))
                     }
                     if (requireActivity().packageManager != null)
                         startActivity(emailIntent)
                 }
-                "link" -> {
+                ExtractionModelType.PHONE -> {
+                    val dialIntent = Intent(Intent.ACTION_DIAL).apply {
+                        data = Uri.parse("tel:${model.content}")
+                    }
+                    if (requireActivity().packageManager != null)
+                        startActivity(dialIntent)
+                }
+                ExtractionModelType.URL -> {
                     val urlIntent = Intent(Intent.ACTION_VIEW).apply {
-                        data = Uri.parse(content)
+                        data = Uri.parse(model.content)
                     }
                     if (requireActivity().packageManager != null)
                         startActivity(urlIntent)
                 }
+                ExtractionModelType.OTHER -> copyToClipboard(model.content)
             }
         } catch (e: ActivityNotFoundException) {
-            showSnackbarShort(
-                message = getString(R.string.something_went_wrong),
-                anchor = binding.imageViewCopy
-            )
+            lifecycleScope.launch { snackbarHostState.showSnackbar(message = getString(R.string.something_went_wrong)) }
         }
     }
 }

@@ -9,6 +9,7 @@ class ScanRepository(
     private val dao = database.scanDao
 
     val allScans = dao.getAllScans()
+    val allPinnedScans = dao.getAllPinnedScans()
 
     suspend fun insertScan(scan: Scan) = dao.insertScan(scan)
     suspend fun deleteScan(scan: Scan) = dao.deleteScan(scan)
