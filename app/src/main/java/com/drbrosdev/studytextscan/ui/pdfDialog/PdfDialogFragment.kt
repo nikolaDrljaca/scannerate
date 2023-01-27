@@ -20,8 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
-class PdfDialogFragment : DialogFragment(R.layout.fragment_pdf_dialog) {
+class PdfDialogFragment : DialogFragment() {
 
     private val viewModel: PdfDialogViewModel by viewModel()
     private val pdfExportService: PdfExportServiceImpl by inject()
