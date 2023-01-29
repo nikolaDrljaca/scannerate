@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -16,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -173,16 +171,16 @@ fun ProductsList(
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         if (loading) {
-           item {
+           item(key = "progress") {
                CircularProgressIndicator(
                    color = MaterialTheme.colors.onPrimary,
                )
            }
         }
         if (products.isEmpty() and !loading) {
-            item { PlaceholderItem() }
+            item(key = "placeholder") { PlaceholderItem() }
         }
-        items(products) {
+        items(items = products, key = { it.product.productId }) {
             SupportItemChip(
                 productDetails = it.product,
                 isSelected = it.isSelected,
@@ -205,9 +203,9 @@ fun VendorList(
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         if (vendors.isEmpty()) {
-            item { PlaceholderItem() }
+            item(key = "vendor_placeholder") { PlaceholderItem() }
         }
-        items(vendors) { vendorModel ->
+        items(items = vendors, key = { it.vendor.vendorName }) { vendorModel ->
             VendorChip(
                 vendor = vendorModel.vendor,
                 isSelected = vendorModel.isSelected,

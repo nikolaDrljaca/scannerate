@@ -32,7 +32,8 @@ fun ScannerateAboutScreen(
         ) {
 
             item(
-                span = { GridItemSpan(maxCurrentLineSpan) }
+                span = { GridItemSpan(maxCurrentLineSpan) },
+                key = "header"
             ) {
                 Card(
                     modifier = Modifier,
@@ -61,7 +62,7 @@ fun ScannerateAboutScreen(
                 }
             }
 
-            items(supportActions) { action ->
+            items(items = supportActions, key = { it.text }) { action ->
                 AboutActionCard(
                     supportAction = action,
                     onClick = { onActionClick(action) }

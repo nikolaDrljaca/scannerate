@@ -26,7 +26,7 @@ fun ScannerateLicensesScreen(
             contentPadding = PaddingValues(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(allLicenceItems) { license ->
+            items(items = allLicenceItems, key = { it.order }) { license ->
                 LicenseCard(
                     license = license,
                     onClick = { onLicenseClick(license.link) }

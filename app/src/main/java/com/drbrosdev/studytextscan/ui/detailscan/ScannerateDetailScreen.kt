@@ -63,11 +63,11 @@ fun ScannerateDetailScreen(
                 .imePadding(),
             state = columnScrollState
         ) {
-            item {
+            item(key = "top_spacer") {
                 Spacer(modifier = Modifier.height(56.dp))
             }
 
-            item {
+            item(key = "scan_header") {
                 state.scan?.let { scan ->
                     ScanDetailHeader(
                         title = scan.scanTitle,
@@ -100,7 +100,7 @@ fun ScannerateDetailScreen(
                         ),
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        items(state.filteredTextModels) {
+                        items(items = state.filteredTextModels, key = { it.id }) {
                             TextEntityChip(
                                 entity = it,
                                 onClick = { onChipClicked(it) }
@@ -111,7 +111,7 @@ fun ScannerateDetailScreen(
             }
 
             state.scan?.let { scan ->
-                item {
+                item(key = "content_field") {
                     var content by remember { mutableStateOf(scan.scanText) }
                     ScannerateTextField(
                         modifier = Modifier.fillMaxWidth(),
@@ -125,7 +125,7 @@ fun ScannerateDetailScreen(
                 }
             }
 
-            item {
+            item(key = "bottom_spacer") {
                 Spacer(modifier = Modifier.height(82.dp))
             }
         }
