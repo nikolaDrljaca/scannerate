@@ -10,13 +10,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.billingclient.api.ProductDetails
-import com.android.billingclient.api.QueryProductDetailsParams
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.ui.support.theme.HeavyBlue
 import com.drbrosdev.studytextscan.ui.support.theme.LightBlue
 import com.drbrosdev.studytextscan.ui.support.theme.DarkTextGray
 
+/*
 @Composable
 fun SupportScreen(
     modifier: Modifier = Modifier,
@@ -114,3 +113,4 @@ fun SupportScreen(
         }
     }
 }
+ */

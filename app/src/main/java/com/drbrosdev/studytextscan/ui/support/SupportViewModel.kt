@@ -1,18 +1,6 @@
 package com.drbrosdev.studytextscan.ui.support
 
-import android.app.Activity
-import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.drbrosdev.studytextscan.datastore.AppPreferences
-import com.drbrosdev.studytextscan.service.billing.BillingClientService
-import com.drbrosdev.studytextscan.service.billing.ProductId
-import com.drbrosdev.studytextscan.service.billing.PurchaseResult
-import com.drbrosdev.studytextscan.service.billing.QueriedProducts
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-
+/*
 class SupportViewModel(
     private val billingClient: BillingClientService,
     private val preferences: AppPreferences
@@ -94,3 +82,4 @@ class SupportViewModel(
         billingClient.retryToConsumePurchases()
     }
 }
+ */

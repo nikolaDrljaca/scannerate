@@ -23,13 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.billingclient.api.ProductDetails
+//import com.android.billingclient.api.ProductDetails
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.ui.support.theme.*
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.*
 import kotlin.random.Random
 
+/*
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SupportItemChip(
@@ -273,3 +274,4 @@ private fun AnimatedRandomIcon(
         )
     }
 }
+ */

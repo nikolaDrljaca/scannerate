@@ -1,15 +1,6 @@
 package com.drbrosdev.studytextscan.service.billing
 
-import android.app.Activity
-import android.content.Context
-import com.android.billingclient.api.*
-import com.android.billingclient.api.BillingClient.ProductType
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
-
+/*
 class BillingClientService(context: Context) : PurchasesUpdatedListener {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -153,3 +144,4 @@ class BillingClientService(context: Context) : PurchasesUpdatedListener {
         })
     }
 }
+ */

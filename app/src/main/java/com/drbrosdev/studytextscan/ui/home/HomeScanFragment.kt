@@ -22,8 +22,6 @@ import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
-import com.drbrosdev.studytextscan.service.billing.BillingClientService
-import com.drbrosdev.studytextscan.service.billing.PurchaseResult
 import com.drbrosdev.studytextscan.ui.home.reward.setupComposeSnackbar
 import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
@@ -34,7 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding(FragmentScanHomeBinding::bind)
     private val viewModel: HomeViewModel by activityViewModel()
-    private val billingClient: BillingClientService by inject()
+//    private val billingClient: BillingClientService by inject()
 
     private val selectImageRequest = registerForActivityResult(CropImageContract()) {
         if (it.isSuccessful) {
@@ -70,7 +68,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
     override fun onResume() {
         super.onResume()
-        billingClient.retryToConsumePurchases()
+//        billingClient.retryToConsumePurchases()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,12 +78,14 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
+        /*
         collectFlow(billingClient.purchaseFlow) {
             when (it) {
                 is PurchaseResult.Failure -> Unit
                 is PurchaseResult.Success -> viewModel.showReward()
             }
         }
+         */
 
         collectFlow(viewModel.state) { state ->
             binding.apply {
@@ -258,7 +258,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     showCameraPermissionInfoDialog()
                 }
                 is HomeEvents.ShowSupportDialog -> {
-                    findNavController().navigate(R.id.action_homeScanFragment_to_supportFragment)
+//                    findNavController().navigate(R.id.action_homeScanFragment_to_supportFragment)
                 }
             }
         }

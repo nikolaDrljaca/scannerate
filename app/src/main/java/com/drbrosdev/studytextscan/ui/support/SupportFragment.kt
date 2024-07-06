@@ -20,7 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SupportFragment : BottomSheetDialogFragment() {
-    private val viewModel: SupportViewModel by viewModel()
+//    private val viewModel: SupportViewModel by viewModel()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -43,12 +43,13 @@ class SupportFragment : BottomSheetDialogFragment() {
 
             setContent {
                 ScannerateTheme {
-                    val state by viewModel.state.collectAsStateWithLifecycle()
+//                    val state by viewModel.state.collectAsStateWithLifecycle()
 
-                    LaunchedEffect(Unit) {
-                        viewModel.queryProducts()
-                    }
+//                    LaunchedEffect(Unit) {
+//                        viewModel.queryProducts()
+//                    }
 
+                    /*
                     LaunchedEffect(viewModel.events) {
                         viewModel.events.collect {
                             when (it) {
@@ -65,6 +66,7 @@ class SupportFragment : BottomSheetDialogFragment() {
                         onVendorSelected = viewModel::selectVendor,
                         onSupportClicked = { viewModel.makePurchase(requireActivity()) }
                     )
+                     */
                 }
             }
         }

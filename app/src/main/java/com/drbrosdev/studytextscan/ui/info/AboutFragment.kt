@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -60,8 +61,10 @@ class AboutFragment : Fragment() {
                 findNavController().safeNav(action)
             }
             SupportAction.SupportDev -> {
-                val action = AboutFragmentDirections.toSupportFragment()
-                findNavController().safeNav(action)
+//                val action = AboutFragmentDirections.toSupportFragment()
+//                findNavController().safeNav(action)
+                Toast.makeText(requireContext(), "Coming soon.", Toast.LENGTH_SHORT)
+                    .show()
             }
             SupportAction.BugReport -> {
                 val addresses =

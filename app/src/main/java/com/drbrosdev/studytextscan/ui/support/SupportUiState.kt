@@ -1,6 +1,5 @@
 package com.drbrosdev.studytextscan.ui.support
 
-import com.android.billingclient.api.ProductDetails
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.GooglePlay
 
@@ -11,7 +10,7 @@ data class SupportUiState(
 )
 
 data class ProductUiModel(
-    val product: ProductDetails,
+//    val product: ProductDetails,
     val isSelected: Boolean = false
 )
 
