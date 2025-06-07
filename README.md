@@ -10,6 +10,9 @@ You can also download the app on the Play Store:
 <a href="https://play.google.com/store/apps/details?id=com.drbrosdev.studytextscan" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="70"/></a>
 
+## Contributing
+Feel free to fork the project and submit any MRs you deem necessary. 
+
 ## License 
     Scannerate - Ad free text recoginition
     Copyright (C) 2021  DrBrosDev
