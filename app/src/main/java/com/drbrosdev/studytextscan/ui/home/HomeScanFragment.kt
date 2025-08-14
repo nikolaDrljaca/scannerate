@@ -222,11 +222,13 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     val action = HomeScanFragmentDirections.toDetailScanFragment(homeEvents.id, 1)
                     findNavController().safeNav(action)
                 }
+
                 is HomeEvents.ShowLoadingDialog -> {
                     binding.cardViewLoading.animate().translationX(0f)
                     binding.buttonCameraScan.isEnabled = false
                     binding.buttonGalleryScan.isEnabled = false
                 }
+
                 is HomeEvents.ShowScanEmpty -> {
                     showSnackbarShort(
                         message = getString(R.string.no_text_found),
@@ -236,6 +238,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     binding.buttonCameraScan.isEnabled = true
                     binding.buttonGalleryScan.isEnabled = true
                 }
+
                 is HomeEvents.ShowUndoDeleteScan -> {
                     showSnackbarLongWithAction(
                         message = getString(R.string.scan_deleted),
@@ -245,18 +248,22 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                         viewModel.insertScan(homeEvents.scan)
                     }
                 }
+
                 is HomeEvents.ShowOnboarding -> {
                     findNavController().navigate(R.id.action_homeScanFragment_to_viewPagerFragment)
                 }
+
                 is HomeEvents.ShowErrorWhenScanning -> {
                     showSnackbarShort(
                         message = getString(R.string.something_went_wrong),
                         anchor = binding.buttonCameraScan
                     )
                 }
+
                 is HomeEvents.ShowPermissionInfo -> {
                     showCameraPermissionInfoDialog()
                 }
+
                 is HomeEvents.ShowSupportDialog -> {
 //                    findNavController().navigate(R.id.action_homeScanFragment_to_supportFragment)
                 }
@@ -282,6 +289,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 == PackageManager.PERMISSION_GRANTED -> {
                             selectImageRequest.launch(cropImageCameraOptions)
                         }
+
                         else -> {
                             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
                         }
