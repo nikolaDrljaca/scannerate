@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.1.0'
 }
 
 sourceSets {
@@ -34,10 +35,10 @@ android {
 
     defaultConfig {
         applicationId "com.drbrosdev.studytextscan"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 36
-        versionCode 14
-        versionName "1.8"
+        versionCode 15
+        versionName "1.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -92,15 +93,15 @@ dependencies {
     implementation "io.coil-kt:coil:2.2.1"
 
     // To recognize Latin script
-    implementation 'com.google.mlkit:text-recognition:16.0.0-beta4'
+    implementation 'com.google.mlkit:text-recognition:16.0.1'
     // To recognize Chinese script
-    implementation 'com.google.mlkit:text-recognition-chinese:16.0.0-beta4'
+    implementation 'com.google.mlkit:text-recognition-chinese:16.0.1'
     // To recognize Devanagari script
-    implementation 'com.google.mlkit:text-recognition-devanagari:16.0.0-beta4'
+    implementation 'com.google.mlkit:text-recognition-devanagari:16.0.1'
     // To recognize Japanese script
-    implementation 'com.google.mlkit:text-recognition-japanese:16.0.0-beta4'
+    implementation 'com.google.mlkit:text-recognition-japanese:16.0.1'
     // To recognize Korean script
-    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta4'
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.1'
 
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-alpha02'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
@@ -121,7 +122,7 @@ dependencies {
     implementation 'androidx.datastore:datastore-core:1.0.0'
 
     //room database
-    def room_version = "2.5.0"
+    def room_version = "2.8.2"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     // optional - Kotlin Extensions and Coroutines support for Room
@@ -139,7 +140,7 @@ dependencies {
     kapt "com.airbnb.android:epoxy-processor:$epoxyVersion"
 
     //entity extraction - text recognition
-    implementation 'com.google.mlkit:entity-extraction:16.0.0-beta4'
+    implementation 'com.google.mlkit:entity-extraction:16.0.0-beta6'
 
     //Google ML-kit Task extensions
     //Source: https://github.com/Kotlin/kotlinx.coroutines/tree/master/integration/kotlinx-coroutines-play-services
